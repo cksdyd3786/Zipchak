@@ -1,0 +1,14 @@
+{
+  "name": "@zipchak/schema",
+  "version": "1.0.0",
+  "private": true,
+  "description": "집착 공통 JSON 스키마 (머지 권한: E)",
+  "type": "module",
+  "scripts": {
+    "validate": "node validate.mjs"
+  },
+  "devDependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1"
+  }
+}

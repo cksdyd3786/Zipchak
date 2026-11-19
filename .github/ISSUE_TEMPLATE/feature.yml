@@ -1,0 +1,37 @@
+name: 기능 구현
+description: 기능 ID 하나를 구현하는 작업
+title: "[M?-?] 기능 이름"
+labels: []
+body:
+  - type: input
+    id: feature_id
+    attributes:
+      label: 기능 ID
+      description: docs/features.md의 ID (예 M2-2)
+    validations:
+      required: true
+  - type: dropdown
+    id: part
+    attributes:
+      label: 담당 파트
+      options: ["A (iOS)", "B (웹 뷰어)", "C (소셜·실시간)", "D (엔진)", "E (백엔드·리드)"]
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 우선순위
+      options: [Must, Should, Could]
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: 완료 기준
+      description: docs/features.md에서 복사
+    validations:
+      required: true
+  - type: textarea
+    id: deps
+    attributes:
+      label: 필요한 것 (다른 파트·스키마·fixture)

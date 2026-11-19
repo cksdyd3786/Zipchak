@@ -1,0 +1,53 @@
+{
+  "_comment": "취향 질문 답 → 점수 항목 가중치 (M2-1). 기본값에 답별 증감을 더한다. 담당 D가 튜닝한다.",
+  "base": {
+    "monitorGlare": 1.0,
+    "daylight": 1.0,
+    "circulation": 1.0,
+    "openness": 1.0,
+    "storageAccess": 1.0,
+    "bedPlacement": 1.0
+  },
+  "questions": {
+    "deskHours": {
+      "label": "하루에 책상에 앉아 있는 시간은?",
+      "options": {
+        "lt1": { "label": "1시간 미만", "delta": { "monitorGlare": -0.5, "daylight": -0.3 } },
+        "1to4": { "label": "1~4시간", "delta": {} },
+        "gt4": { "label": "4시간 이상", "delta": { "monitorGlare": 0.8, "daylight": 0.5 } }
+      }
+    },
+    "guests": {
+      "label": "친구를 얼마나 자주 초대하나요?",
+      "options": {
+        "rare": { "label": "거의 안 함", "delta": { "openness": -0.4 } },
+        "monthly": { "label": "한 달에 한두 번", "delta": {} },
+        "weekly": { "label": "매주", "delta": { "openness": 0.8, "circulation": 0.3 } }
+      }
+    },
+    "sleepSensitivity": {
+      "label": "잘 때 빛이나 바람에 예민한가요?",
+      "options": {
+        "no": { "label": "아무 데서나 잘 잠", "delta": { "bedPlacement": -0.4 } },
+        "some": { "label": "조금 예민함", "delta": {} },
+        "yes": { "label": "많이 예민함", "delta": { "bedPlacement": 0.9 } }
+      }
+    },
+    "stuff": {
+      "label": "수납할 물건의 양은?",
+      "options": {
+        "few": { "label": "적음", "delta": { "storageAccess": -0.3 } },
+        "normal": { "label": "보통", "delta": {} },
+        "many": { "label": "많음", "delta": { "storageAccess": 0.8 } }
+      }
+    },
+    "monitors": {
+      "label": "모니터는 몇 대 쓰나요?",
+      "options": {
+        "0": { "label": "노트북만", "delta": { "monitorGlare": -0.2 } },
+        "1": { "label": "1대", "delta": {} },
+        "2plus": { "label": "2대 이상", "delta": { "monitorGlare": 0.5 } }
+      }
+    }
+  }
+}

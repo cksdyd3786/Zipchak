@@ -1,0 +1,185 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://zipchak.app/schema/furniture-layout.schema.json",
+  "title": "FurnitureLayout",
+  "description": "배치안 + 엔진 분석 + 포스트잇(방명록·제안). 게스트는 placements를 바꿀 수 없다.",
+  "type": "object",
+  "required": ["schemaVersion", "layoutId", "roomId", "version", "kind", "createdBy", "title", "placements", "analysis", "postits", "createdAt", "updatedAt"],
+  "additionalProperties": false,
+  "$defs": {
+    "point2": {
+      "type": "object",
+      "required": ["x", "z"],
+      "additionalProperties": false,
+      "properties": { "x": { "type": "integer" }, "z": { "type": "integer" } }
+    },
+    "point3": {
+      "type": "object",
+      "required": ["x", "y", "z"],
+      "additionalProperties": false,
+      "properties": { "x": { "type": "number" }, "y": { "type": "number" }, "z": { "type": "number" } }
+    },
+    "actor": {
+      "type": "object",
+      "required": ["type", "id", "displayName"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "enum": ["user", "guest", "engine"] },
+        "id": { "type": "string" },
+        "displayName": { "type": "string" }
+      }
+    },
+    "scoreKey": { "enum": ["circulation", "daylight", "monitorGlare", "openness", "storageAccess", "bedPlacement"] }
+  },
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "layoutId": { "type": "string", "pattern": "^lay_" },
+    "roomId": { "type": "string", "pattern": "^room_" },
+    "version": { "description": "저장할 때마다 +1. PUT 시 서버보다 낮으면 409", "type": "integer", "minimum": 1 },
+    "kind": { "enum": ["ai_recommendation", "user_saved"] },
+    "parentLayoutId": { "type": ["string", "null"] },
+    "createdBy": { "$ref": "#/$defs/actor" },
+    "preferences": {
+      "description": "M2-1 취향 질문 답과 M2-5 가중치",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "answers": { "type": "object", "additionalProperties": { "type": "string" } },
+        "weights": { "type": "object", "propertyNames": { "$ref": "#/$defs/scoreKey" }, "additionalProperties": { "type": "number", "minimum": 0 } },
+        "budget": { "type": ["integer", "null"], "minimum": 0 }
+      }
+    },
+    "roomType": {
+      "description": "M2-4 '내 방 유형' (예: 창가 집중러)",
+      "type": ["object", "null"],
+      "properties": { "name": { "type": "string" }, "summary": { "type": "string" } }
+    },
+    "title": { "type": "string" },
+    "placements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["instanceId", "source", "category", "dimensions", "position", "rotationDeg", "locked"],
+        "additionalProperties": false,
+        "properties": {
+          "instanceId": { "type": "string" },
+          "source": { "enum": ["existing", "catalog", "custom"] },
+          "catalogItemId": { "type": ["string", "null"] },
+          "category": { "type": "string" },
+          "dimensions": {
+            "type": "object",
+            "required": ["width", "depth", "height"],
+            "properties": { "width": { "type": "integer" }, "depth": { "type": "integer" }, "height": { "type": "integer" } }
+          },
+          "position": { "$ref": "#/$defs/point2" },
+          "rotationDeg": { "enum": [0, 90, 180, 270] },
+          "locked": { "type": "boolean" }
+        }
+      }
+    },
+    "analysis": {
+      "description": "엔진이 채우는 읽기 전용 영역",
+      "type": ["object", "null"],
+      "required": ["score", "scoreBreakdown", "violations", "reasons"],
+      "properties": {
+        "score": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "scoreBreakdown": { "type": "object", "propertyNames": { "$ref": "#/$defs/scoreKey" }, "additionalProperties": { "type": "number", "minimum": 0, "maximum": 1 } },
+        "violations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["code", "instanceId", "message"],
+            "properties": {
+              "code": { "enum": ["DOOR_SWING", "WINDOW_BLOCK", "WALL_OVERLAP", "FURNITURE_OVERLAP", "CIRCULATION_NARROW", "CLEARANCE_BLOCKED"] },
+              "instanceId": { "type": "string" },
+              "message": { "type": "string" }
+            }
+          }
+        },
+        "reasons": { "type": "array", "items": { "type": "string" } },
+        "missingCategories": { "type": "array", "items": { "type": "string" } },
+        "deadSpaces": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "polygon", "maxBox"],
+            "properties": {
+              "id": { "type": "string" },
+              "polygon": { "type": "array", "items": { "$ref": "#/$defs/point2" } },
+              "maxBox": { "type": "object", "properties": { "width": { "type": "integer" }, "depth": { "type": "integer" }, "heightLimit": { "type": "integer" } } },
+              "suggestedCategories": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "recommendedItems": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["catalogItemId", "forSlot", "fitMarginMm", "rank"],
+            "properties": {
+              "catalogItemId": { "type": "string" },
+              "forSlot": { "type": "string", "description": "missing:<category> | dead:<deadSpaceId> | decor" },
+              "fitMarginMm": { "type": "object", "properties": { "width": { "type": "integer" }, "depth": { "type": "integer" } } },
+              "rank": { "type": "integer", "minimum": 1 }
+            }
+          }
+        },
+        "totalPrice": { "type": "object", "properties": { "amount": { "type": "integer" }, "currency": { "const": "KRW" } } },
+        "partial": { "type": "boolean" }
+      }
+    },
+    "postits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["postitId", "type", "author", "text", "color", "anchor", "createdAt", "resolved"],
+        "additionalProperties": false,
+        "properties": {
+          "postitId": { "type": "string", "pattern": "^pin_" },
+          "type": { "description": "guestbook = 방명록, proposal = 제안 포스트잇", "enum": ["guestbook", "proposal"] },
+          "proposal": {
+            "description": "type = proposal 일 때만. 주인이 누르면 이 위치로 미리보기 + AI 검사",
+            "oneOf": [
+              { "type": "null" },
+              {
+                "type": "object",
+                "required": ["furnitureInstanceId", "suggestedPosition", "suggestedRotationDeg"],
+                "additionalProperties": false,
+                "properties": {
+                  "furnitureInstanceId": { "type": "string" },
+                  "suggestedPosition": { "$ref": "#/$defs/point2" },
+                  "suggestedRotationDeg": { "enum": [0, 90, 180, 270] }
+                }
+              }
+            ]
+          },
+          "author": { "$ref": "#/$defs/actor" },
+          "text": { "type": "string", "maxLength": 140 },
+          "color": { "enum": ["yellow", "pink", "blue", "green", "purple"] },
+          "anchor": {
+            "type": "object",
+            "required": ["targetType", "targetId", "point", "normal"],
+            "additionalProperties": false,
+            "properties": {
+              "targetType": { "enum": ["wall", "floor", "furniture", "opening"] },
+              "targetId": { "type": ["string", "null"] },
+              "furnitureInstanceId": { "type": ["string", "null"] },
+              "point": { "$ref": "#/$defs/point3", "description": "mm. 가구에 붙으면 그 가구 기준 로컬 좌표" },
+              "normal": { "$ref": "#/$defs/point3" }
+            }
+          },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "resolved": { "type": "boolean" }
+        },
+        "allOf": [
+          {
+            "if": { "properties": { "type": { "const": "proposal" } } },
+            "then": { "required": ["proposal"], "properties": { "proposal": { "type": "object" } } }
+          }
+        ]
+      }
+    },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" }
+  }
+}

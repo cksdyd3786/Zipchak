@@ -1,0 +1,78 @@
+[
+  {
+    "schemaVersion": "1.0",
+    "itemId": "cat_desk_1200_a",
+    "category": "desk",
+    "name": "(예시) 심플 컴퓨터 책상 1200",
+    "brand": "예시브랜드",
+    "market": "ohouse",
+    "purchaseUrl": "https://example.com/product/desk-1200",
+    "affiliateUrl": null,
+    "price": { "amount": 89000, "currency": "KRW" },
+    "dimensions": { "width": 1200, "depth": 600, "height": 730 },
+    "clearance": { "front": 700, "back": 0, "left": 0, "right": 0 },
+    "placementRules": { "againstWall": "preferred", "underWindowAllowed": true, "stackable": false },
+    "lifestyleTags": ["work"],
+    "styleTags": ["minimal", "white"],
+    "color": "#F2F0EB",
+    "asset": {
+      "glbUrl": "https://cdn.example.com/assets/cat_desk_1200_a.glb",
+      "thumbnailUrl": null,
+      "assetFidelity": "proxy",
+      "originAtFootprintCenter": true
+    },
+    "sponsor": { "isSponsored": false, "boost": 0 },
+    "status": "available",
+    "verifiedAt": "2026-11-19"
+  },
+  {
+    "schemaVersion": "1.0",
+    "itemId": "cat_shelf_slim_250",
+    "category": "shelf",
+    "name": "(예시) 슬림 틈새 선반 250",
+    "brand": "예시브랜드",
+    "market": "ikea",
+    "purchaseUrl": "https://example.com/product/slim-shelf",
+    "affiliateUrl": null,
+    "price": { "amount": 39000, "currency": "KRW" },
+    "dimensions": { "width": 250, "depth": 380, "height": 1500 },
+    "clearance": { "front": 300, "back": 0, "left": 0, "right": 0 },
+    "placementRules": { "againstWall": "required", "underWindowAllowed": false, "stackable": false },
+    "lifestyleTags": ["storage"],
+    "styleTags": ["wood"],
+    "color": "#C8A67A",
+    "asset": {
+      "glbUrl": "https://cdn.example.com/assets/cat_shelf_slim_250.glb",
+      "thumbnailUrl": null,
+      "assetFidelity": "proxy",
+      "originAtFootprintCenter": true
+    },
+    "status": "available",
+    "verifiedAt": "2026-11-19"
+  },
+  {
+    "schemaVersion": "1.0",
+    "itemId": "cat_lamp_stand_a",
+    "category": "lamp",
+    "name": "(예시) 플로어 스탠드 조명",
+    "brand": "예시브랜드",
+    "market": "coupang",
+    "purchaseUrl": "https://example.com/product/stand-lamp",
+    "affiliateUrl": null,
+    "price": { "amount": 45000, "currency": "KRW" },
+    "dimensions": { "width": 300, "depth": 300, "height": 1600 },
+    "clearance": { "front": 0, "back": 0, "left": 0, "right": 0 },
+    "placementRules": { "againstWall": "none", "underWindowAllowed": true, "stackable": false },
+    "lifestyleTags": ["rest"],
+    "styleTags": ["minimal", "warm"],
+    "color": "#222222",
+    "asset": {
+      "glbUrl": "https://cdn.example.com/assets/cat_lamp_stand_a.glb",
+      "thumbnailUrl": null,
+      "assetFidelity": "proxy",
+      "originAtFootprintCenter": true
+    },
+    "status": "available",
+    "verifiedAt": "2026-11-19"
+  }
+]

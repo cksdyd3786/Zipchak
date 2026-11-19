@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://zipchak.app/schema/market-furniture-item.schema.json",
+  "title": "MarketFurnitureItem",
+  "description": "큐레이션 카탈로그 항목. 규격·가격·URL은 마켓 상세페이지에서 직접 옮겨 적고 verifiedAt을 기록한다.",
+  "type": "object",
+  "required": ["schemaVersion", "itemId", "category", "name", "brand", "market", "purchaseUrl", "price", "dimensions", "clearance", "placementRules", "lifestyleTags", "styleTags", "asset", "status", "verifiedAt"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "itemId": { "type": "string", "pattern": "^cat_" },
+    "category": { "enum": ["bed", "desk", "chair", "storage", "shelf", "table", "wardrobe", "sofa", "lamp", "decor", "etc"] },
+    "name": { "type": "string" },
+    "brand": { "type": "string" },
+    "market": { "enum": ["ikea", "ohouse", "coupang", "etc"] },
+    "purchaseUrl": { "type": "string", "format": "uri" },
+    "affiliateUrl": { "type": ["string", "null"] },
+    "price": {
+      "type": "object",
+      "required": ["amount", "currency"],
+      "additionalProperties": false,
+      "properties": { "amount": { "type": "integer", "minimum": 0 }, "currency": { "const": "KRW" } }
+    },
+    "dimensions": {
+      "type": "object",
+      "required": ["width", "depth", "height"],
+      "additionalProperties": false,
+      "properties": {
+        "width": { "type": "integer", "minimum": 1 },
+        "depth": { "type": "integer", "minimum": 1 },
+        "height": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "clearance": {
+      "description": "사용에 필요한 여유 공간(mm). 책상 앞 700 = 의자, 서랍장 앞 450 = 서랍",
+      "type": "object",
+      "required": ["front", "back", "left", "right"],
+      "additionalProperties": false,
+      "properties": {
+        "front": { "type": "integer", "minimum": 0 },
+        "back": { "type": "integer", "minimum": 0 },
+        "left": { "type": "integer", "minimum": 0 },
+        "right": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "placementRules": {
+      "type": "object",
+      "required": ["againstWall", "underWindowAllowed", "stackable"],
+      "additionalProperties": false,
+      "properties": {
+        "againstWall": { "enum": ["required", "preferred", "none"] },
+        "underWindowAllowed": { "type": "boolean" },
+        "stackable": { "type": "boolean" }
+      }
+    },
+    "lifestyleTags": { "type": "array", "items": { "enum": ["work", "rest", "guest", "storage"] } },
+    "styleTags": { "description": "M3-8 소품 추천용 (minimal, wood, white, vintage ...)", "type": "array", "items": { "type": "string" } },
+    "color": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+    "asset": {
+      "type": "object",
+      "required": ["glbUrl", "thumbnailUrl", "assetFidelity", "originAtFootprintCenter"],
+      "additionalProperties": false,
+      "properties": {
+        "glbUrl": { "type": "string" },
+        "thumbnailUrl": { "type": ["string", "null"] },
+        "assetFidelity": { "description": "official = 제조사 모델, proxy = 규격 기반 로우폴리", "enum": ["official", "proxy"] },
+        "originAtFootprintCenter": { "const": true }
+      }
+    },
+    "sponsor": {
+      "description": "이번 학기는 구현하지 않음(발표용 BM 설명). 엔진은 무시한다.",
+      "type": "object",
+      "properties": { "isSponsored": { "type": "boolean" }, "boost": { "type": "number", "minimum": 0, "maximum": 1 } }
+    },
+    "status": { "enum": ["available", "unavailable"] },
+    "verifiedAt": { "type": "string", "format": "date" }
+  }
+}

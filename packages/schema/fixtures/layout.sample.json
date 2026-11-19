@@ -1,0 +1,110 @@
+{
+  "schemaVersion": "1.0",
+  "layoutId": "lay_01HXB7M0",
+  "roomId": "room_01HXA3K9Q2",
+  "version": 3,
+  "kind": "ai_recommendation",
+  "parentLayoutId": null,
+  "createdBy": { "type": "engine", "id": "engine@0.1.0", "displayName": "집착 AI" },
+  "preferences": {
+    "answers": { "deskHours": "gt4", "guests": "monthly", "sleepSensitivity": "yes", "stuff": "normal", "monitors": "2plus" },
+    "weights": { "monitorGlare": 2.3, "daylight": 1.5, "circulation": 1.0, "openness": 1.0, "storageAccess": 1.0, "bedPlacement": 1.9 },
+    "budget": 300000
+  },
+  "roomType": { "name": "창가 집중러", "summary": "책상은 빛을 옆에 두고, 침대는 문에서 안 보이는 안쪽에." },
+  "title": "창가 집중 업무형",
+  "placements": [
+    {
+      "instanceId": "inst_bed_01",
+      "source": "existing",
+      "catalogItemId": null,
+      "category": "bed",
+      "dimensions": { "width": 1100, "depth": 2000, "height": 450 },
+      "position": { "x": 2600, "z": 3750 },
+      "rotationDeg": 0,
+      "locked": false
+    },
+    {
+      "instanceId": "inst_desk_rec_01",
+      "source": "catalog",
+      "catalogItemId": "cat_desk_1200_a",
+      "category": "desk",
+      "dimensions": { "width": 1200, "depth": 600, "height": 730 },
+      "position": { "x": 400, "z": 1400 },
+      "rotationDeg": 90,
+      "locked": false
+    }
+  ],
+  "analysis": {
+    "score": 87,
+    "scoreBreakdown": { "circulation": 0.9, "daylight": 0.85, "monitorGlare": 0.95, "openness": 0.7, "storageAccess": 0.8, "bedPlacement": 0.9 },
+    "violations": [],
+    "reasons": [
+      "책상을 창문과 직각으로 두어 모니터 빛 반사를 피했어요",
+      "문에서 책상까지 동선 폭을 700mm 확보했어요",
+      "침대를 문에서 바로 보이지 않는 안쪽에 두었어요"
+    ],
+    "missingCategories": ["desk"],
+    "deadSpaces": [
+      {
+        "id": "dead_1",
+        "polygon": [
+          { "x": 1650, "z": 2750 },
+          { "x": 2050, "z": 2750 },
+          { "x": 2050, "z": 4750 },
+          { "x": 1650, "z": 4750 }
+        ],
+        "maxBox": { "width": 400, "depth": 2000, "heightLimit": 2400 },
+        "suggestedCategories": ["shelf", "storage"]
+      }
+    ],
+    "recommendedItems": [
+      { "catalogItemId": "cat_desk_1200_a", "forSlot": "missing:desk", "fitMarginMm": { "width": 35, "depth": 120 }, "rank": 1 },
+      { "catalogItemId": "cat_shelf_slim_250", "forSlot": "dead:dead_1", "fitMarginMm": { "width": 150, "depth": 1620 }, "rank": 1 }
+    ],
+    "totalPrice": { "amount": 128000, "currency": "KRW" },
+    "partial": false
+  },
+  "postits": [
+    {
+      "postitId": "pin_01HXC1",
+      "type": "guestbook",
+      "proposal": null,
+      "author": { "type": "guest", "id": "guest_7f3a", "displayName": "지수" },
+      "text": "집들이 축하해! 방 진짜 넓어 보인다",
+      "color": "yellow",
+      "anchor": {
+        "targetType": "wall",
+        "targetId": "wall_E",
+        "furnitureInstanceId": null,
+        "point": { "x": 3200, "y": 1500, "z": 3600 },
+        "normal": { "x": -1, "y": 0, "z": 0 }
+      },
+      "createdAt": "2026-11-19T12:10:00Z",
+      "resolved": false
+    },
+    {
+      "postitId": "pin_01HXC2",
+      "type": "proposal",
+      "proposal": {
+        "furnitureInstanceId": "inst_bed_01",
+        "suggestedPosition": { "x": 2600, "z": 1100 },
+        "suggestedRotationDeg": 0
+      },
+      "author": { "type": "guest", "id": "guest_91bc", "displayName": "세연" },
+      "text": "침대 창가로 옮기면 아침에 햇빛 받기 좋을 듯?",
+      "color": "blue",
+      "anchor": {
+        "targetType": "furniture",
+        "targetId": null,
+        "furnitureInstanceId": "inst_bed_01",
+        "point": { "x": 0, "y": 450, "z": 0 },
+        "normal": { "x": 0, "y": 1, "z": 0 }
+      },
+      "createdAt": "2026-11-19T12:20:00Z",
+      "resolved": false
+    }
+  ],
+  "createdAt": "2026-11-19T06:31:00Z",
+  "updatedAt": "2026-11-19T12:20:00Z"
+}

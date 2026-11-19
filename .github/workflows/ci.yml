@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main, dev]
+
+jobs:
+  schema:
+    name: 스키마·fixture 검증
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install --no-audit --no-fund
+        working-directory: packages/schema
+      - run: npm run validate
+        working-directory: packages/schema
+
+  engine:
+    name: 엔진 테스트
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -e ".[dev]"
+        working-directory: services/engine
+      - run: pytest -q
+        working-directory: services/engine
+
+  web:
+    name: 웹 빌드
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        if: ${{ hashFiles('apps/web/package.json') != '' }}
+        with:
+          node-version: 20
+      - run: npm install --no-audit --no-fund && npm run build
+        if: ${{ hashFiles('apps/web/package.json') != '' }}
+        working-directory: apps/web
+      - run: echo "apps/web 프로젝트가 아직 없어 건너뜁니다 (B가 1주차에 생성)"
+        if: ${{ hashFiles('apps/web/package.json') == '' }}

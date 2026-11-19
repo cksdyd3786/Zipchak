@@ -1,0 +1,23 @@
+name: 스키마·API 변경 제안
+description: packages/schema 또는 docs/api.md를 바꿔야 할 때 (코드부터 바꾸지 말 것)
+title: "[schema] "
+labels: [schema-change]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: 바꾸려는 것
+      description: 어느 스키마의 어떤 필드를 추가/변경/삭제하는지
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: 이유와 영향받는 파트
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: 변경 종류
+      options: ["필드 추가 (minor)", "이름 변경·삭제 (major, 전원 합의)"]

@@ -1,0 +1,87 @@
+{
+  "schemaVersion": "1.0",
+  "roomId": "room_01HXA3K9Q2",
+  "ownerId": "user_01HX9ZP1",
+  "name": "민지의 첫 자취방",
+  "source": "manual",
+  "sourceMeta": {
+    "device": null,
+    "roomPlanVersion": null,
+    "rawAssetUrl": null,
+    "templateId": "tpl_5py",
+    "floorplanImageUrl": null
+  },
+  "unit": "mm",
+  "ceilingHeight": 2400,
+  "floorPolygon": [
+    { "x": 0, "z": 0 },
+    { "x": 3200, "z": 0 },
+    { "x": 3200, "z": 4800 },
+    { "x": 0, "z": 4800 }
+  ],
+  "walls": [
+    { "id": "wall_N", "start": { "x": 0, "z": 0 }, "end": { "x": 3200, "z": 0 }, "height": 2400, "thickness": 120 },
+    { "id": "wall_E", "start": { "x": 3200, "z": 0 }, "end": { "x": 3200, "z": 4800 }, "height": 2400, "thickness": 120 },
+    { "id": "wall_S", "start": { "x": 3200, "z": 4800 }, "end": { "x": 0, "z": 4800 }, "height": 2400, "thickness": 120 },
+    { "id": "wall_W", "start": { "x": 0, "z": 4800 }, "end": { "x": 0, "z": 0 }, "height": 2400, "thickness": 120 }
+  ],
+  "openings": [
+    {
+      "id": "door_main",
+      "type": "door",
+      "wallId": "wall_S",
+      "offset": 300,
+      "width": 900,
+      "height": 2100,
+      "sillHeight": 0,
+      "facing": null,
+      "swing": { "kind": "hinged", "hingeSide": "left", "opensInward": true, "maxAngleDeg": 90 }
+    },
+    {
+      "id": "win_1",
+      "type": "window",
+      "wallId": "wall_N",
+      "offset": 800,
+      "width": 1600,
+      "height": 1200,
+      "sillHeight": 900,
+      "facing": "S",
+      "swing": null
+    }
+  ],
+  "fixtures": [
+    {
+      "id": "fix_radiator",
+      "type": "radiator",
+      "footprint": [
+        { "x": 800, "z": 0 },
+        { "x": 2400, "z": 0 },
+        { "x": 2400, "z": 80 },
+        { "x": 800, "z": 80 }
+      ],
+      "height": 600
+    },
+    {
+      "id": "fix_aircon",
+      "type": "aircon",
+      "position": { "x": 3200, "y": 2100, "z": 2400 },
+      "direction": { "x": -1, "z": 0 }
+    }
+  ],
+  "existingFurniture": [
+    {
+      "instanceId": "inst_bed_01",
+      "category": "bed",
+      "catalogItemId": null,
+      "label": "기존 슈퍼싱글 침대",
+      "dimensions": { "width": 1100, "depth": 2000, "height": 450 },
+      "position": { "x": 600, "z": 3700 },
+      "rotationDeg": 0,
+      "movable": true,
+      "detectedBy": "user",
+      "confidence": "high"
+    }
+  ],
+  "createdAt": "2026-11-19T06:30:00Z",
+  "updatedAt": "2026-11-19T06:30:00Z"
+}
