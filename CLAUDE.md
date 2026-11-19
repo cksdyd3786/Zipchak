@@ -43,7 +43,7 @@
 ## 폴더 지도
 
 ```
-apps/ios            A  Swift · RoomPlan
+apps/ios            A  Swift · RoomPlan (+ fixtures/rooms·templates, 카탈로그 데이터는 PR로 제출)
 apps/web            B  React · R3F (social/ 하위는 C)
 services/realtime   C  Socket.io
 services/engine     D  FastAPI · 배치 엔진

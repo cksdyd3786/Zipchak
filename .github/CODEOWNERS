@@ -1,11 +1,15 @@
-# 폴더별 리뷰어 자동 지정. 아래 @A-github-id 등을 실제 GitHub 아이디로 바꾸고 주석(#)을 지운다.
-# 저장소 Settings → Branches → dev 보호 규칙에서 "Require review from Code Owners"를 켜면 강제된다.
+# 폴더별 리뷰어 자동 지정 (docs/team.md 참고).
+# @TODO 줄은 팀원 GitHub 아이디로 바꾸고 맨 앞 # 을 지운다.
+# Settings → Branches → dev 보호 규칙에서 "Require review from Code Owners"를 켜면 강제된다.
 
-# /apps/ios/               @A-github-id
-# /apps/web/               @B-github-id
-# /apps/web/src/social/    @C-github-id
-# /services/realtime/      @C-github-id
-# /services/engine/        @D-github-id
-# /services/api/           @E-github-id
-# /packages/schema/        @E-github-id
-# /docs/api.md             @E-github-id
+# 기본: 통합 리더(E)가 모든 변경을 본다
+*                        @cksdyd3786
+
+/apps/ios/               @jagari @cksdyd3786
+# /apps/web/             @TODO-B @cksdyd3786
+# /apps/web/src/social/  @TODO-C @cksdyd3786
+# /services/realtime/    @TODO-C @cksdyd3786
+# /services/engine/      @TODO-D @cksdyd3786
+/services/api/           @cksdyd3786
+/packages/schema/        @cksdyd3786
+/docs/api.md             @cksdyd3786

@@ -28,7 +28,7 @@ while IFS='|' read -r id part prio title accept; do
 done <<'EOF'
 M1-1|A|Must|정밀 모드: RoomPlan 스캔 → RoomData 변환·업로드|실측 대비 벽 길이 오차 ±3cm (팀원 방 3곳)
 M1-2|B|Must|자유 모드: 치수 입력|입력 후 3초 내 3D 생성
-M1-3|E+B|Must|자유 모드: 원룸 템플릿 3종|선택 후 치수 수정 가능
+M1-3|A+B|Must|자유 모드: 원룸 템플릿 3종|선택 후 치수 수정 가능
 M1-4|B|Should|자유 모드: 다각형 꼭짓점 편집|꼭짓점 8개
 M1-5|B|Could|자유 모드: 평면도 이미지 따라 그리기|기준선 1개로 스케일 보정
 M1-6|D|Could|평면도 자동 벽 인식|단순 원룸 인식률 70%
@@ -38,13 +38,13 @@ M2-3|D|Must|소프트 점수 6항목|항목별 점수 + 사유 문장
 M2-4|D|Must|AI 설명 + 내 방 유형 (LLM)|2~3문장 + 유형 이름
 M2-5|B+D|Should|점수 가중치 직접 조절|바꾸면 재추천
 M2-6|C|Should|내 방 유형 공유 카드|카드에서 초대 링크로 이동
-M3-1|E+D|Must|큐레이션 카탈로그 25종|7개 카테고리, 필드 누락 0, GLB 확보 방법 1주차 결정
+M3-1|A+D|Must|큐레이션 카탈로그 25종|7개 카테고리, 필드 누락 0, GLB 확보 방법 1주차 결정
 M3-2|D|Must|부족 가구 탐지|업무형인데 책상 없으면 missing:desk
 M3-3|D|Must|데드 스페이스 탐지|300×300mm 이상 빈 영역
 M3-4|D|Must|들어감 판정 (정밀 20mm / 자유 50mm)|추천 상품 배치 시 충돌 0
 M3-5|B|Must|3D 프리뷰 + 구매 링크|클릭 시 purchase_click 이벤트
 M3-6|B|Should|예산 필터·합계 금액|합계 실시간 갱신
-M3-8|D+E|Should|인테리어 소품 추천|방 스타일에 맞는 3개
+M3-8|D|Should|인테리어 소품 추천|방 스타일에 맞는 3개
 M4-1|B|Must|RoomData → 3D 렌더|iPhone Safari·Android Chrome·PC 30fps
 M4-2|B|Must|가구 직접 편집·충돌 표시|옮기면 AI 점수 재계산
 M4-3|B|Must|쿼터뷰/탑뷰, 문 반경 표시|

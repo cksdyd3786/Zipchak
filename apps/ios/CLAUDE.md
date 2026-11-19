@@ -11,6 +11,8 @@ RoomPlan으로 방을 스캔해 `CapturedRoom`을 `RoomData`(packages/schema/roo
 | ID | 기능 | 완료 기준 |
 | --- | --- | --- |
 | M1-1 | RoomPlan 스캔 → `RoomData` 변환·업로드 | 실측 대비 벽 길이 오차 ±3cm 이내 (팀원 방 3곳 검증) |
+| M1-3 | 원룸 템플릿 3종 `RoomData` 작성 (4·5·6평) | `packages/schema/fixtures/templates/`에 제출, 스키마 통과 |
+| M3-1 | 카탈로그 25종 수집 (규격·가격·URL·verifiedAt) | 시트 → `catalog*.json` 변환, 스키마 통과, 필드 누락 0 |
 
 ## 변환 규칙 (가장 중요)
 

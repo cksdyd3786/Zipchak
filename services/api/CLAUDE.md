@@ -9,11 +9,10 @@
 | M0-1 | 회원가입/로그인 (이메일 또는 카카오 OAuth 중 1개) → JWT | Must |
 | M0-2 | 내 방 목록·배치안 저장/불러오기 | Must |
 | M0-3 | 퍼널 이벤트 로깅 (`events` 테이블 1개) | Should |
-| M1-3 | 원룸 템플릿 3종 데이터 (`GET /templates`) | Must |
-| M3-1 | 카탈로그 25종 수집·DB (로직은 D) | Must |
-| M3-8 | 인테리어 소품 데이터 (조명·서랍장) | Should |
+| M1-3 | 템플릿 API (`GET /templates`) — 데이터는 A가 작성 | Must |
+| M3-1 | 카탈로그 DB 적재·`GET /catalog` — 수집은 A, 로직은 D | Must |
 
-그 외: `packages/schema` 머지 권한, CI, 배포, Mock 서버.
+그 외: **통합 리더** — 모든 PR 최종 확인, `packages/schema` 머지 권한, CI, 배포, Mock 서버, 통합 데모 진행.
 
 ## 구조
 

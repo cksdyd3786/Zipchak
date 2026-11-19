@@ -17,7 +17,7 @@
 
 | 폴더 | 담당 | 내용 | 스택 |
 | --- | --- | --- | --- |
-| `apps/ios` | **A** | 정밀 모드: RoomPlan 스캔 → `RoomData` 업로드 | Swift, SwiftUI, RoomPlan (iOS 17+) |
+| `apps/ios` | **A** | 정밀 모드: RoomPlan 스캔 → `RoomData` 업로드 (+ 템플릿·카탈로그 데이터 수집) | Swift, SwiftUI, RoomPlan (iOS 17+) |
 | `apps/web` | **B** | 3D 뷰어·에디터, 자유 모드, 마켓 패널 | React + Vite + TS, React Three Fiber |
 | `apps/web/src/social` | **C** | 포스트잇 레이어, 게스트 화면 | React Three Fiber, socket.io-client |
 | `services/realtime` | **C** | 동시 방문·포스트잇 실시간 동기화 | Node 20 + TS, Socket.io |
@@ -26,7 +26,7 @@
 | `packages/schema` | **E** (머지 권한) | 공통 JSON 스키마 + 예시 데이터 | JSON Schema |
 | `docs` | 전원 | 기능 명세, API 계약, 규약 | Markdown |
 
-**자기 폴더만 수정한다.** 다른 파트가 필요하면 `packages/schema/fixtures`의 예시 데이터나 Mock 서버로 개발하고 기다리지 않는다.
+담당자 이름은 [`docs/team.md`](docs/team.md). **자기 폴더만 수정한다.** 다른 파트가 필요하면 `packages/schema/fixtures`의 예시 데이터나 Mock 서버로 개발하고 기다리지 않는다.
 
 ## 처음 시작하기
 

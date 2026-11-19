@@ -29,7 +29,7 @@ for (const file of walk(join(here, "fixtures"))) {
   const rel = file.slice(here.length);
   const name = rel.split("/").pop();
   const data = JSON.parse(readFileSync(file, "utf8"));
-  const checks = rel.includes("/rooms/") || name.startsWith("room")
+  const checks = rel.includes("/rooms/") || rel.includes("/templates/") || name.startsWith("room")
     ? [[validators.room, data]]
     : name.startsWith("catalog")
       ? data.map((item) => [validators.item, item])
