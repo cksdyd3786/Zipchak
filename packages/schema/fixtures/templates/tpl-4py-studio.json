@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "1.0",
+  "roomId": "room_01J0TEMPLATE04PYSTUDIO00",
+  "ownerId": "user_template_system",
+  "name": "4평 오픈형 원룸 (3.0×4.4m)",
+  "source": "template",
+  "sourceMeta": {
+    "device": null,
+    "roomPlanVersion": null,
+    "rawAssetUrl": null,
+    "templateId": "tpl_4py",
+    "floorplanImageUrl": null
+  },
+  "unit": "mm",
+  "ceilingHeight": 2350,
+  "floorPolygon": [
+    { "x": 0, "z": 0 },
+    { "x": 3000, "z": 0 },
+    { "x": 3000, "z": 4400 },
+    { "x": 0, "z": 4400 }
+  ],
+  "walls": [
+    { "id": "wall_N", "start": { "x": 0, "z": 0 }, "end": { "x": 3000, "z": 0 }, "height": 2350, "thickness": 120 },
+    { "id": "wall_E", "start": { "x": 3000, "z": 0 }, "end": { "x": 3000, "z": 4400 }, "height": 2350, "thickness": 120 },
+    { "id": "wall_S", "start": { "x": 3000, "z": 4400 }, "end": { "x": 0, "z": 4400 }, "height": 2350, "thickness": 120 },
+    { "id": "wall_W", "start": { "x": 0, "z": 4400 }, "end": { "x": 0, "z": 0 }, "height": 2350, "thickness": 120 }
+  ],
+  "openings": [
+    {
+      "id": "win_main",
+      "type": "window",
+      "wallId": "wall_N",
+      "offset": 700,
+      "width": 1600,
+      "height": 1200,
+      "sillHeight": 900,
+      "facing": "S",
+      "swing": null
+    },
+    {
+      "id": "door_main",
+      "type": "door",
+      "wallId": "wall_S",
+      "offset": 300,
+      "width": 850,
+      "height": 2050,
+      "sillHeight": 0,
+      "facing": null,
+      "swing": { "kind": "hinged", "hingeSide": "left", "opensInward": true, "maxAngleDeg": 90 }
+    }
+  ],
+  "fixtures": [
+    {
+      "id": "fix_aircon",
+      "type": "aircon",
+      "position": { "x": 3000, "y": 2050, "z": 1200 },
+      "direction": { "x": -1, "z": 0 }
+    },
+    {
+      "id": "fix_outlet_1",
+      "type": "outlet",
+      "position": { "x": 0, "y": 300, "z": 1800 }
+    }
+  ],
+  "existingFurniture": [],
+  "createdAt": "2026-11-21T00:00:00Z",
+  "updatedAt": "2026-11-21T00:00:00Z"
+}
