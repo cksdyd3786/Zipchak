@@ -1,31 +1,75 @@
-# apps/web — 3D 웹 뷰어·에디터 (담당 B, social/는 C)
+# React + TypeScript + Vite
 
-## 시작하기 (B가 1주차에 생성)
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-```bash
-cd apps/web
-npm create vite@latest . -- --template react-ts
-npm install three @react-three/fiber @react-three/drei zustand socket.io-client
-npm install -D tailwindcss @types/three
-npm run dev
+Currently, two official plugins are available:
+
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+
+## React Compiler
+
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+
+## Expanding the ESLint configuration
+
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
+
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+
 ```
 
-## 권장 폴더 구조
+You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
+
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 
 ```
-src/
-  lib/units.ts            mm ↔ m 변환 (유일한 변환 지점)
-  lib/api.ts              REST 클라이언트 (VITE_API_URL)
-  scene/RoomScene.tsx     <RoomScene room layout />  ← B·C 공용 진입점
-  scene/Walls.tsx, Openings.tsx, Furniture.tsx, DoorSwing.tsx
-  editor/                 자유 모드 편집기 (치수 입력·템플릿·꼭짓점)
-  recommend/              취향 질문 → 배치안 카드 3개 → 적용
-  market/                 마켓 패널, 들어감 배지, 구매 링크
-  hooks/useFurniturePick.ts
-  store/                  Zustand
-  social/                 ← C 소유 (PostitLayer, GuestPage, socket.ts)
-```
-
-## Claude 프롬프트 예시
-
-> apps/web/CLAUDE.md를 따라 M4-1을 구현해줘. packages/schema/fixtures/room.sample.json을 읽어서 벽·문·창문·바닥을 R3F로 렌더하고, 단위 변환은 src/lib/units.ts에서만 해줘.
