@@ -33,6 +33,7 @@ gh pr merge --squash
 - 머지 전에 PR 템플릿의 **"Claude가 만든 코드를 직접 읽었고 설명할 수 있다"** 체크박스를 확인한다. 승인은 없어도 이 체크는 생략하지 않는다 (발표 질의응답 대비).
 - **`dev` CI가 빨간불이면 모두 머지를 멈춘다.** 깨뜨린 PR의 작성자가 먼저 고치고(되돌리기 PR도 가능), 초록불이 된 뒤 머지를 재개한다.
 - 공통 경로 목록은 [`.github/CODEOWNERS`](../.github/CODEOWNERS)에 있다. 코드와 공통 파일을 한 PR에 섞으면 PR 전체가 승인 대기가 되므로 나눠 올린다.
+- 공통 경로의 E 승인은 필수 검사 **`공통 경로 승인`**(`.github/workflows/common-approval.yml`)이 강제한다. CODEOWNERS를 읽어 공통 경로를 건드린 팀원 PR에 @cksdyd3786 승인이 없으면 실패하고, 승인이 달리면 자동으로 다시 판정한다. 이 검사가 PR에 안 보여 막혀 있으면 E가 `gh workflow run common-approval.yml --ref dev`로 다시 돌린다.
 - **스키마 변경**(`packages/schema/*.schema.json`)은 PR 전에 `schema-change` 이슈를 먼저 열어 합의한다.
 - `dev`로 가는 PR은 **스쿼시만** 허용한다. 머지 후 브랜치는 자동 삭제된다. (`dev` → `main`만 merge commit을 써서 두 브랜치 이력이 갈라지지 않게 한다.)
 - CI가 실패하면 머지 버튼이 켜지지 않는다. 고쳐서 같은 브랜치에 push하면 CI가 다시 돈다.
