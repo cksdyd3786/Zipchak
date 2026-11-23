@@ -1,7 +1,10 @@
 # 승인이 필요한 경로만 적는다 (docs/workflow.md "머지 규칙" 참고).
 # 여기에 없는 경로(apps/*, services/*, 각 파트 폴더의 CLAUDE.md·README.md)는 소유자가 없다.
 # → CI만 통과하면 작성자가 승인 없이 머지한다.
-# 아래 경로를 건드린 PR은 dev Ruleset의 "Require review from Code Owners"에 따라 @cksdyd3786 승인이 필요하다.
+# 아래 경로를 건드린 PR은 @cksdyd3786 승인이 필요하다. dev Ruleset의 필요 승인 수가 0이면 GitHub가
+# "Require review from Code Owners"를 강제하지 않으므로, 필수 검사 "공통 경로 승인"
+# (.github/workflows/common-approval.yml)이 이 파일을 읽어 대신 강제한다.
+# 이 파일은 "/dir/"(폴더)와 "/file"(파일) 형태만 쓴다. 다른 형태를 쓰려면 .github/scripts/common-approval.js도 고친다.
 
 /docs/                   @cksdyd3786
 /README.md               @cksdyd3786

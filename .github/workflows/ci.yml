@@ -18,6 +18,8 @@ jobs:
         working-directory: packages/schema
       - run: npm run validate
         working-directory: packages/schema
+      - name: .github 스크립트 테스트 (리뷰어 지정·공통 경로 승인)
+        run: node --test .github/scripts/*.test.js
 
   schema-windows:
     name: 스키마 검증 (Windows)
