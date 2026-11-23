@@ -61,3 +61,29 @@ def codes(violations) -> list[str]:
 
 def clone(o):
     return copy.deepcopy(o)
+
+
+def cat_item(item_id: str, category: str, w: int, d: int, h: int, price: int = 50000, clearance=None,
+             style=("minimal",), under_window=True, against_wall="preferred") -> dict:
+    """테스트용 MarketFurnitureItem (스키마 필수 필드 포함)."""
+    return {
+        "schemaVersion": "1.0", "itemId": item_id, "category": category, "name": item_id, "brand": "test", "market": "etc",
+        "purchaseUrl": f"https://example.com/{item_id}", "affiliateUrl": None,
+        "price": {"amount": price, "currency": "KRW"},
+        "dimensions": {"width": w, "depth": d, "height": h},
+        "clearance": {"front": 0, "back": 0, "left": 0, "right": 0, **(clearance or {})},
+        "placementRules": {"againstWall": against_wall, "underWindowAllowed": under_window, "stackable": False},
+        "lifestyleTags": [], "styleTags": list(style), "color": "#CCCCCC",
+        "asset": {"glbUrl": f"/assets/proxy/{item_id}.glb", "thumbnailUrl": None, "assetFidelity": "proxy", "originAtFootprintCenter": True},
+        "status": "available", "verifiedAt": "2026-11-23",
+    }
+
+
+# 기본 테스트 카탈로그: 침대 1종 + 책상 1종 (규격은 #46 카탈로그의 TARVA·LAGKAPTEN 과 같음)
+CATALOG = [
+    cat_item("cat_bed_t", "bed", 980, 2090, 920, 109000, style=("wood", "warm")),
+    cat_item("cat_desk_t", "desk", 1200, 600, 730, 59900, clearance={"front": 700}, style=("minimal", "white")),
+]
+
+WORKER = {"deskHours": "gt4", "monitors": "2plus", "guests": "rare", "sleepSensitivity": "no"}
+HOST = {"deskHours": "1to4", "monitors": "0", "guests": "weekly", "sleepSensitivity": "yes"}
