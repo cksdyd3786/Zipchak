@@ -1,6 +1,6 @@
 import { mmToM } from '../lib/units'
 import type { Opening, Wall } from '../types/schema'
-import { wallFrame } from './Walls'
+import { wallFrame } from './wallGeometry'
 
 /** 창문은 반투명 유리, 문은 닫힌 상태의 문짝으로 그린다. (문 회전 반경 부채꼴은 M4-3 DoorSwing) */
 export function Openings({ walls, openings }: { walls: Wall[]; openings: Opening[] }) {

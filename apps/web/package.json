@@ -1,5 +1,5 @@
 {
-  "name": "web",
+  "name": "zipchak-web",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest run"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.9",
@@ -32,6 +33,7 @@
     "tailwindcss": "^4.3.5",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.72.1",
-    "vite": "^8.3.6"
+    "vite": "^8.3.6",
+    "vitest": "^5.1.1"
   }
 }
