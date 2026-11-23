@@ -195,21 +195,17 @@ def openness(room: Room, grid: Grid) -> tuple[float, str]:
     return round(_clamp(value), 3), why
 
 
-def _free_depth(room: Room, f: Furniture, others: list[Furniture], limit: int) -> int:
-    """가구 정면 앞으로 막힘 없이 비어 있는 깊이 (mm, 50 단위, 최대 limit)."""
-    direction = world_side("front", f.rotation)
+def free_depth(room: Room, r: Rect, direction: tuple[int, int], others: list[Furniture], limit: int) -> int:
+    """사각형 r 의 direction 쪽으로 막힘 없이 비어 있는 깊이 (mm, 50 단위, 최대 limit)."""
     depth = limit
-    # 다른 가구: 정면 띠(limit 깊이)와 겹치는 가구까지의 거리
-    full = side_band(f.rect, direction, limit)
-    r = f.rect
+    full = side_band(r, direction, limit)
     for g in others:
-        if g is f or not full.intersects(g.rect):
+        if not full.intersects(g.rect):
             continue
         q = g.rect
         gap = {(0, 1): q.min_z - r.max_z, (0, -1): r.min_z - q.max_z, (1, 0): q.min_x - r.max_x, (-1, 0): r.min_x - q.max_x}[direction]
         depth = min(depth, max(0, gap))
-    # 벽·고정물: 고정물까지 막은 기본 그리드를 한 줄씩 본다
-    grid = room.base_grid
+    grid = room.base_grid  # 벽·고정물: 고정물까지 막은 기본 그리드를 한 줄씩 본다
     steps = 0
     while steps * CELL_MM < depth:
         band = side_band(r, direction, (steps + 1) * CELL_MM)
@@ -218,6 +214,11 @@ def _free_depth(room: Room, f: Furniture, others: list[Furniture], limit: int) -
             break
         steps += 1
     return min(depth, steps * CELL_MM) // CELL_MM * CELL_MM
+
+
+def _free_depth(room: Room, f: Furniture, others: list[Furniture], limit: int) -> int:
+    """가구 정면 앞으로 비어 있는 깊이."""
+    return free_depth(room, f.rect, world_side("front", f.rotation), [g for g in others if g is not f], limit)
 
 
 def _within(grid: Grid, r: Rect) -> bool:
