@@ -21,6 +21,9 @@
 		AA0002000000000000000012 /* RoomFloorPlan2DView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0002000000000000000012 /* RoomFloorPlan2DView.swift */; };
 		AA0002000000000000000013 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB0002000000000000000013 /* Assets.xcassets */; };
 		AA0002000000000000000014 /* ZipChakCore in Frameworks */ = {isa = PBXBuildFile; productRef = EE0002000000000000000001 /* ZipChakCore */; };
+		AA0002000000000000000015 /* tpl-4py-studio.json in Resources */ = {isa = PBXBuildFile; fileRef = BB0002000000000000000015 /* tpl-4py-studio.json */; };
+		AA0002000000000000000016 /* tpl-5py-studio.json in Resources */ = {isa = PBXBuildFile; fileRef = BB0002000000000000000016 /* tpl-5py-studio.json */; };
+		AA0002000000000000000017 /* tpl-6py-studio.json in Resources */ = {isa = PBXBuildFile; fileRef = BB0002000000000000000017 /* tpl-6py-studio.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +42,9 @@
 		BB0002000000000000000012 /* RoomFloorPlan2DView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomFloorPlan2DView.swift; sourceTree = "<group>"; };
 		BB0002000000000000000013 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BB0002000000000000000014 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BB0002000000000000000015 /* tpl-4py-studio.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = "tpl-4py-studio.json"; path = "../../packages/schema/fixtures/templates/tpl-4py-studio.json"; sourceTree = SOURCE_ROOT; };
+		BB0002000000000000000016 /* tpl-5py-studio.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = "tpl-5py-studio.json"; path = "../../packages/schema/fixtures/templates/tpl-5py-studio.json"; sourceTree = SOURCE_ROOT; };
+		BB0002000000000000000017 /* tpl-6py-studio.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = "tpl-6py-studio.json"; path = "../../packages/schema/fixtures/templates/tpl-6py-studio.json"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +63,7 @@
 			isa = PBXGroup;
 			children = (
 				DD0002000000000000000002 /* ZipChakScan */,
+				DD0002000000000000000010 /* Templates */,
 				DD0002000000000000000003 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -138,6 +145,16 @@
 			path = Preview;
 			sourceTree = "<group>";
 		};
+		DD0002000000000000000010 /* Templates */ = {
+			isa = PBXGroup;
+			children = (
+				BB0002000000000000000015 /* tpl-4py-studio.json */,
+				BB0002000000000000000016 /* tpl-5py-studio.json */,
+				BB0002000000000000000017 /* tpl-6py-studio.json */,
+			);
+			name = Templates;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -199,6 +216,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA0002000000000000000013 /* Assets.xcassets in Resources */,
+				AA0002000000000000000015 /* tpl-4py-studio.json in Resources */,
+				AA0002000000000000000016 /* tpl-5py-studio.json in Resources */,
+				AA0002000000000000000017 /* tpl-6py-studio.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

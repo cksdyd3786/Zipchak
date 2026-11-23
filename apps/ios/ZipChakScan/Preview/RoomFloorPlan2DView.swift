@@ -104,6 +104,26 @@ struct RoomFloorPlan2DView: View {
                         context.fill(p, with: .color(Color.indigo.opacity(0.28)))
                         context.stroke(p, with: .color(Color.indigo.opacity(0.85)), lineWidth: 1.4)
 
+                        // Highlight furniture +Z front edge and outward front indicator arrow
+                        var frontEdge = Path()
+                        frontEdge.move(to: corners[2])
+                        frontEdge.addLine(to: corners[3])
+                        context.stroke(frontEdge, with: .color(Color.teal), style: StrokeStyle(lineWidth: 2.6, lineCap: .round))
+
+                        let frontBaseX = cx + fx * hd
+                        let frontBaseZ = cz + fz * hd
+                        let arrowLenMm = min(220.0, max(110.0, hd * 0.45))
+                        let arrowHalfW = min(90.0, max(55.0, hw * 0.25))
+                        let arrowTip = pt(frontBaseX + fx * arrowLenMm, frontBaseZ + fz * arrowLenMm)
+                        let arrowLeft = pt(frontBaseX - rx * arrowHalfW, frontBaseZ - rz * arrowHalfW)
+                        let arrowRight = pt(frontBaseX + rx * arrowHalfW, frontBaseZ + rz * arrowHalfW)
+                        var arrow = Path()
+                        arrow.move(to: arrowLeft)
+                        arrow.addLine(to: arrowTip)
+                        arrow.addLine(to: arrowRight)
+                        arrow.closeSubpath()
+                        context.fill(arrow, with: .color(Color.teal))
+
                         let label = Text(item.label ?? item.category.koreanName)
                             .font(.system(size: 10, weight: .semibold))
                             .foregroundStyle(.primary)
@@ -201,6 +221,12 @@ struct RoomFloorPlan2DView: View {
                     Text("원점 (0, 0)")
                         .font(.caption2.monospaced())
                         .foregroundStyle(.secondary)
+                    if !room.existingFurniture.isEmpty {
+                        Text("·")
+                        Text("▲ 가구 정면(+Z)")
+                            .font(.caption2.weight(.semibold))
+                            .foregroundStyle(.teal)
+                    }
                 }
                 .padding(.horizontal, 10)
                 .padding(.vertical, 6)

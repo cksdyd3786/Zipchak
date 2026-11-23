@@ -28,6 +28,12 @@ struct RoomPreviewScreen: View {
                     .padding(.horizontal, 16)
                     .padding(.vertical, 8)
 
+                    if !viewModel.activeWarnings.isEmpty {
+                        conversionWarningBanner
+                            .padding(.horizontal, 16)
+                            .padding(.bottom, 8)
+                    }
+
                     Group {
                         switch previewMode {
                         case .preview3D:
@@ -136,6 +142,39 @@ struct RoomPreviewScreen: View {
         }
         .frame(maxHeight: 245)
         .background(Color(.systemBackground))
+    }
+
+    private var conversionWarningBanner: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(alignment: .center, spacing: 8) {
+                Label("스캔 품질 확인 필요", systemImage: "exclamationmark.triangle.fill")
+                    .font(.caption.bold())
+                    .foregroundStyle(.orange)
+
+                Spacer()
+
+                Button {
+                    viewModel.startScan()
+                } label: {
+                    Label("다시 스캔", systemImage: "arrow.counterclockwise")
+                        .font(.caption2.weight(.semibold))
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(Color.orange.opacity(0.18), in: Capsule())
+                        .foregroundStyle(.orange)
+                }
+            }
+
+            ForEach(viewModel.activeWarnings) { warning in
+                Text("• \(warning.koreanMessage)")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .padding(10)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color.orange.opacity(0.10), in: RoundedRectangle(cornerRadius: 12))
     }
 
     private func statBadge(_ label: String, _ value: String) -> some View {
