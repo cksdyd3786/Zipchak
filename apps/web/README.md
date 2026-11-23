@@ -29,3 +29,5 @@ src/
 ## Claude 프롬프트 예시
 
 > apps/web/CLAUDE.md를 따라 M4-1을 구현해줘. packages/schema/fixtures/room.sample.json을 읽어서 벽·문·창문·바닥을 R3F로 렌더하고, 단위 변환은 src/lib/units.ts에서만 해줘.
+
+<!-- 머지 규칙 테스트 (닫을 PR) -->
