@@ -5,7 +5,7 @@ from typing import Any
 
 from fastapi import FastAPI, HTTPException
 
-from app.constraints import validate_layout
+from app.analysis import analyze_layout
 from app.preferences import question_list
 from app.recommend import recommend as recommend_layouts
 
@@ -35,12 +35,11 @@ def recommend(body: dict[str, Any]) -> dict[str, Any]:
 
 @app.post("/v1/layouts:validate")
 def validate(body: dict[str, Any]) -> dict[str, Any]:
-    """M2-2 하드 제약 위반 목록. 점수 재계산(analysis)은 M2-3에서 채운다."""
+    """M2-2 하드 제약 위반 + M2-3 점수 재계산 + M3-3 데드 스페이스 (가구 편집·제안 포스트잇 미리보기)."""
     try:
-        violations = validate_layout(body["room"], body["layout"], body.get("catalog"))
+        return analyze_layout(body["room"], body["layout"], body.get("catalog"))
     except (KeyError, ValueError) as e:
         raise HTTPException(status_code=400, detail={"error": {"code": "VALIDATION_FAILED", "message": str(e), "details": {}}})
-    return {"violations": violations, "analysis": None}
 
 
 @app.post("/v1/fit:search")
