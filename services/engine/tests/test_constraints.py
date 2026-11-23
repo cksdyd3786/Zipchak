@@ -235,11 +235,11 @@ def test_30_templates_empty_ok_and_door_blocking_detected(path):
     assert "DOOR_SWING" in codes(validate_layout(tpl, layout(box)))
 
 
-def test_31_layout_sample_bed_blocks_door():
-    # layout.sample.json 의 침대: 중심 (2600,3750) 1100×2000 → x 2050…3150, z 2750…4750.
-    # 문 부채꼴 x 2000…2900, z 3900…4800 과 겹친다 → 샘플은 예시일 뿐 물리적으로는 위반 (E에게 공유)
+def test_31_layout_sample_bed_clear_of_door():
+    # #66: 침대를 왼쪽 벽 쪽으로 옮김. 중심 (600,3750) 1100×2000 → x 50…1150, z 2750…4750.
+    # 문 부채꼴 x 2000…2900, z 3900…4800 과 안 겹친다 → 샘플이 실제로도 맞는 예시가 된다
     v = validate_layout(load("room.sample.json"), load("layout.sample.json"))
-    assert any(x["code"] == "DOOR_SWING" and x["instanceId"] == "inst_bed_01" for x in v)
+    assert not any(x["code"] == "DOOR_SWING" for x in v), v
 
 
 def test_32_validate_endpoint():
