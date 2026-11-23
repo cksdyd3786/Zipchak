@@ -6,7 +6,8 @@ from typing import Any
 from fastapi import FastAPI, HTTPException
 
 from app.constraints import validate_layout
-from app.preferences import question_list, weights_from_answers
+from app.preferences import question_list
+from app.recommend import recommend as recommend_layouts
 
 app = FastAPI(title="Zipchak Engine", version="0.1.0")
 
@@ -23,9 +24,13 @@ def questions() -> dict[str, Any]:
 
 @app.post("/v1/layouts:recommend")
 def recommend(body: dict[str, Any]) -> dict[str, Any]:
-    # TODO(M2-1~M2-3): 그리드 → 후보 → 하드 제약 → 가중 점수 → 빔 서치 상위 3개
-    weights = body.get("weights") or weights_from_answers(body.get("answers", {}))
-    return {"layouts": [], "partial": True, "weights": weights}
+    """M2-1: 그리드 → 후보 → 하드 제약 → 가중 점수 → 빔 서치 → 침대 위치가 다른 3개."""
+    try:
+        return recommend_layouts(
+            body["room"], body.get("answers") or {}, body.get("weights"), body.get("budget"), body.get("catalog") or []
+        )
+    except (KeyError, ValueError) as e:
+        raise HTTPException(status_code=400, detail={"error": {"code": "VALIDATION_FAILED", "message": str(e), "details": {}}})
 
 
 @app.post("/v1/layouts:validate")
