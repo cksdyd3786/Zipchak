@@ -27,6 +27,7 @@ from app.constraints import (
     furniture_from,
     validate_items,
 )
+from app.explain import explain_layouts, explainer_from_env
 from app.geometry import clearance_zones, footprint
 from app.ids import new_id, now_iso
 from app.missing import is_satisfied, missing_categories
@@ -339,14 +340,19 @@ def _placement(f: Furniture, source: str, catalog_item_id: str | None, locked: b
 
 def recommend(room_data: dict[str, Any], answers: dict[str, str] | None = None, weights: dict[str, float] | None = None,
               budget: int | None = None, catalog: list[dict[str, Any]] | None = None,
-              time_budget: float = TIME_BUDGET_S) -> dict[str, Any]:
+              time_budget: float = TIME_BUDGET_S, explainer: Any = None) -> dict[str, Any]:
     answers = answers or {}
     weights = weights or weights_from_answers(answers)
     room = Room(room_data)
+    llm = explainer if explainer is not None else explainer_from_env()
+    if llm is not None and time_budget == TIME_BUDGET_S:
+        time_budget = TIME_BUDGET_S - 1.0  # 설명(LLM) 1초까지 합쳐 5초 안에 끝나도록
     to_place, fixed = furniture_to_place(room, answers, catalog or [], budget)
     beam, partial = beam_search(room, to_place, fixed, weights, time_budget=time_budget)
     picked = pick_diverse(beam, room, fixed)
     if len(picked) < 3:
         partial = partial or len(picked) < 3
     layouts = [to_layout(room, s, to_place, fixed, answers, weights, budget, partial, i + 1) for i, s in enumerate(picked)]
+    # M2-4: 배치 이유 2~3문장 + 내 방 유형 (LLM_API_KEY 없거나 1초 안에 못 받으면 규칙 기반)
+    explain_layouts(layouts, [s.reasons for s in picked], llm)
     return {"layouts": layouts, "partial": partial}
