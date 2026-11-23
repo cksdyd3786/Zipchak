@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # 기능 ID별 GitHub 이슈와 라벨을 한 번에 만든다. 저장소 루트에서 한 번만 실행.
 # 준비: GitHub CLI 설치 후 `gh auth login`
+# 이미 한 번 실행했다면 다시 돌리지 말 것 (이슈가 중복 생성됨). 새로 추가된 줄만 수동으로 만든다.
 # 사용: bash scripts/create-issues.sh            (현재 폴더의 저장소)
 #       bash scripts/create-issues.sh cksdyd3786/Zipchak
 set -euo pipefail
@@ -16,7 +17,9 @@ label "part:E" "5319e7" "백엔드·통합"
 label "Must" "b60205" "MVP 필수"
 label "Should" "e99695" "권장"
 label "Could" "c5def5" "여유 시"
-label "schema-change" "000000" "스키마·API 변경"
+label "schema-change" "000000" "스키마 변경"
+label "api-change" "5a5a5a" "API 계약 변경"
+label "bug" "d73a4a" "버그"
 
 # ID|파트|우선순위|제목|완료 기준
 while IFS='|' read -r id part prio title accept; do
@@ -56,5 +59,7 @@ M5-4|C|Must|실시간 동시 방문|동시 5명, 지연 300ms 이하
 M0-1|E|Must|로그인|JWT 발급
 M0-2|E|Must|방·배치안 저장/불러오기|
 M0-3|E|Should|퍼널 이벤트 로깅|이벤트 테이블 1개
+M1-3|E|Must|템플릿 API (GET /templates)|A가 만든 템플릿 3종을 그대로 반환
+M3-1|E|Must|카탈로그 DB 적재·GET /catalog|25종 적재, category·maxWidth·maxDepth 필터
 EOF
 echo "완료. 공동 담당(E+B 등)은 첫 파트 라벨만 붙었으니 필요하면 라벨을 더 붙이세요."
