@@ -5,6 +5,7 @@ from typing import Any
 
 from app.constraints import furniture_from, validate_items
 from app.deadspace import detect_dead_spaces
+from app.missing import missing_categories
 from app.preferences import weights_from_answers
 from app.room import Room
 from app.scoring import score_layout, top_reasons
@@ -29,6 +30,7 @@ def analyze_layout(room_data: dict[str, Any], layout: dict[str, Any], catalog: l
         "scoreBreakdown": result["breakdown"],
         "violations": violations,
         "reasons": top_reasons(result, weights),
+        "missingCategories": missing_categories(room_data, (layout.get("preferences") or {}).get("answers") or {}, layout),
         "deadSpaces": detect_dead_spaces(room, items, obstacles),
     }
     return {"violations": violations, "analysis": analysis}

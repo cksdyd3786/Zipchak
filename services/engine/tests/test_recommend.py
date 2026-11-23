@@ -8,7 +8,7 @@ from fastapi.testclient import TestClient
 
 from app.constraints import validate_layout
 from app.main import app
-from app.recommend import recommend, required_categories
+from app.recommend import recommend
 from tests.helpers import CATALOG, HOST, TEMPLATE_FILES, WORKER, load
 
 
@@ -87,11 +87,6 @@ def test_budget_excludes_expensive_items():
     # 예산 50,000원이면 59,900원 책상은 못 넣는다
     lay = recommend(load("room.sample.json"), WORKER, budget=50000, catalog=CATALOG)["layouts"][0]
     assert not any(p["category"] == "desk" for p in lay["placements"])
-
-
-def test_required_categories_rule():
-    assert required_categories({"deskHours": "lt1"}) == ["bed"]
-    assert required_categories({"deskHours": "gt4"}) == ["bed", "desk"]
 
 
 def test_layout_shape_matches_schema_fields():
