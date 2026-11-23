@@ -47,6 +47,8 @@ def test_every_recommended_item_fits_without_new_violations(room, lay):
     res = fit_search(room, lay, None, CATALOG_FULL)["recommendedItems"]
     assert res, "추천이 하나도 없으면 속성 검사가 의미 없다"
     for rec in res:
+        if "onTopOf" in rec["placement"]:
+            continue  # 탁상 소품(M3-8)은 가구 위에 올리므로 바닥 충돌 검사 대상이 아니다
         after = validate_layout(room, _place(lay, rec), CATALOG_FULL)
         assert not [v for v in after if v["instanceId"] == "inst_new"], (rec, after)
         assert len(after) <= before, (rec, after)
@@ -122,6 +124,7 @@ def test_missing_chair_goes_in_front_of_desk():
 
 def test_parse_slot_rejects_bad_value():
     assert parse_slot("missing:desk") == ("missing", "desk")
+    assert parse_slot("decor") == ("decor", "")
     with pytest.raises(ValueError):
         parse_slot("desk")
 

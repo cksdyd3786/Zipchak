@@ -92,9 +92,11 @@ def front_margin(room: Room, f: Furniture, context: list[Furniture], limit: int 
 
 # ---------------------------------------------------------------- 메인
 def parse_slot(slot: str) -> tuple[str, str]:
+    if slot == "decor":
+        return "decor", ""
     kind, _, key = (slot or "").partition(":")
     if kind not in ("dead", "missing") or not key:
-        raise ValueError(f"slot 형식은 'dead:<id>' 또는 'missing:<category>' 이다: {slot!r}")
+        raise ValueError(f"slot 형식은 'dead:<id>' · 'missing:<category>' · 'decor' 이다: {slot!r}")
     return kind, key
 
 
@@ -116,11 +118,15 @@ def fit_search(room_data: dict[str, Any], layout: dict[str, Any], slot: str | No
     else:  # slot 이 없으면 부족 카테고리 + 데드 스페이스 전부
         slots = [f"missing:{c}" for c in missing_categories(room_data, answers, layout)]
         slots += [f"dead:{d['id']}" for d in detect_dead_spaces(room, items, obstacles)]
+        slots.append("decor")
 
     results: list[dict[str, Any]] = []
     for s in slots:
         kind, key = parse_slot(s)
         found: list[tuple[tuple, dict]] = []
+        if kind == "decor":
+            results += _decor(room, room_data, layout, items, obstacles, available, by_id, weights, margin, base_count)
+            continue
         if kind == "dead":
             dead = {d["id"]: d for d in detect_dead_spaces(room, items, obstacles)}.get(key)
             if dead is None:
@@ -177,23 +183,9 @@ def fit_search(room_data: dict[str, Any], layout: dict[str, Any], slot: str | No
             for c in [c for c in available if c["category"] == key]:
                 proto = _catalog_proto(c, f"inst_fit_{c['itemId']}", by_id)
                 context = items + obstacles
-                cands = [cand for cand in wall_candidates(room, proto) if quick_ok(room, cand, context)]
-                # 빠른 점수로 상위 몇 곳만 남긴 뒤, 새 위반 0 인 자리 중 정밀 점수가 가장 좋은 곳
-                cands.sort(key=lambda cand: -_fast_total(room, context + [cand], weights))
-                best = None
-                checked = 0
-                for cand in cands:
-                    if checked >= MAX_POSITIONS_SCORED:
-                        break
-                    if _new_violations(room, items, obstacles, cand, base_count):
-                        continue
-                    checked += 1
-                    sc = score_layout(room, context + [cand], weights)["score"]
-                    if best is None or sc > best[0]:
-                        best = (sc, cand)
-                if best is None:
+                cand = _place_on_wall(room, proto, items, obstacles, weights, base_count)
+                if cand is None:
                     continue
-                cand = best[1]
                 mw, md = wall_run_margin(room, cand, context), front_margin(room, cand, context)
                 if mw < 2 * margin or md < margin:
                     # 벽을 따라 남는 폭이 여유 폭보다 작으면 '딱 맞음' 보장이 없으므로 제외
@@ -219,3 +211,56 @@ def _rec(item: dict[str, Any], slot: str, mw: int, md: int, placed: Furniture) -
 def _fast_total(room: Room, items: list[Furniture], weights: dict[str, float]) -> float:
     b = score_layout_fast(room, items)
     return sum(weights.get(k, 1.0) * b[k] for k in SCORE_KEYS)
+
+
+def _place_on_wall(room: Room, proto: Furniture, items: list[Furniture], obstacles: list[Furniture],
+                   weights: dict[str, float], base_count: int) -> Furniture | None:
+    """빈 벽면 후보 중 새 위반 0 이고 점수가 가장 좋은 자리 (missing 슬롯과 같은 방식)."""
+    context = items + obstacles
+    cands = [c for c in wall_candidates(room, proto) if quick_ok(room, c, context)]
+    cands.sort(key=lambda c: -_fast_total(room, context + [c], weights))
+    best, checked = None, 0
+    for cand in cands:
+        if checked >= MAX_POSITIONS_SCORED:
+            break
+        if _new_violations(room, items, obstacles, cand, base_count):
+            continue
+        checked += 1
+        sc = score_layout(room, context + [cand], weights)["score"]
+        if best is None or sc > best[0]:
+            best = (sc, cand)
+    return best[1] if best else None
+
+
+def _decor(room, room_data, layout, items, obstacles, available, by_id, weights, margin, base_count) -> list[dict[str, Any]]:
+    from app.decor import DECOR_CATEGORIES, TABLETOP_MAX_HEIGHT_MM, TOP_N, room_style, style_match, tabletop_surface
+
+    votes = room_style(layout, room_data, by_id)
+    cands = sorted((c for c in available if c["category"] in DECOR_CATEGORIES),
+                   key=lambda c: (-style_match(c, votes), c["price"]["amount"]))
+    recs: list[dict[str, Any]] = []
+    for c in cands:
+        if len(recs) >= TOP_N:
+            break
+        d = c["dimensions"]
+        if d["height"] <= TABLETOP_MAX_HEIGHT_MM:
+            surface = tabletop_surface(c, items + obstacles)
+            if surface is None:
+                continue
+            rec = _rec(c, "decor", max(surface.width, surface.depth) - max(d["width"], d["depth"]),
+                       min(surface.width, surface.depth) - min(d["width"], d["depth"]), surface)
+            rec["placement"]["onTopOf"] = surface.instance_id
+        else:
+            proto = _catalog_proto(c, f"inst_fit_{c['itemId']}", by_id)
+            cand = _place_on_wall(room, proto, items, obstacles, weights, base_count)
+            if cand is None:
+                continue
+            context = items + obstacles
+            mw, md = wall_run_margin(room, cand, context), front_margin(room, cand, context)
+            if mw < 2 * margin or md < margin:
+                continue
+            rec = _rec(c, "decor", mw, md, cand)
+        rec["styleMatch"] = style_match(c, votes)
+        rec["rank"] = len(recs) + 1
+        recs.append(rec)
+    return recs
