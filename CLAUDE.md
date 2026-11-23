@@ -24,6 +24,9 @@
 | 회전 | `rotationDeg`: Y축 기준 반시계 방향. MVP는 0/90/180/270만 |
 | 가구 기준점 | 바닥면 중심. `width`=X, `depth`=Z, `height`=Y (회전 0도 기준) |
 | 가구 정면 | 회전 0도일 때 **+Z 방향** |
+| 벽 선 | `walls[].start→end`는 **방 안쪽 면** (바닥 윤곽 변과 같은 선), 두께는 바깥쪽 |
+| 문 경첩 `hingeSide` | 방 안쪽에서 문을 볼 때 **왼손 쪽 = `left`** |
+| `clearance.left/right` | 가구 정면에 서서 가구를 볼 때 왼쪽·오른쪽 (회전 0도에서 left = −X) |
 | ID | `prefix_` + ULID (예: `room_01HX...`, `lay_...`, `pin_...`) |
 | 시간 | ISO 8601 UTC 문자열 |
 

@@ -52,7 +52,7 @@ cd packages/schema && npm install && npm run validate
 
 - **한 이슈 = 한 기능 ID = 한 PR.** 브랜치 이름은 `feat/<담당코드>-<기능ID>` (예: `feat/D-M2-2`).
 - `main`(배포) ← `dev`(통합) ← `feat/*`. PR은 `dev`로 보낸다.
-- **코드 PR은 CI 통과 + 팀원 1명 승인(누구든)이면 자동 머지**된다. PR을 열자마자 `gh pr merge --auto --squash`로 예약한다. 리뷰는 당일 안에 하고, 하루 넘게 응답이 없으면 다른 팀원 누구든 승인해도 된다.
+- **코드 PR은 CI 통과 + 팀원 1명 승인(누구든)이면 Squash and merge 버튼이 켜지고**, 작성자나 리뷰어 누구든 머지한다. 자동 머지는 쓰지 않는다. 자동 지정된 리뷰어는 빼지 않고, PR은 항상 `dev`를 base로 연다. 리뷰는 당일 안에 하고, 하루 넘게 응답이 없으면 다른 팀원 누구든 승인해도 된다.
 - `docs/`·루트 `README.md`·`CLAUDE.md`·`packages/schema/`·`.github/`를 건드린 PR은 **E(@cksdyd3786) 승인**이 필요하다.
 - **`dev` CI가 빨간불이면 모두 머지를 멈추고**, 깨뜨린 PR 작성자가 먼저 고친다.
 - 스키마 변경은 `schema-change` 이슈로 먼저 합의한다. 필드 추가는 minor, 삭제·이름 변경은 전원 합의. `dev` → `main`은 통합 데모 날 E만 반영한다.

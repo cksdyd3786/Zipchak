@@ -12,7 +12,8 @@ Closes #
 - [ ] 완료 기준을 만족한다:
 - [ ] 테스트를 추가했다 / 수동 확인 방법을 아래에 적었다
 - [ ] 내 파트 폴더 밖의 파일은 수정하지 않았다 (수정했다면 이유와 담당자 멘션)
-- [ ] `gh pr merge --auto --squash`로 자동 머지를 예약했다 (CI 통과 + 팀원 1명 승인 시 머지)
+- [ ] base가 `dev`다 (다른 feature 브랜치 위에 쌓지 않았다)
+- [ ] 자동 지정된 리뷰어를 빼지 않았다 (승인 + CI 통과 후 Squash and merge)
 - [ ] 공통 경로(`docs/`, 루트 `README.md`·`CLAUDE.md`, `packages/schema/`, `.github/`)를 건드렸다면 @cksdyd3786 승인을 받는다 (스키마 변경은 `schema-change` 이슈 먼저)
 - [ ] `dev` CI가 초록불인 것을 확인했다 (빨간불이면 머지 중단)
 

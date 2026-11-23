@@ -17,15 +17,18 @@ main  ← 배포 (6주차 금요일 이후 동결)
 
 | PR 종류 | 머지 조건 | 누가 머지 |
 | --- | --- | --- |
-| **코드 PR** (`apps/*`, `services/*`, 각 파트 폴더의 `CLAUDE.md`·`README.md`) | CI 통과 + **팀원 1명 승인 (누구든)** | 자동 머지 (작성자가 예약) |
-| **공통 PR** (`/docs/`, `/README.md`, `/CLAUDE.md`, `/packages/schema/`, `/.github/` 중 하나라도 건드림) | CI 통과 + **@cksdyd3786 승인** | 자동 머지 (작성자가 예약) |
+| **코드 PR** (`apps/*`, `services/*`, 각 파트 폴더의 `CLAUDE.md`·`README.md`) | CI 통과 + **팀원 1명 승인 (누구든)** | 작성자 또는 리뷰어 누구든 |
+| **공통 PR** (`/docs/`, `/README.md`, `/CLAUDE.md`, `/packages/schema/`, `/.github/` 중 하나라도 건드림) | CI 통과 + **@cksdyd3786 승인** | 작성자 또는 리뷰어 누구든 |
 | **`dev` → `main`** | 통합 데모 날(2·4·6주차 금요일) | E만 |
 
-- **PR을 열자마자 자동 머지를 예약한다.** CI가 통과하고 승인이 붙는 순간 머지된다.
+- **자동 머지는 쓰지 않는다** (저장소 설정에서 꺼 둠). 승인과 CI가 갖춰지기 전에는 머지 버튼이 회색이고, 갖춰지면 **Squash and merge**가 켜진다. 그때 작성자나 리뷰어 누구든 누른다.
   ```bash
   gh pr create --base dev --fill
-  gh pr merge --auto --squash
+  # 승인 + CI 통과 후
+  gh pr merge --squash
   ```
+- **자동 지정된 리뷰어를 빼지 않는다.** 특히 B·C가 함께 쓰는 파일(`apps/web/src/scene/RoomScene.tsx`, `src/hooks/`)을 바꾸면 상대 파트가 꼭 리뷰어로 남아 있어야 한다.
+- **PR은 `dev`를 base로 연다.** 다른 feature 브랜치를 base로 쌓은 PR(스택 PR)은 브랜치 규칙이 걸리지 않아 리뷰 없이 머지 버튼이 켜진다. 앞 PR이 `dev`에 들어간 뒤 다음 PR을 `dev` 기준으로 올린다.
 - **리뷰는 당일 안에.** 지정된 리뷰어가 하루 넘게 응답이 없으면 **다른 팀원 누구든 승인해도 된다.**
 - 리뷰할 때 보는 것은 3가지다.
   1. **완료 기준**(`docs/features.md`)을 만족하는가
@@ -36,7 +39,7 @@ main  ← 배포 (6주차 금요일 이후 동결)
 - 공통 경로 목록은 [`.github/CODEOWNERS`](../.github/CODEOWNERS)에 있다. 코드와 공통 파일을 한 PR에 섞으면 PR 전체가 승인 대기가 되므로 나눠 올린다.
 - **스키마 변경**(`packages/schema/*.schema.json`)은 PR 전에 `schema-change` 이슈를 먼저 열어 합의한다.
 - `dev`로 가는 PR은 **스쿼시만** 허용한다. 머지 후 브랜치는 자동 삭제된다. (`dev` → `main`만 merge commit을 써서 두 브랜치 이력이 갈라지지 않게 한다.)
-- CI가 실패하면 머지되지 않는다. 고쳐서 같은 브랜치에 push하면 자동 머지 예약은 그대로 유지된다.
+- CI가 실패하면 머지 버튼이 켜지지 않는다. 고쳐서 같은 브랜치에 push하면 CI가 다시 돈다.
 
 ## 이슈
 
