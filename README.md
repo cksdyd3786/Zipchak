@@ -51,8 +51,9 @@ cd packages/schema && npm install && npm run validate
 ## 협업 규칙 요약
 
 - **한 이슈 = 한 기능 ID = 한 PR.** 브랜치 이름은 `feat/<담당코드>-<기능ID>` (예: `feat/D-M2-2`).
-- `main`(배포) ← `dev`(통합) ← `feat/*`. PR은 `dev`로 보내고 다른 파트 1명이 리뷰한다.
-- 스키마(`packages/schema`)는 **E만 머지**한다. 필드 추가는 minor, 삭제·이름 변경은 전원 합의.
+- `main`(배포) ← `dev`(통합) ← `feat/*`. PR은 `dev`로 보낸다.
+- **코드 PR은 CI만 통과하면 승인 없이 작성자가 머지**한다 (`gh pr merge --auto --squash`로 예약). `docs/`·루트 `README.md`·`CLAUDE.md`·`packages/schema/`·`.github/`를 건드린 PR은 **E(@cksdyd3786) 승인**이 필요하다.
+- 스키마 변경은 `schema-change` 이슈로 먼저 합의한다. 필드 추가는 minor, 삭제·이름 변경은 전원 합의. `dev` → `main`은 통합 데모 날 E만 반영한다.
 - 통합 데모는 **2주차·4주차·6주차 금요일**.
 - 자세한 내용: [`docs/workflow.md`](docs/workflow.md), 좌표·단위 규약: [`docs/conventions.md`](docs/conventions.md)
 
