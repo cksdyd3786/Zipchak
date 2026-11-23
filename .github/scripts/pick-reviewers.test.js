@@ -12,16 +12,19 @@ test("glob: ** 는 하위 폴더 전체, * 는 한 단계", () => {
   assert.ok(!globToRegExp("README.md").test("apps/web/README.md"));
 });
 
-test("웹 PR(B 작성) → C", () => {
-  assert.deepStrictEqual(pickReviewers(config, ["apps/web/src/scene/Walls.tsx"], "ps514"), ["seyeon1202"]);
+test("코드 PR은 아무도 자동 지정하지 않는다 (리뷰는 작성자가 직접 요청)", () => {
+  const cases = [
+    [["apps/web/src/scene/Walls.tsx"], "ps514"],
+    [["apps/web/src/social/PostitLayer.tsx", "services/realtime/src/index.ts"], "seyeon1202"],
+    [["apps/ios/ZipChakScan/Info.plist"], "jagari"],
+    [["services/engine/app/main.py"], "sharkless-web"],
+    [["services/api/src/index.ts"], "cksdyd3786"],
+  ];
+  for (const [files, author] of cases) assert.deepStrictEqual(pickReviewers(config, files, author), [], files.join(","));
 });
 
-test("소셜 폴더(C 작성) → B, 웹 규칙의 exclude로 C 자신 대신 B만", () => {
-  assert.deepStrictEqual(pickReviewers(config, ["apps/web/src/social/PostitLayer.tsx"], "seyeon1202"), ["ps514"]);
-});
-
-test("iOS PR(A 작성) → E", () => {
-  assert.deepStrictEqual(pickReviewers(config, ["apps/ios/ZipChakScan/Info.plist"], "jagari"), ["cksdyd3786"]);
+test("파트 폴더의 CLAUDE.md·README.md는 코드 PR 취급 → 지정 없음", () => {
+  assert.deepStrictEqual(pickReviewers(config, ["apps/web/README.md", "services/engine/CLAUDE.md"], "jagari"), []);
 });
 
 test("API 계약(E 작성) → 작성자 E는 빠지고 B, C", () => {
@@ -35,21 +38,33 @@ test("스키마 변경(A 작성) → B, D, E", () => {
   );
 });
 
-test("문서만(E 작성) → 규칙상 E뿐이라 비면 fallback의 B", () => {
-  assert.deepStrictEqual(pickReviewers(config, ["docs/milestones.md"], "cksdyd3786"), ["ps514"]);
+test("문서만(A 작성) → E", () => {
+  assert.deepStrictEqual(pickReviewers(config, ["docs/milestones.md"], "jagari"), ["cksdyd3786"]);
 });
 
-test("여러 파트를 건드리면 합치되 최대 3명", () => {
-  const r = pickReviewers(config, ["apps/web/src/App.tsx", "services/engine/app/main.py", "packages/schema/x.json"], "jagari");
-  assert.ok(r.length <= 3);
-  assert.ok(!r.includes("jagari"));
+test("문서만(E 작성) → E는 빠지고 fallback이 비어 있어 아무도 없음", () => {
+  assert.deepStrictEqual(pickReviewers(config, ["docs/milestones.md"], "cksdyd3786"), []);
 });
 
-test("아이디 대소문자 무시하고 작성자 제외 → 아무도 안 남으면 fallback", () => {
-  // 웹 규칙의 리뷰어는 C뿐인데 작성자가 C(대문자로 들어옴)라 빠지고, fallback E·B가 지정된다
-  assert.deepStrictEqual(pickReviewers(config, ["apps/web/a.ts"], "SEYEON1202"), ["cksdyd3786", "ps514"]);
+test("코드 + 공통을 섞으면 공통 규칙만 적용", () => {
+  assert.deepStrictEqual(pickReviewers(config, ["apps/web/src/App.tsx", ".github/workflows/ci.yml"], "ps514"), ["cksdyd3786"]);
 });
 
-test("파일이 어느 규칙에도 안 맞으면 fallback", () => {
-  assert.deepStrictEqual(pickReviewers(config, ["scripts/x.sh"], "jagari"), ["cksdyd3786", "ps514"]);
+test("여러 공통 규칙이 겹치면 합치되 최대 3명", () => {
+  const r = pickReviewers(config, ["packages/schema/x.json", "docs/api.md"], "jagari");
+  assert.deepStrictEqual(r, ["ps514", "sharkless-web", "cksdyd3786"]);
+});
+
+test("아이디 대소문자 무시하고 작성자 제외", () => {
+  assert.deepStrictEqual(pickReviewers(config, ["README.md"], "CKSDYD3786"), []);
+});
+
+test("파일이 어느 규칙에도 안 맞으면 fallback(빈 목록) → 아무도 없음", () => {
+  assert.deepStrictEqual(config.fallback, []);
+  assert.deepStrictEqual(pickReviewers(config, ["scripts/x.sh"], "jagari"), []);
+});
+
+test("fallback이 없는 설정도 빈 목록으로 처리", () => {
+  const { fallback, ...noFallback } = config;
+  assert.deepStrictEqual(pickReviewers(noFallback, ["scripts/x.sh"], "jagari"), []);
 });

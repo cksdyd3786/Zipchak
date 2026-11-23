@@ -38,8 +38,10 @@
 | --- | --- | --- |
 | GET | `/v1/questions` | → 질문 목록 |
 | POST | `/v1/layouts:recommend` | `{ room, answers, weights?, budget?, catalog }` → `{ layouts, partial }` |
-| POST | `/v1/layouts:validate` | `{ room, layout }` → `{ violations, analysis }` |
+| POST | `/v1/layouts:validate` | `{ room, layout, catalog? }` → `{ violations, analysis }` |
 | POST | `/v1/fit:search` | `{ room, layout, slot, catalog }` → `{ recommendedItems }` |
+
+- `/v1/layouts:validate`의 `catalog`는 `MarketFurnitureItem[]` **선택 필드**다. 엔진은 `layout.placements[].catalogItemId`(및 `room.existingFurniture[]`)를 `itemId`로 찾아 가구별 `clearance`(와 `placementRules.underWindowAllowed`)를 여기서 읽는다. `catalog`가 없거나 해당 항목이 없으면 **카테고리 기본값**(엔진 `DEFAULT_CLEARANCE`)을 쓴다.
 
 ## Socket.io (services/realtime, 담당 C) — 네임스페이스 `/room`, 룸 = `layoutId`
 
