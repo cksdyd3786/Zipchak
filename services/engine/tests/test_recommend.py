@@ -33,8 +33,10 @@ def test_answers_change_result(tpl):
     # 가구가 침대·책상 2개뿐이면 한 배치가 모든 항목에서 가장 좋아(우세) 어떤 가중치든 같은 답이 맞을 수 있다.
     room = _tpl(tpl)
     room["existingFurniture"] = [WARDROBE, CABINET]
-    worker = recommend(room, WORKER, catalog=CATALOG)["layouts"][0]
-    host = recommend(room, HOST, catalog=CATALOG)["layouts"][0]
+    # 이 테스트는 '답에 따라 달라지는지'를 보므로 시간 예산을 넉넉히 준다 (5초 제한은 아래 테스트에서 따로 검사).
+    # CI 러너는 느려서 4.5초 안에 가구 4개를 다 못 놓고 partial 이 될 수 있다.
+    worker = recommend(room, WORKER, catalog=CATALOG, time_budget=30)["layouts"][0]
+    host = recommend(room, HOST, catalog=CATALOG, time_budget=30)["layouts"][0]
     cats = {"bed", "desk", "wardrobe", "storage"}
     assert {p["category"] for p in worker["placements"]} == {p["category"] for p in host["placements"]} == cats
     assert _sig(worker) != _sig(host)
