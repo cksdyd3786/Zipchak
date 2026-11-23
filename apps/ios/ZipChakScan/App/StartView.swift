@@ -215,7 +215,7 @@ struct StartView: View {
         NavigationStack {
             Form {
                 Section("집착 API · 웹 서버 연결") {
-                    TextField("API Base URL (예: http://192.168.0.10:3000)", text: $viewModel.apiBaseURLString)
+                    TextField("API Base URL (예: http://192.168.0.10:4000)", text: $viewModel.apiBaseURLString)
                         .keyboardType(.URL)
                         .textInputAutocapitalization(.never)
                         .autocorrectionDisabled()

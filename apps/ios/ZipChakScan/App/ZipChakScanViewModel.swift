@@ -34,7 +34,7 @@ final class ZipChakScanViewModel {
     let pendingStore = PendingUploadStore()
 
     init() {
-        self.apiBaseURLString = UserDefaults.standard.string(forKey: "zipchak_api_base_url") ?? "http://localhost:3000"
+        self.apiBaseURLString = UserDefaults.standard.string(forKey: "zipchak_api_base_url") ?? "http://localhost:4000"
         self.webBaseURLString = UserDefaults.standard.string(forKey: "zipchak_web_base_url") ?? "http://localhost:5173"
         self.accessToken = UserDefaults.standard.string(forKey: "zipchak_access_token") ?? ""
         refreshPendingScans()

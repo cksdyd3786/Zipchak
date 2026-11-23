@@ -22,6 +22,13 @@
 	<string>1</string>
 	<key>NSCameraUsageDescription</key>
 	<string>방을 정밀 스캔하기 위해 카메라와 LiDAR 센서를 사용합니다.</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+	</dict>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>개발 중인 집착 서버(같은 와이파이의 노트북)에 스캔 결과를 올리기 위해 로컬 네트워크에 접근합니다.</string>
 	<key>UILaunchScreen</key>
 	<dict/>
 	<key>UISupportedInterfaceOrientations</key>
