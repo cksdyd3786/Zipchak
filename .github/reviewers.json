@@ -1,0 +1,55 @@
+{
+  "_comment": "PR 리뷰어 자동 지정 규칙. .github/workflows/auto-reviewers.yml 이 읽는다. 작성자 본인은 항상 빠진다. 지정은 알림일 뿐이고, 머지 조건(승인 필요 여부)은 브랜치 규칙이 정한다.",
+  "team": {
+    "A": "jagari",
+    "B": "ps514",
+    "C": "seyeon1202",
+    "D": "sharkless-web",
+    "E": "cksdyd3786"
+  },
+  "rules": [
+    {
+      "_why": "공통 데이터 규격: 읽는 쪽(웹 B, 엔진 D)과 관리자 E",
+      "paths": ["packages/schema/**"],
+      "reviewers": ["B", "D", "E"]
+    },
+    {
+      "_why": "API 계약: 가장 많이 쓰는 웹 B, 실시간 C, 관리자 E",
+      "paths": ["docs/openapi.yaml", "docs/api.md"],
+      "reviewers": ["B", "C", "E"]
+    },
+    {
+      "_why": "팀 문서·규칙·CI 설정은 E가 관리",
+      "paths": ["docs/**", "README.md", "CLAUDE.md", ".github/**"],
+      "reviewers": ["E"]
+    },
+    {
+      "_why": "iOS는 업로드 API를 만드는 E와 짝",
+      "paths": ["apps/ios/**"],
+      "reviewers": ["E"]
+    },
+    {
+      "_why": "웹은 같은 앱을 쓰는 C, 화면에 엔진 결과를 띄우므로 D",
+      "paths": ["apps/web/**"],
+      "exclude": ["apps/web/src/social/**"],
+      "reviewers": ["C"]
+    },
+    {
+      "_why": "소셜·실시간은 같은 웹 앱의 B와 짝",
+      "paths": ["apps/web/src/social/**", "services/realtime/**"],
+      "reviewers": ["B"]
+    },
+    {
+      "_why": "엔진 결과를 화면에 그리는 B와 짝",
+      "paths": ["services/engine/**"],
+      "reviewers": ["B"]
+    },
+    {
+      "_why": "API 서버는 업로드를 보내는 A, 화면의 B와 짝",
+      "paths": ["services/api/**"],
+      "reviewers": ["A", "B"]
+    }
+  ],
+  "fallback": ["E", "B"],
+  "maxReviewers": 3
+}

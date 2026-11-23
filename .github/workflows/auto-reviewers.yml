@@ -1,0 +1,43 @@
+name: 리뷰어 자동 지정
+
+# PR이 열리거나 Draft에서 Ready로 바뀌면 .github/reviewers.json 규칙대로 리뷰어를 요청한다.
+# pull_request_target: 기본 브랜치(dev)의 규칙·스크립트로 실행하고 PR 코드는 실행하지 않는다.
+on:
+  pull_request_target:
+    types: [opened, reopened, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  assign:
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.ref }}
+          sparse-checkout: .github
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const config = require('./.github/reviewers.json');
+            const { pickReviewers } = require('./.github/scripts/pick-reviewers.js');
+            const pr = context.payload.pull_request;
+            const files = await github.paginate(github.rest.pulls.listFiles, {
+              owner: context.repo.owner, repo: context.repo.repo, pull_number: pr.number, per_page: 100,
+            });
+            const already = (pr.requested_reviewers || []).map((u) => u.login);
+            const reviewers = pickReviewers(config, files.map((f) => f.filename), pr.user.login)
+              .filter((r) => !already.includes(r));
+            core.info(`바뀐 파일 ${files.length}개 → 리뷰어 ${reviewers.join(', ') || '(없음)'}`);
+            if (reviewers.length === 0) return;
+            try {
+              await github.rest.pulls.requestReviewers({
+                owner: context.repo.owner, repo: context.repo.repo, pull_number: pr.number, reviewers,
+              });
+            } catch (e) {
+              // 초대를 아직 수락하지 않은 팀원 등은 실패할 수 있다. PR 등록 자체는 막지 않는다.
+              core.warning(`리뷰어 요청 실패: ${e.message}`);
+            }
