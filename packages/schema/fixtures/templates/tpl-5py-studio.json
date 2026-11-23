@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "1.0",
+  "roomId": "room_01J0TEMPLATE05PYSTUDIO00",
+  "ownerId": "user_template_system",
+  "name": "5평 표준 직사각 원룸 (3.4×4.9m)",
+  "source": "template",
+  "sourceMeta": {
+    "device": null,
+    "roomPlanVersion": null,
+    "rawAssetUrl": null,
+    "templateId": "tpl_5py",
+    "floorplanImageUrl": null
+  },
+  "unit": "mm",
+  "ceilingHeight": 2400,
+  "floorPolygon": [
+    { "x": 0, "z": 0 },
+    { "x": 3400, "z": 0 },
+    { "x": 3400, "z": 4900 },
+    { "x": 0, "z": 4900 }
+  ],
+  "walls": [
+    { "id": "wall_N", "start": { "x": 0, "z": 0 }, "end": { "x": 3400, "z": 0 }, "height": 2400, "thickness": 120 },
+    { "id": "wall_E", "start": { "x": 3400, "z": 0 }, "end": { "x": 3400, "z": 4900 }, "height": 2400, "thickness": 120 },
+    { "id": "wall_S", "start": { "x": 3400, "z": 4900 }, "end": { "x": 0, "z": 4900 }, "height": 2400, "thickness": 120 },
+    { "id": "wall_W", "start": { "x": 0, "z": 4900 }, "end": { "x": 0, "z": 0 }, "height": 2400, "thickness": 120 }
+  ],
+  "openings": [
+    {
+      "id": "win_balcony",
+      "type": "window",
+      "wallId": "wall_N",
+      "offset": 700,
+      "width": 2000,
+      "height": 1500,
+      "sillHeight": 650,
+      "facing": "S",
+      "swing": null
+    },
+    {
+      "id": "door_entry",
+      "type": "door",
+      "wallId": "wall_S",
+      "offset": 350,
+      "width": 900,
+      "height": 2100,
+      "sillHeight": 0,
+      "facing": null,
+      "swing": { "kind": "hinged", "hingeSide": "left", "opensInward": true, "maxAngleDeg": 90 }
+    }
+  ],
+  "fixtures": [
+    {
+      "id": "fix_closet",
+      "type": "closet_builtin",
+      "footprint": [
+        { "x": 0, "z": 3700 },
+        { "x": 600, "z": 3700 },
+        { "x": 600, "z": 4900 },
+        { "x": 0, "z": 4900 }
+      ],
+      "height": 2400
+    },
+    {
+      "id": "fix_aircon",
+      "type": "aircon",
+      "position": { "x": 3400, "y": 2100, "z": 1400 },
+      "direction": { "x": -1, "z": 0 }
+    }
+  ],
+  "existingFurniture": [],
+  "createdAt": "2026-11-21T00:00:00Z",
+  "updatedAt": "2026-11-21T00:00:00Z"
+}
