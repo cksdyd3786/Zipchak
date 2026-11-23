@@ -6,6 +6,7 @@ from typing import Any
 from fastapi import FastAPI, HTTPException
 
 from app.analysis import analyze_layout
+from app.fit import fit_search as run_fit_search
 from app.preferences import question_list
 from app.recommend import recommend as recommend_layouts
 
@@ -44,5 +45,8 @@ def validate(body: dict[str, Any]) -> dict[str, Any]:
 
 @app.post("/v1/fit:search")
 def fit_search(body: dict[str, Any]) -> dict[str, Any]:
-    # TODO(M3-2~M3-4): 부족 가구·데드 스페이스 슬롯에 들어가는 상품 정렬
-    return {"recommendedItems": []}
+    """M3-4: 슬롯('missing:<category>' | 'dead:<id>', 없으면 전부)에 실제로 들어가는 상품만 여유 폭 순으로."""
+    try:
+        return run_fit_search(body["room"], body["layout"], body.get("slot"), body.get("catalog") or [])
+    except (KeyError, ValueError) as e:
+        raise HTTPException(status_code=400, detail={"error": {"code": "VALIDATION_FAILED", "message": str(e), "details": {}}})

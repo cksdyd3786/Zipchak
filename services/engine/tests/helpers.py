@@ -87,3 +87,26 @@ CATALOG = [
 
 WORKER = {"deskHours": "gt4", "monitors": "2plus", "guests": "rare", "sleepSensitivity": "no"}
 HOST = {"deskHours": "1to4", "monitors": "0", "guests": "weekly", "sleepSensitivity": "yes"}
+
+
+# fit:search 테스트용 카탈로그 (규격은 #46 카탈로그에서 가져옴, 이름·URL 은 가짜)
+CATALOG_FULL = [
+    cat_item("cat_desk_730", "desk", 730, 500, 750, 69900, clearance={"front": 700}, style=("minimal", "white")),
+    cat_item("cat_desk_1050", "desk", 1050, 500, 750, 119000, clearance={"front": 700}, style=("minimal", "white")),
+    cat_item("cat_desk_1200", "desk", 1200, 600, 730, 59900, clearance={"front": 700}, style=("minimal", "white")),
+    cat_item("cat_storage_slim", "storage", 520, 180, 390, 40000, clearance={"front": 350}, style=("minimal", "white")),
+    cat_item("cat_storage_slim2", "storage", 540, 180, 710, 15000, clearance={"front": 300}, style=("minimal", "white")),
+    cat_item("cat_shelf_slim_250", "shelf", 250, 380, 1500, 39000, clearance={"front": 300}, style=("wood",), under_window=False, against_wall="required"),
+    cat_item("cat_shelf_233", "shelf", 367, 233, 1006, 17000, clearance={"front": 300}, style=("minimal", "white")),
+    cat_item("cat_shelf_billy", "shelf", 800, 280, 2020, 89900, clearance={"front": 400}, style=("minimal", "white")),
+    cat_item("cat_shelf_kallax", "shelf", 765, 390, 1465, 109000, clearance={"front": 400}, style=("minimal", "white", "modern")),
+    cat_item("cat_bed_900", "bed", 980, 2090, 920, 109000, style=("wood", "warm", "natural")),
+    cat_item("cat_chair_a", "chair", 650, 650, 850, 35000, clearance={"front": 300, "back": 200, "left": 100, "right": 100}, style=("minimal", "dark")),
+    cat_item("cat_chair_b", "chair", 700, 700, 1230, 149000, clearance={"front": 350, "back": 200, "left": 100, "right": 100}, style=("warm", "modern")),
+    cat_item("cat_table_550", "table", 550, 550, 450, 15900, clearance={"front": 300}, style=("minimal", "white")),
+    cat_item("cat_wardrobe_790", "wardrobe", 790, 550, 1760, 139000, clearance={"front": 600}, style=("minimal", "white")),
+    cat_item("cat_lamp_floor", "lamp", 240, 240, 1800, 19900, style=("minimal", "warm", "dark")),
+    cat_item("cat_lamp_desk", "lamp", 150, 150, 400, 9900, style=("wood", "natural"), against_wall="none"),
+    cat_item("cat_decor_plant", "decor", 520, 520, 1670, 139000, clearance={"front": 500}, style=("wood", "warm", "natural")),
+    cat_item("cat_decor_white", "decor", 300, 300, 600, 25000, style=("minimal", "white")),
+]
