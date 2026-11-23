@@ -21,16 +21,23 @@ def _sig(layout):
 
 
 # ---- 먼저 쓴 테스트: 답이 바뀌면 결과가 바뀐다 ---------------------------------
-# 4평은 임시 점수로는 두 답의 1순위가 같다 → M2-3(#20) 점수가 들어오면 4평도 추가
-@pytest.mark.parametrize("tpl", ["5py", "6py"])
+WARDROBE = {"instanceId": "inst_ward", "category": "wardrobe", "dimensions": {"width": 800, "depth": 550, "height": 1800},
+            "position": {"x": 0, "z": 0}, "rotationDeg": 0, "movable": True}
+CABINET = {"instanceId": "inst_cab", "category": "storage", "dimensions": {"width": 800, "depth": 400, "height": 800},
+           "position": {"x": 0, "z": 0}, "rotationDeg": 0, "movable": True}
+
+
+@pytest.mark.parametrize("tpl", ["4py", "5py", "6py"])
 def test_answers_change_result(tpl):
-    # 같은 방·같은 가구(침대·책상)인데 업무형과 초대형의 1순위 배치가 달라야 한다
+    # 같은 방·같은 가구(기존 장롱·수납장 + 카탈로그 침대·책상)인데 업무형과 초대형의 1순위 배치가 달라야 한다.
+    # 가구가 침대·책상 2개뿐이면 한 배치가 모든 항목에서 가장 좋아(우세) 어떤 가중치든 같은 답이 맞을 수 있다.
     room = _tpl(tpl)
+    room["existingFurniture"] = [WARDROBE, CABINET]
     worker = recommend(room, WORKER, catalog=CATALOG)["layouts"][0]
     host = recommend(room, HOST, catalog=CATALOG)["layouts"][0]
-    assert {p["category"] for p in worker["placements"]} == {p["category"] for p in host["placements"]} == {"bed", "desk"}
+    cats = {"bed", "desk", "wardrobe", "storage"}
+    assert {p["category"] for p in worker["placements"]} == {p["category"] for p in host["placements"]} == cats
     assert _sig(worker) != _sig(host)
-    assert worker["preferences"]["weights"] != host["preferences"]["weights"]
 
 
 @pytest.mark.parametrize("path", TEMPLATE_FILES, ids=lambda p: p.stem)

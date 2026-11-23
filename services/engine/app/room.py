@@ -15,6 +15,7 @@ from functools import cached_property
 from typing import Any
 
 from shapely.geometry import Polygon, box
+from shapely.prepared import prep
 
 WINDOW_ZONE_DEPTH_MM = 500  # 창문 앞 이 깊이 안에서는 가구 높이가 창틀(sillHeight) 이하여야 한다
 DOOR_APPROACH_DEPTH_MM = 600  # 문 바로 안쪽 통로 (문 폭 × 600mm) 는 비워 둔다
@@ -151,6 +152,33 @@ class Room:
             if fp and len(fp) >= 3:
                 out.append((f["id"], Polygon([(p["x"], p["z"]) for p in fp]), int(f.get("height", self.ceiling))))
         return out
+
+    @cached_property
+    def prepared(self):
+        return prep(self.polygon)
+
+    @cached_property
+    def fixture_prepared(self) -> list[tuple[str, Any, Polygon]]:
+        return [(fid, prep(poly), poly) for fid, poly, _h in self.fixture_polygons]
+
+    @cached_property
+    def door_zones(self) -> list[tuple[Opening, Polygon | None, Polygon]]:
+        """(문, 회전 부채꼴 또는 None, 문 앞 통로)."""
+        return [(d, d.swing_sector(), d.strip(DOOR_APPROACH_DEPTH_MM)) for d in self.doors]
+
+    @cached_property
+    def window_zones(self) -> list[tuple[Opening, Polygon]]:
+        return [(w, w.window_zone()) for w in self.windows]
+
+    @cached_property
+    def base_grid(self):
+        """고정물까지 막아 둔 그리드 (복사해서 쓴다)."""
+        from app.grid import Grid
+
+        g = Grid.for_polygon(self.polygon)
+        for _fid, poly, _h in self.fixture_polygons:
+            g.block_polygon(poly)
+        return g
 
     def fixed_furniture(self, placed_ids: set[str]) -> list[dict[str, Any]]:
         """배치안에 없는 움직일 수 없는 기존 가구 → 장애물로 취급."""

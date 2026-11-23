@@ -14,7 +14,7 @@ from __future__ import annotations
 import math
 import random
 import time
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from typing import Any
 
 from app.constraints import (
@@ -31,13 +31,13 @@ from app.geometry import clearance_zones, footprint
 from app.ids import new_id, now_iso
 from app.preferences import weights_from_answers
 from app.room import Room, rect_polygon
-from app.scoring import score_layout
+from app.scoring import score_layout, top_reasons
 
 BEAM_WIDTH = 20
 STEP_MM = 100
 TIME_BUDGET_S = 4.5
-PRE_KEEP = 8  # 상태마다 싼 점수 상위 몇 개를 정밀 점수로 볼지
-EXPLORE_KEEP = 4  # 다양성을 위해 무작위로 더 볼 후보 수
+PRE_KEEP = 6  # 상태마다 싼 점수 상위 몇 개를 정밀 점수로 볼지
+EXPLORE_KEEP = 2  # 다양성을 위해 무작위로 더 볼 후보 수
 PLACE_ORDER = ["bed", "desk", "wardrobe", "storage", "shelf", "sofa", "table", "chair", "etc", "lamp", "decor"]
 BED_BUCKET_MM = 600
 MAX_PER_BED_BUCKET = 4
@@ -151,14 +151,15 @@ def quick_ok(room: Room, f: Furniture, placed: list[Furniture]) -> bool:
     if check_walls(room, [f]) or check_doors(room, [f]) or check_windows(room, [f]):
         return False
     # 내 여유 공간이 벽·가구에 막히지 않고, 남의 여유 공간을 내가 막지 않는지
+    allowed = ALLOWED_IN_CLEARANCE.get(f.category, set())
     for _side, zone in clearance_zones(f.rect, f.clearance, f.rotation):
-        if not room.polygon.covers(rect_polygon(zone)):
-            return False
-        allowed = ALLOWED_IN_CLEARANCE.get(f.category, set())
         if any(zone.intersects(g.rect) and g.category not in allowed for g in placed):
             return False
-        for _fid, fpoly, _h in room.fixture_polygons:
-            if rect_polygon(zone).intersection(fpoly).area > 0:
+        zpoly = rect_polygon(zone)
+        if not room.prepared.covers(zpoly):
+            return False
+        for _fid, fprep, fpoly in room.fixture_prepared:
+            if fprep.intersects(zpoly) and fpoly.intersection(zpoly).area > 0:
                 return False
     for g in placed:
         if f.category in ALLOWED_IN_CLEARANCE.get(g.category, set()):
@@ -176,6 +177,7 @@ class State:
     placed: list[Furniture]  # 이번에 놓은 가구 (고정 가구 제외)
     score: int
     breakdown: dict[str, float]
+    reasons: dict[str, str] = field(default_factory=dict)
 
 
 def _bed_key(state: State) -> tuple[int, int, int] | None:
@@ -190,7 +192,7 @@ def beam_search(room: Room, to_place: list[ToPlace], fixed: list[Furniture], wei
     deadline = time.monotonic() + time_budget
     rng = random.Random(seed)
     base = score_layout(room, fixed, weights)
-    beam = [State([], base["score"], base["breakdown"])]
+    beam = [State([], base["score"], base["breakdown"], base["reasons"])]
     partial = False
     for tp in to_place:
         if time.monotonic() > deadline:
@@ -211,7 +213,7 @@ def beam_search(room: Room, to_place: list[ToPlace], fixed: list[Furniture], wei
             chosen = pre[:PRE_KEEP] + rng.sample(pre[PRE_KEEP:], min(EXPLORE_KEEP, max(0, len(pre) - PRE_KEEP)))
             for c in chosen:
                 sc = score_layout(room, context + [c], weights)
-                expanded.append((sc["score"], State(st.placed + [c], sc["score"], sc["breakdown"]), c))
+                expanded.append((sc["score"], State(st.placed + [c], sc["score"], sc["breakdown"], sc["reasons"]), c))
         if not expanded:
             continue  # 이 가구는 놓을 자리가 없다 → 건너뛴다
         expanded.sort(key=lambda t: -t[0])
@@ -312,7 +314,7 @@ def to_layout(room: Room, state: State, to_place: list[ToPlace], fixed: list[Fur
             "score": state.score,
             "scoreBreakdown": state.breakdown,
             "violations": [],
-            "reasons": [],
+            "reasons": top_reasons({"breakdown": state.breakdown, "reasons": state.reasons}, weights) if state.reasons else [],
             "totalPrice": {"amount": price, "currency": "KRW"},
             "partial": partial,
         },
