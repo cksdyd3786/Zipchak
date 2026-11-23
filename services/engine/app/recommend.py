@@ -29,6 +29,7 @@ from app.constraints import (
 )
 from app.geometry import clearance_zones, footprint
 from app.ids import new_id, now_iso
+from app.missing import is_satisfied, missing_categories
 from app.preferences import weights_from_answers
 from app.room import Room, rect_polygon
 from app.scoring import score_layout, top_reasons
@@ -47,12 +48,8 @@ ENGINE_ACTOR = {"type": "engine", "id": "engine@0.1.0", "displayName": "집착 A
 # ---------------------------------------------------------------------------
 # 1. 놓을 가구
 # ---------------------------------------------------------------------------
-def required_categories(answers: dict[str, str]) -> list[str]:
-    """필수 카테고리 (임시 규칙). M3-2(#27)에서 required.json 규칙표로 바꾼다."""
-    cats = ["bed"]
-    if answers.get("deskHours", "1to4") != "lt1":
-        cats.append("desk")
-    return cats
+# 배치안에 따로 놓지 않는 카테고리: 의자는 책상 앞 여유 공간(700) 안에 들어가므로 위치를 따로 잡지 않는다
+NOT_PLACED = {"chair"}
 
 
 @dataclass
@@ -81,9 +78,10 @@ def furniture_to_place(room: Room, answers: dict[str, str], catalog: list[dict[s
         else:
             fixed.append(f)
     have = {t.proto.category for t in movable} | {f.category for f in fixed}
+    fixture_types = {f.get("type") for f in room.data.get("fixtures", [])}
     budget_left = budget
-    for cat in required_categories(answers):
-        if cat in have:
+    for cat in missing_categories(room.data, answers):
+        if cat in NOT_PLACED or is_satisfied(cat, have, fixture_types):
             continue
         item = pick_catalog_item(catalog, cat, budget_left)
         if item is None:
@@ -93,6 +91,7 @@ def furniture_to_place(room: Room, answers: dict[str, str], catalog: list[dict[s
         entry = {"instanceId": new_id("inst"), "category": cat, "catalogItemId": item["itemId"],
                  "dimensions": item["dimensions"], "position": {"x": 0, "z": 0}, "rotationDeg": 0}
         movable.append(ToPlace(furniture_from(entry, by_id), "catalog", item["itemId"], item["price"]["amount"]))
+        have.add(cat)  # 이번에 추천한 가구도 다음 카테고리를 대신할 수 있다 (책상 → 테이블)
     order = {c: i for i, c in enumerate(PLACE_ORDER)}
     movable.sort(key=lambda t: (order.get(t.proto.category, len(order)), -t.proto.width * t.proto.depth))
     return movable, fixed
@@ -315,6 +314,7 @@ def to_layout(room: Room, state: State, to_place: list[ToPlace], fixed: list[Fur
             "scoreBreakdown": state.breakdown,
             "violations": [],
             "reasons": top_reasons({"breakdown": state.breakdown, "reasons": state.reasons}, weights) if state.reasons else [],
+            "missingCategories": missing_categories(room.data, answers),
             "totalPrice": {"amount": price, "currency": "KRW"},
             "partial": partial,
         },
