@@ -8,9 +8,18 @@ const room = io.of("/room");
 
 room.on("connection", (socket) => {
   // TODO(M5-1): token(JWT 또는 inviteToken) 검증 → layoutId 룸 입장
-  socket.on("room:join", ({ layoutId }: { layoutId: string; token: string }) => {
-    socket.join(layoutId);
-  });
+  socket.on(
+    "room:join",
+    async (
+      { layoutId }: { layoutId: string; token: string },
+      reply?: (result: { layoutId: string }) => void,
+    ) => {
+      await socket.join(layoutId);
+      if (typeof reply === "function") {
+        reply({ layoutId });
+      }
+    },
+  );
 
   // TODO(M5-4): presence 10Hz 스로틀 후 같은 룸에 브로드캐스트
   // TODO(M5-2): postit:add → API 저장 → postit:added 브로드캐스트
