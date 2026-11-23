@@ -19,6 +19,38 @@ jobs:
       - run: npm run validate
         working-directory: packages/schema
 
+  schema-windows:
+    name: 스키마 검증 (Windows)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install --no-audit --no-fund
+        working-directory: packages/schema
+      - run: npm run validate
+        working-directory: packages/schema
+
+  ios:
+    name: iOS 테스트·빌드
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Xcode 버전
+        run: xcodebuild -version
+      - name: ZipChakCore 단위 테스트 (swift test)
+        working-directory: apps/ios/ZipChakCore
+        run: swift test
+      - name: ZipChakScan 시뮬레이터 빌드 (서명 없이)
+        run: >
+          xcodebuild
+          -project apps/ios/ZipChakScan.xcodeproj
+          -scheme ZipChakScan
+          -destination 'generic/platform=iOS Simulator'
+          CODE_SIGNING_ALLOWED=NO
+          build
+
   engine:
     name: 엔진 테스트
     runs-on: ubuntu-latest
