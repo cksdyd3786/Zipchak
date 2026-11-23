@@ -12,7 +12,8 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8.2", "httpx>=0.27", "datamodel-code-generator>=0.25"]
+dev = ["pytest>=8.2", "httpx>=0.27", "datamodel-code-generator>=0.25", "opencv-python-headless>=4.9"]
+floorplan = ["opencv-python-headless>=4.9"]  # M1-6 평면도 벽 인식 (서버에서 쓸 때)
 
 [tool.setuptools.packages.find]
 include = ["app*"]
