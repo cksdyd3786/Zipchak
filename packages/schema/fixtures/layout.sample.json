@@ -20,7 +20,7 @@
       "catalogItemId": null,
       "category": "bed",
       "dimensions": { "width": 1100, "depth": 2000, "height": 450 },
-      "position": { "x": 2600, "z": 3750 },
+      "position": { "x": 600, "z": 3750 },
       "rotationDeg": 0,
       "locked": false
     },
@@ -49,10 +49,10 @@
       {
         "id": "dead_1",
         "polygon": [
-          { "x": 1650, "z": 2750 },
-          { "x": 2050, "z": 2750 },
-          { "x": 2050, "z": 4750 },
-          { "x": 1650, "z": 4750 }
+          { "x": 1150, "z": 2750 },
+          { "x": 1550, "z": 2750 },
+          { "x": 1550, "z": 4750 },
+          { "x": 1150, "z": 4750 }
         ],
         "maxBox": { "width": 400, "depth": 2000, "heightLimit": 2400 },
         "suggestedCategories": ["shelf", "storage"]
