@@ -51,8 +51,12 @@ cd packages/schema && npm install && npm run validate
 ## 협업 규칙 요약
 
 - **한 이슈 = 한 기능 ID = 한 PR.** 브랜치 이름은 `feat/<담당코드>-<기능ID>` (예: `feat/D-M2-2`).
-- `main`(배포) ← `dev`(통합) ← `feat/*`. PR은 `dev`로 보낸다.
-- **코드 PR은 CI만 통과하면 승인 없이 작성자가 머지**한다 (`gh pr merge --auto --squash`로 예약). `docs/`·루트 `README.md`·`CLAUDE.md`·`packages/schema/`·`.github/`를 건드린 PR은 **E(@cksdyd3786) 승인**이 필요하다.
+- `main`(배포) ← `dev`(통합) ← `feat/*`. PR은 항상 `dev`로 보낸다. 스택 PR은 쓰지 않고, 다음 브랜치는 앞 PR을 머지한 뒤 `dev`에서 새로 딴다.
+- **코드 PR(`apps/*`, `services/*`)은 CI가 통과하면 작성자가 직접 Squash and merge 한다.** 승인은 필요 없고 자동 머지(auto-merge)는 쓰지 않는다. PR은 작게 만들어 그날 머지한다.
+- `docs/`·루트 `README.md`·`CLAUDE.md`·`packages/schema/`·`.github/`를 건드린 공통 PR은 CI 통과 + **E(@cksdyd3786) 승인**이 필요하고, 승인 후에는 누구든 머지한다.
+- 리뷰는 선택이다. 봐 줬으면 하는 사람에게 작성자가 직접 요청한다 (자동 지정은 공통 경로만). 머지 전 "Claude가 만든 코드를 직접 읽었고 설명할 수 있다" 체크는 꼭 한다.
+- **매주 금요일 30분 통합 시연:** 최신 `dev`로 fixture 스캔 → 배치 → 방문 흐름을 돌려 녹화하고, 깨진 곳은 이슈로 남긴다.
+- **`dev` CI가 빨간불이면 모두 머지를 멈추고**, 깨뜨린 PR 작성자가 먼저 고친다.
 - 스키마 변경은 `schema-change` 이슈로 먼저 합의한다. 필드 추가는 minor, 삭제·이름 변경은 전원 합의. `dev` → `main`은 통합 데모 날 E만 반영한다.
 - 통합 데모는 **2주차·4주차·6주차 금요일**.
 - 자세한 내용: [`docs/workflow.md`](docs/workflow.md), 좌표·단위 규약: [`docs/conventions.md`](docs/conventions.md)

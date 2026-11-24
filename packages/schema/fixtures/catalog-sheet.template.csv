@@ -1,0 +1,2 @@
+itemId,category,name,brand,market,purchaseUrl,priceKRW,widthMm,depthMm,heightMm,clearFrontMm,clearBackMm,clearLeftMm,clearRightMm,againstWall,underWindowAllowed,stackable,lifestyleTags,styleTags,color,glbUrl,thumbnailUrl,assetFidelity,status,verifiedAt
+cat_desk_1200_a,desk,(예시) 심플 컴퓨터 책상 1200,예시브랜드,ohouse,https://example.com/product/desk-1200,89000,1200,600,730,700,0,0,0,preferred,TRUE,FALSE,work,minimal;white,#F2F0EB,https://cdn.example.com/assets/cat_desk_1200_a.glb,,proxy,available,2026-11-19

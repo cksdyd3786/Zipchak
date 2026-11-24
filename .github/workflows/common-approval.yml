@@ -1,0 +1,55 @@
+name: 공통 경로 승인
+
+# 공통 경로(.github/CODEOWNERS)를 건드린 PR에 코드 오너(@cksdyd3786) 승인이 있는지 검사해
+# PR 헤드 커밋에 "공통 경로 승인" check run을 남긴다. dev Ruleset의 필수 검사로 걸어 쓴다.
+# (필요 승인 수 0에서는 GitHub의 "Require review from Code Owners"가 강제되지 않기 때문)
+#
+# - 판정 로직·CODEOWNERS는 항상 기본 브랜치(dev)의 것을 쓰고, PR 코드는 실행하지 않는다.
+# - 리뷰가 달리거나 취소되면 다시 판정한다.
+# - 수동 실행(workflow_dispatch)하면 열린 PR 전체를 다시 판정한다 (필수 검사로 건 직후 기존 PR용).
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review]
+  pull_request_review:
+    types: [submitted, dismissed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+  checks: write
+
+concurrency:
+  group: common-approval-${{ github.event.pull_request.number || 'all' }}
+  cancel-in-progress: false
+
+jobs:
+  evaluate:
+    name: 공통 경로 승인 판정
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          sparse-checkout: .github
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const { parseCodeowners, evaluate } = require('./.github/scripts/common-approval.js');
+            const rules = parseCodeowners(fs.readFileSync('.github/CODEOWNERS', 'utf8'));
+            const { owner, repo } = context.repo;
+            const prs = context.payload.pull_request
+              ? [context.payload.pull_request]
+              : await github.paginate(github.rest.pulls.list, { owner, repo, state: 'open', per_page: 100 });
+            for (const pr of prs) {
+              const files = await github.paginate(github.rest.pulls.listFiles, { owner, repo, pull_number: pr.number, per_page: 100 });
+              const reviews = await github.paginate(github.rest.pulls.listReviews, { owner, repo, pull_number: pr.number, per_page: 100 });
+              const r = evaluate({ rules, files: files.map((f) => f.filename), author: pr.user.login, reviews });
+              core.info(`#${pr.number} → ${r.conclusion}: ${r.title}`);
+              await github.rest.checks.create({
+                owner, repo, head_sha: pr.head.sha, name: '공통 경로 승인',
+                status: 'completed', conclusion: r.conclusion,
+                output: { title: r.title, summary: r.summary },
+              });
+            }

@@ -24,6 +24,9 @@
 | 회전 | `rotationDeg`: Y축 기준 반시계 방향. MVP는 0/90/180/270만 |
 | 가구 기준점 | 바닥면 중심. `width`=X, `depth`=Z, `height`=Y (회전 0도 기준) |
 | 가구 정면 | 회전 0도일 때 **+Z 방향** |
+| 벽 선 | `walls[].start→end`는 **방 안쪽 면** (바닥 윤곽 변과 같은 선), 두께는 바깥쪽 |
+| 문 경첩 `hingeSide` | 방 안쪽에서 문을 볼 때 **왼손 쪽 = `left`** |
+| `clearance.left/right` | 가구 정면에 서서 가구를 볼 때 왼쪽·오른쪽 (회전 0도에서 left = −X) |
 | ID | `prefix_` + ULID (예: `room_01HX...`, `lay_...`, `pin_...`) |
 | 시간 | ISO 8601 UTC 문자열 |
 
@@ -37,6 +40,7 @@
 - 요청에는 **기능 ID**(예: M2-2)가 붙는다. 해당 기능의 완료 기준은 `docs/features.md`에 있다. 완료 기준을 테스트로 먼저 쓰고 구현한다.
 - 다른 파트의 서버가 아직 없으면 `packages/schema/fixtures/*.json`과 Mock 서버로 개발한다.
 - 변경은 작게. 한 PR에는 한 기능 ID만 담는다.
+- PR의 base는 항상 `dev`다. 다른 feature 브랜치 위에 쌓지 않는다(스택 PR 금지). 앞 기능이 필요하면 그 PR이 머지된 뒤 최신 `dev`에서 새 브랜치를 딴다. 코드 PR은 CI 통과 후 작성자가 직접 Squash and merge 하고, auto-merge는 예약하지 않는다 (`docs/workflow.md`).
 - 코드 주석·커밋 메시지는 한국어 또는 영어 중 팀이 정한 것을 따른다 (기본: 커밋 제목은 `feat(M2-2): 문 회전 반경 충돌 검사`).
 - 확신이 없는 설계 결정(스키마, API 모양, 폴더 구조)은 구현 전에 사람에게 묻는다.
 
