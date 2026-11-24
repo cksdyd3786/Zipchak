@@ -102,6 +102,24 @@ export function GuestInviteRoute({ apiUrl, token, signupUrl }: {
   return <GuestPage invite={invite} signupUrl={signupUrl} />
 }
 
+export function GuestLinkPage({ pathname, apiUrl, signupUrl }: {
+  pathname: string
+  apiUrl: string
+  signupUrl?: string
+}) {
+  const match = /^\/v\/([^/]+)\/?$/.exec(pathname)
+  if (!match) return <GuestPage invite={{ status: 'not-found' }} />
+
+  let token: string
+  try {
+    token = decodeURIComponent(match[1])
+  } catch {
+    return <GuestPage invite={{ status: 'not-found' }} />
+  }
+
+  return <GuestInviteRoute key={token} apiUrl={apiUrl} token={token} signupUrl={signupUrl} />
+}
+
 // 테스트용 경로만 예시 데이터를 사용한다.
 export default function GuestPreview() {
   const path = window.location.pathname.replace(/\/$/, '')
@@ -114,17 +132,7 @@ export default function GuestPreview() {
       return <GuestPage invite={{ status: 'ready', room, permission: 'postit' }} />
     case '/v/expired':
       return <GuestPage invite={{ status: 'expired' }} />
-    default: {
-      const match = /^\/v\/([^/]+)$/.exec(path)
-      if (!match) return <GuestPage invite={{ status: 'not-found' }} />
-      let token: string
-      try {
-        token = decodeURIComponent(match[1])
-      } catch {
-        return <GuestPage invite={{ status: 'not-found' }} />
-      }
-      const apiUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:4000'
-      return <GuestInviteRoute key={token} apiUrl={apiUrl} token={token} />
-    }
+    default:
+      return <GuestLinkPage pathname={path} apiUrl={import.meta.env.VITE_API_URL ?? 'http://localhost:4000'} />
   }
 }
