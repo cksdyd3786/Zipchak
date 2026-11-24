@@ -1,0 +1,1280 @@
+[
+  {
+    "schemaVersion": "1.0",
+    "itemId": "cat_desk_micke_730",
+    "category": "desk",
+    "name": "MICKE 미케 책상 73x50 (화이트)",
+    "brand": "IKEA",
+    "market": "ikea",
+    "purchaseUrl": "https://www.ikea.com/kr/ko/p/micke-desk-white-80354281/",
+    "affiliateUrl": null,
+    "price": {
+      "amount": 69900,
+      "currency": "KRW"
+    },
+    "dimensions": {
+      "width": 730,
+      "depth": 500,
+      "height": 750
+    },
+    "clearance": {
+      "front": 700,
+      "back": 0,
+      "left": 0,
+      "right": 0
+    },
+    "placementRules": {
+      "againstWall": "preferred",
+      "underWindowAllowed": true,
+      "stackable": false
+    },
+    "lifestyleTags": [
+      "work"
+    ],
+    "styleTags": [
+      "minimal",
+      "white"
+    ],
+    "asset": {
+      "glbUrl": "https://web-api.ikea.com/dimma/assets/1.2/80354281/PS01_S01_NV01/iqp3/glb_draco/083d08bd587b4a07bce5cb3a571f883f-80354281_PS01_S01_NV01_iqp3_v1.4.11.glb",
+      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/micke-desk-white__0736022_pe740349_s5.jpg",
+      "assetFidelity": "official",
+      "originAtFootprintCenter": true
+    },
+    "sponsor": {
+      "isSponsored": false,
+      "boost": 0
+    },
+    "status": "available",
+    "verifiedAt": "2026-11-23",
+    "color": "#F4F4F2"
+  },
+  {
+    "schemaVersion": "1.0",
+    "itemId": "cat_desk_micke_1050",
+    "category": "desk",
+    "name": "MICKE 미케 책상 105x50 (화이트)",
+    "brand": "IKEA",
+    "market": "ikea",
+    "purchaseUrl": "https://www.ikea.com/kr/ko/p/micke-desk-white-80354276/",
+    "affiliateUrl": null,
+    "price": {
+      "amount": 119000,
+      "currency": "KRW"
+    },
+    "dimensions": {
+      "width": 1050,
+      "depth": 500,
+      "height": 750
+    },
+    "clearance": {
+      "front": 700,
+      "back": 0,
+      "left": 0,
+      "right": 0
+    },
+    "placementRules": {
+      "againstWall": "preferred",
+      "underWindowAllowed": true,
+      "stackable": false
+    },
+    "lifestyleTags": [
+      "work",
+      "storage"
+    ],
+    "styleTags": [
+      "minimal",
+      "white"
+    ],
+    "asset": {
+      "glbUrl": "https://web-api.ikea.com/dimma/assets/1.2/80354276/PS01_S01_NV01/rqp3/glb_draco/370fd7aeef434e99a96c0817370cc437-80354276_PS01_S01_NV01_RQP3_3.0.glb",
+      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/micke-desk-white__0736018_pe740345_s5.jpg",
+      "assetFidelity": "official",
+      "originAtFootprintCenter": true
+    },
+    "sponsor": {
+      "isSponsored": false,
+      "boost": 0
+    },
+    "status": "available",
+    "verifiedAt": "2026-11-23",
+    "color": "#F4F4F2"
+  },
+  {
+    "schemaVersion": "1.0",
+    "itemId": "cat_desk_lagkapten_1200",
+    "category": "desk",
+    "name": "LAGKAPTEN 락캅텐 / ADILS 아딜스 책상 120x60 (화이트)",
+    "brand": "IKEA",
+    "market": "ikea",
+    "purchaseUrl": "https://www.ikea.com/kr/ko/p/lagkapten-adils-desk-white-s09416759/",
+    "affiliateUrl": null,
+    "price": {
+      "amount": 59900,
+      "currency": "KRW"
+    },
+    "dimensions": {
+      "width": 1200,
+      "depth": 600,
+      "height": 730
+    },
+    "clearance": {
+      "front": 700,
+      "back": 0,
+      "left": 0,
+      "right": 0
+    },
+    "placementRules": {
+      "againstWall": "preferred",
+      "underWindowAllowed": true,
+      "stackable": false
+    },
+    "lifestyleTags": [
+      "work"
+    ],
+    "styleTags": [
+      "minimal",
+      "white"
+    ],
+    "asset": {
+      "glbUrl": "https://web-api.ikea.com/dimma/assets/geomagical/29416758/PS01_S01_NV_01/simple/glb_draco/7e0ab0e20e394146946f36c899c0e7f4-G-29416758-de80d3edad569bdd8b5f0c000ffe1f6ee7f5ffbd-simple+draco.glb",
+      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/lagkapten-adils-desk-white__0977229_pe813472_s5.jpg",
+      "assetFidelity": "official",
+      "originAtFootprintCenter": true
+    },
+    "sponsor": {
+      "isSponsored": false,
+      "boost": 0
+    },
+    "status": "available",
+    "verifiedAt": "2026-11-23",
+    "color": "#F6F6F4"
+  },
+  {
+    "schemaVersion": "1.0",
+    "itemId": "cat_desk_trotten_1200",
+    "category": "desk",
+    "name": "TROTTEN 트로텐 책상 120x70 (화이트)",
+    "brand": "IKEA",
+    "market": "ikea",
+    "purchaseUrl": "https://www.ikea.com/kr/ko/p/trotten-desk-white-s39621918/",
+    "affiliateUrl": null,
+    "price": {
+      "amount": 149000,
+      "currency": "KRW"
+    },
+    "dimensions": {
+      "width": 1200,
+      "depth": 700,
+      "height": 750
+    },
+    "clearance": {
+      "front": 700,
+      "back": 0,
+      "left": 0,
+      "right": 0
+    },
+    "placementRules": {
+      "againstWall": "preferred",
+      "underWindowAllowed": true,
+      "stackable": false
+    },
+    "lifestyleTags": [
+      "work"
+    ],
+    "styleTags": [
+      "minimal",
+      "white",
+      "modern"
+    ],
+    "asset": {
+      "glbUrl": "https://web-api.ikea.com/dimma/assets/geomagical/59621917/PS01_S01_NV_01/simple/glb/583bfc2ac49824dabd7f152756a7856a-G-59621917-8ee4d09d644bfde6300374469eebfc3661cefa28-simple.glb",
+      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/trotten-desk-white__1517365_pe1012269_s5.jpg",
+      "assetFidelity": "official",
+      "originAtFootprintCenter": true
+    },
+    "sponsor": {
+      "isSponsored": false,
+      "boost": 0
+    },
+    "status": "available",
+    "verifiedAt": "2026-11-23",
+    "color": "#F5F5F3"
+  },
+  {
+    "schemaVersion": "1.0",
+    "itemId": "cat_desk_lagkapten_alex_1400",
+    "category": "desk",
+    "name": "LAGKAPTEN 락캅텐 / ALEX 알렉스 책상 140x60 (화이트)",
+    "brand": "IKEA",
+    "market": "ikea",
+    "purchaseUrl": "https://www.ikea.com/kr/ko/p/lagkapten-alex-desk-white-s79431983/",
+    "affiliateUrl": null,
+    "price": {
+      "amount": 287900,
+      "currency": "KRW"
+    },
+    "dimensions": {
+      "width": 1400,
+      "depth": 600,
+      "height": 730
+    },
+    "clearance": {
+      "front": 700,
+      "back": 0,
+      "left": 0,
+      "right": 0
+    },
+    "placementRules": {
+      "againstWall": "preferred",
+      "underWindowAllowed": true,
+      "stackable": false
+    },
+    "lifestyleTags": [
+      "work",
+      "storage"
+    ],
+    "styleTags": [
+      "minimal",
+      "white",
+      "modern"
+    ],
+    "asset": {
+      "glbUrl": "https://web-api.ikea.com/dimma/assets/geomagical/99431982/PS01_S01_NV_01/simple/glb_draco/7f531f06993a400d86580f12ad790fe7-G-99431982-c43512c8d95098d59bb54949d9e5bfdb6e69ba52-simple+draco.glb",
+      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/lagkapten-alex-desk-white__1022432_pe832720_s5.jpg",
+      "assetFidelity": "official",
+      "originAtFootprintCenter": true
+    },
+    "sponsor": {
+      "isSponsored": false,
+      "boost": 0
+    },
+    "status": "available",
+    "verifiedAt": "2026-11-23",
+    "color": "#F2F2F0"
+  },
+  {
+    "schemaVersion": "1.0",
+    "itemId": "cat_storage_trones_slim_180",
+    "category": "storage",
+    "name": "TRONES 트로네스 슬림 신발장/수납장 2개세트 52x18x39",
+    "brand": "IKEA",
+    "market": "ikea",
+    "purchaseUrl": "https://www.ikea.com/kr/ko/p/trones-shoe-cabinet-storage-white-80397308/",
+    "affiliateUrl": null,
+    "price": {
+      "amount": 40000,
+      "currency": "KRW"
+    },
+    "dimensions": {
+      "width": 520,
+      "depth": 180,
+      "height": 390
+    },
+    "clearance": {
+      "front": 350,
+      "back": 0,
+      "left": 0,
+      "right": 0
+    },
+    "placementRules": {
+      "againstWall": "required",
+      "underWindowAllowed": true,
+      "stackable": true
+    },
+    "lifestyleTags": [
+      "storage"
+    ],
+    "styleTags": [
+      "minimal",
+      "white",
+      "slim"
+    ],
+    "asset": {
+      "glbUrl": "https://web-api.ikea.com/dimma/assets/geomagical/00397307/PS01_S01_NV_01/simple/glb_draco/bfcdd53c9275470794f36e63a2a71509-G-00397307-98087ed690722e1c14566bc7f9a2a1d30c1eee2b-simple+draco.glb",
+      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/trones-shoe-cabinet-storage-white__0710711_pe727734_s5.jpg",
+      "assetFidelity": "official",
+      "originAtFootprintCenter": true
+    },
+    "sponsor": {
+      "isSponsored": false,
+      "boost": 0
+    },
+    "status": "available",
+    "verifiedAt": "2026-11-23",
+    "color": "#F5F5F5"
+  },
+  {
+    "schemaVersion": "1.0",
+    "itemId": "cat_storage_vesken_slim_180",
+    "category": "storage",
+    "name": "VESKEN 베스켄 슬림 트롤리 54x18x71 (화이트)",
+    "brand": "IKEA",
+    "market": "ikea",
+    "purchaseUrl": "https://www.ikea.com/kr/ko/p/vesken-trolley-white-10613909/",
+    "affiliateUrl": null,
+    "price": {
+      "amount": 15000,
+      "currency": "KRW"
+    },
+    "dimensions": {
+      "width": 540,
+      "depth": 180,
+      "height": 710
+    },
+    "clearance": {
+      "front": 300,
+      "back": 0,
+      "left": 0,
+      "right": 0
+    },
+    "placementRules": {
+      "againstWall": "none",
+      "underWindowAllowed": true,
+      "stackable": false
+    },
+    "lifestyleTags": [
+      "storage"
+    ],
+    "styleTags": [
+      "minimal",
+      "white",
+      "slim"
+    ],
+    "asset": {
+      "glbUrl": "https://web-api.ikea.com/dimma/assets/1.2/10613909/PS01_S01_NV01/rqp3/glb_draco/d27b3df60377dba5b0bddf953294606a-10613909_PS01_S01_NV01_RQP3_4.0.glb",
+      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/vesken-trolley-white__1418594_pe976656_s5.jpg",
+      "assetFidelity": "official",
+      "originAtFootprintCenter": true
+    },
+    "sponsor": {
+      "isSponsored": false,
+      "boost": 0
+    },
+    "status": "available",
+    "verifiedAt": "2026-11-23",
+    "color": "#F7F7F7"
+  },
+  {
+    "schemaVersion": "1.0",
+    "itemId": "cat_shelf_vesken_slim_233",
+    "category": "shelf",
+    "name": "VESKEN 베스켄 슬림 선반유닛 37x23x101 (화이트)",
+    "brand": "IKEA",
+    "market": "ikea",
+    "purchaseUrl": "https://www.ikea.com/kr/ko/p/vesken-shelf-unit-white-20307867/",
+    "affiliateUrl": null,
+    "price": {
+      "amount": 17000,
+      "currency": "KRW"
+    },
+    "dimensions": {
+      "width": 367,
+      "depth": 233,
+      "height": 1006
+    },
+    "clearance": {
+      "front": 300,
+      "back": 0,
+      "left": 0,
+      "right": 0
+    },
+    "placementRules": {
+      "againstWall": "preferred",
+      "underWindowAllowed": false,
+      "stackable": false
+    },
+    "lifestyleTags": [
+      "storage"
+    ],
+    "styleTags": [
+      "minimal",
+      "white",
+      "slim"
+    ],
+    "asset": {
+      "glbUrl": "https://web-api.ikea.com/dimma/assets/geomagical/40307866/PS01_S01_NV_01/simple/glb_draco/162c6d1a5b1f4eeab7deb1bfe5484c6f-G-40307866-40f460c492946f9e59e06a307b6abfeef0e3dfdb-simple+draco.glb",
+      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/vesken-shelf-unit-white__0419316_pe576206_s5.jpg",
+      "assetFidelity": "official",
+      "originAtFootprintCenter": true
+    },
+    "sponsor": {
+      "isSponsored": false,
+      "boost": 0
+    },
+    "status": "available",
+    "verifiedAt": "2026-11-23",
+    "color": "#F7F7F7"
+  },
+  {
+    "schemaVersion": "1.0",
+    "itemId": "cat_shelf_billy_800",
+    "category": "shelf",
+    "name": "BILLY 빌리 책장 80x28x202 (화이트)",
+    "brand": "IKEA",
+    "market": "ikea",
+    "purchaseUrl": "https://www.ikea.com/kr/ko/p/billy-bookcase-white-00522047/",
+    "affiliateUrl": null,
+    "price": {
+      "amount": 89900,
+      "currency": "KRW"
+    },
+    "dimensions": {
+      "width": 800,
+      "depth": 280,
+      "height": 2020
+    },
+    "clearance": {
+      "front": 400,
+      "back": 0,
+      "left": 0,
+      "right": 0
+    },
+    "placementRules": {
+      "againstWall": "required",
+      "underWindowAllowed": false,
+      "stackable": false
+    },
+    "lifestyleTags": [
+      "storage",
+      "work"
+    ],
+    "styleTags": [
+      "minimal",
+      "white"
+    ],
+    "asset": {
+      "glbUrl": "https://web-api.ikea.com/dimma/assets/1.2/00522047/PS01_S01_NV01/rqp3/glb_draco/00522047_PS01_S01_NV01_RQP3_4.0_03890849055f43b8ac35482f7e01cf6f.glb",
+      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/billy-bookcase-white__1590272_pe1038911_s5.jpg",
+      "assetFidelity": "official",
+      "originAtFootprintCenter": true
+    },
+    "sponsor": {
+      "isSponsored": false,
+      "boost": 0
+    },
+    "status": "available",
+    "verifiedAt": "2026-11-23",
+    "color": "#F4F4F2"
+  },
+  {
+    "schemaVersion": "1.0",
+    "itemId": "cat_shelf_kallax_770",
+    "category": "shelf",
+    "name": "KALLAX 칼락스 선반유닛 77x39x147 (화이트)",
+    "brand": "IKEA",
+    "market": "ikea",
+    "purchaseUrl": "https://www.ikea.com/kr/ko/p/kallax-shelving-unit-white-20351884/",
+    "affiliateUrl": null,
+    "price": {
+      "amount": 109000,
+      "currency": "KRW"
+    },
+    "dimensions": {
+      "width": 765,
+      "depth": 390,
+      "height": 1465
+    },
+    "clearance": {
+      "front": 400,
+      "back": 0,
+      "left": 0,
+      "right": 0
+    },
+    "placementRules": {
+      "againstWall": "preferred",
+      "underWindowAllowed": false,
+      "stackable": false
+    },
+    "lifestyleTags": [
+      "storage",
+      "rest"
+    ],
+    "styleTags": [
+      "minimal",
+      "white",
+      "modern"
+    ],
+    "asset": {
+      "glbUrl": "https://web-api.ikea.com/dimma/assets/1.2/20351884/PS01_S01_NV01/iqp3/glb_draco/c59e88a945c14f68b56e9d83bb22faf9-20351884_PS01_S01_NV01_iqp3_v1.4.11.glb",
+      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/kallax-shelving-unit-white__0644757_pe702939_s5.jpg",
+      "assetFidelity": "official",
+      "originAtFootprintCenter": true
+    },
+    "sponsor": {
+      "isSponsored": false,
+      "boost": 0
+    },
+    "status": "available",
+    "verifiedAt": "2026-11-23",
+    "color": "#F5F5F3"
+  },
+  {
+    "schemaVersion": "1.0",
+    "itemId": "cat_bed_tarva_900",
+    "category": "bed",
+    "name": "TARVA 타르바 원목 침대프레임 90x200 (소나무)",
+    "brand": "IKEA",
+    "market": "ikea",
+    "purchaseUrl": "https://www.ikea.com/kr/ko/p/tarva-bed-frame-pine-20354463/",
+    "affiliateUrl": null,
+    "price": {
+      "amount": 109000,
+      "currency": "KRW"
+    },
+    "dimensions": {
+      "width": 980,
+      "depth": 2090,
+      "height": 920
+    },
+    "clearance": {
+      "front": 500,
+      "back": 0,
+      "left": 500,
+      "right": 0
+    },
+    "placementRules": {
+      "againstWall": "required",
+      "underWindowAllowed": true,
+      "stackable": false
+    },
+    "lifestyleTags": [
+      "rest"
+    ],
+    "styleTags": [
+      "wood",
+      "warm",
+      "natural"
+    ],
+    "asset": {
+      "glbUrl": "https://web-api.ikea.com/dimma/assets/geomagical/30261270/PS01_S01_NV_01/simple/glb/28005b9c8bcb20c7fb7c11ca75101e33-G-30261270-d0a12f7217c99c25d778349302e5c55560e81b4d-simple.glb",
+      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/tarva-bed-frame-pine__0655004_pe708894_s5.jpg",
+      "assetFidelity": "official",
+      "originAtFootprintCenter": true
+    },
+    "sponsor": {
+      "isSponsored": false,
+      "boost": 0
+    },
+    "status": "available",
+    "verifiedAt": "2026-11-23",
+    "color": "#D7B98E"
+  },
+  {
+    "schemaVersion": "1.0",
+    "itemId": "cat_bed_vihals_900",
+    "category": "bed",
+    "name": "VIHALS 비할스 침대프레임+수납상자2 90x200 (화이트)",
+    "brand": "IKEA",
+    "market": "ikea",
+    "purchaseUrl": "https://www.ikea.com/kr/ko/p/vihals-bed-frame-with-2-storage-boxes-white-luroey-s39581984/",
+    "affiliateUrl": null,
+    "price": {
+      "amount": 244000,
+      "currency": "KRW"
+    },
+    "dimensions": {
+      "width": 960,
+      "depth": 2060,
+      "height": 660
+    },
+    "clearance": {
+      "front": 500,
+      "back": 0,
+      "left": 550,
+      "right": 0
+    },
+    "placementRules": {
+      "againstWall": "required",
+      "underWindowAllowed": true,
+      "stackable": false
+    },
+    "lifestyleTags": [
+      "rest",
+      "storage"
+    ],
+    "styleTags": [
+      "minimal",
+      "white"
+    ],
+    "asset": {
+      "glbUrl": "https://web-api.ikea.com/dimma/assets/geomagical/59581983/PS01_S01_NV_01/simple/glb/5df4b7721e6de29debce97cff4408f94-G-59581983-3ac6e8fe0c4c80d28aa9af67d93e3680475786b1-simple.glb",
+      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/vihals-bed-frame-with-2-storage-boxes-white-luroey__1447002_pe988912_s5.jpg",
+      "assetFidelity": "official",
+      "originAtFootprintCenter": true
+    },
+    "sponsor": {
+      "isSponsored": false,
+      "boost": 0
+    },
+    "status": "available",
+    "verifiedAt": "2026-11-23",
+    "color": "#F4F4F2"
+  },
+  {
+    "schemaVersion": "1.0",
+    "itemId": "cat_bed_vevelstad_1200",
+    "category": "bed",
+    "name": "VEVELSTAD 베벨스타드 침대프레임 120x200 (화이트)",
+    "brand": "IKEA",
+    "market": "ikea",
+    "purchaseUrl": "https://www.ikea.com/kr/ko/p/vevelstad-bed-frame-white-80518273/",
+    "affiliateUrl": null,
+    "price": {
+      "amount": 119000,
+      "currency": "KRW"
+    },
+    "dimensions": {
+      "width": 1260,
+      "depth": 2070,
+      "height": 270
+    },
+    "clearance": {
+      "front": 500,
+      "back": 0,
+      "left": 500,
+      "right": 0
+    },
+    "placementRules": {
+      "againstWall": "required",
+      "underWindowAllowed": true,
+      "stackable": false
+    },
+    "lifestyleTags": [
+      "rest"
+    ],
+    "styleTags": [
+      "minimal",
+      "white",
+      "modern"
+    ],
+    "asset": {
+      "glbUrl": "https://web-api.ikea.com/dimma/assets/geomagical/40518270/PS01_S01_NV_01/simple/glb/40c87964c764bd83a9b108e1497874f3-G-40518270-277f26626d75c57eae4e1a675924b3b1ff2bc0fe-simple.glb",
+      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/vevelstad-bed-frame-white__1035356_pe840532_s5.jpg",
+      "assetFidelity": "official",
+      "originAtFootprintCenter": true
+    },
+    "sponsor": {
+      "isSponsored": false,
+      "boost": 0
+    },
+    "status": "available",
+    "verifiedAt": "2026-11-23",
+    "color": "#F0F0EE"
+  },
+  {
+    "schemaVersion": "1.0",
+    "itemId": "cat_bed_slattum_1200",
+    "category": "bed",
+    "name": "SLATTUM 슬라툼 쿠션형 침대프레임 120x200 (다크그레이)",
+    "brand": "IKEA",
+    "market": "ikea",
+    "purchaseUrl": "https://www.ikea.com/kr/ko/p/slattum-upholstered-bed-frame-vissle-dark-grey-70571242/",
+    "affiliateUrl": null,
+    "price": {
+      "amount": 139000,
+      "currency": "KRW"
+    },
+    "dimensions": {
+      "width": 1240,
+      "depth": 2060,
+      "height": 850
+    },
+    "clearance": {
+      "front": 500,
+      "back": 0,
+      "left": 500,
+      "right": 0
+    },
+    "placementRules": {
+      "againstWall": "required",
+      "underWindowAllowed": true,
+      "stackable": false
+    },
+    "lifestyleTags": [
+      "rest"
+    ],
+    "styleTags": [
+      "modern",
+      "dark",
+      "cozy"
+    ],
+    "asset": {
+      "glbUrl": "https://web-api.ikea.com/dimma/assets/geomagical/10578741/PS01_S01_NV_01/simple/glb/c922e1571d2daa445b9656d7b00bd12b-G-10578741-7eb3310c55341cb7519cd9632dab62e3a22a3882-simple.glb",
+      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/slattum-upholstered-bed-frame-vissle-dark-grey__1259334_pe926648_s5.jpg",
+      "assetFidelity": "official",
+      "originAtFootprintCenter": true
+    },
+    "sponsor": {
+      "isSponsored": false,
+      "boost": 0
+    },
+    "status": "available",
+    "verifiedAt": "2026-11-23",
+    "color": "#52555A"
+  },
+  {
+    "schemaVersion": "1.0",
+    "itemId": "cat_chair_smaellen",
+    "category": "chair",
+    "name": "SMÄLLEN 스멜렌 회전의자 (블랙)",
+    "brand": "IKEA",
+    "market": "ikea",
+    "purchaseUrl": "https://www.ikea.com/kr/ko/p/smaellen-swivel-chair-black-10503468/",
+    "affiliateUrl": null,
+    "price": {
+      "amount": 35000,
+      "currency": "KRW"
+    },
+    "dimensions": {
+      "width": 650,
+      "depth": 650,
+      "height": 850
+    },
+    "clearance": {
+      "front": 300,
+      "back": 200,
+      "left": 100,
+      "right": 100
+    },
+    "placementRules": {
+      "againstWall": "none",
+      "underWindowAllowed": true,
+      "stackable": false
+    },
+    "lifestyleTags": [
+      "work"
+    ],
+    "styleTags": [
+      "minimal",
+      "dark"
+    ],
+    "asset": {
+      "glbUrl": "https://web-api.ikea.com/dimma/assets/geomagical/00503435/PS01_S01_NV_01/simple/glb_draco/5428b19c251ed9997352c74185829237-G-00503435-10ff792038fcf0514872064a1f547a884a82e036-simple+draco.glb",
+      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/smaellen-swivel-chair-black__1096271_pe864278_s5.jpg",
+      "assetFidelity": "official",
+      "originAtFootprintCenter": true
+    },
+    "sponsor": {
+      "isSponsored": false,
+      "boost": 0
+    },
+    "status": "available",
+    "verifiedAt": "2026-11-23",
+    "color": "#2B2B2D"
+  },
+  {
+    "schemaVersion": "1.0",
+    "itemId": "cat_chair_oerfjaell",
+    "category": "chair",
+    "name": "ÖRFJÄLL 외르피엘 회전의자 (화이트/라이트그레이)",
+    "brand": "IKEA",
+    "market": "ikea",
+    "purchaseUrl": "https://www.ikea.com/kr/ko/p/oerfjaell-swivel-chair-white-vissle-light-grey-s29416013/",
+    "affiliateUrl": null,
+    "price": {
+      "amount": 79900,
+      "currency": "KRW"
+    },
+    "dimensions": {
+      "width": 680,
+      "depth": 680,
+      "height": 930
+    },
+    "clearance": {
+      "front": 300,
+      "back": 200,
+      "left": 100,
+      "right": 100
+    },
+    "placementRules": {
+      "againstWall": "none",
+      "underWindowAllowed": true,
+      "stackable": false
+    },
+    "lifestyleTags": [
+      "work"
+    ],
+    "styleTags": [
+      "minimal",
+      "white",
+      "cozy"
+    ],
+    "asset": {
+      "glbUrl": "https://web-api.ikea.com/dimma/assets/geomagical/49416012/PS01_S01_NV_01/simple/glb_draco/6562fc4e4403468aab1c4a228d5d5116-G-49416012-2eb4df9e7a0c153707e5e4fe62d58029de77507e-simple+draco.glb",
+      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/oerfjaell-swivel-chair-white-vissle-light-grey__0978008_pe813981_s5.jpg",
+      "assetFidelity": "official",
+      "originAtFootprintCenter": true
+    },
+    "sponsor": {
+      "isSponsored": false,
+      "boost": 0
+    },
+    "status": "available",
+    "verifiedAt": "2026-11-23",
+    "color": "#D6D8DC"
+  },
+  {
+    "schemaVersion": "1.0",
+    "itemId": "cat_chair_millberget",
+    "category": "chair",
+    "name": "MILLBERGET 밀베리에트 회전의자 (무룸 베이지)",
+    "brand": "IKEA",
+    "market": "ikea",
+    "purchaseUrl": "https://www.ikea.com/kr/ko/p/millberget-swivel-chair-murum-beige-10489392/",
+    "affiliateUrl": null,
+    "price": {
+      "amount": 149000,
+      "currency": "KRW"
+    },
+    "dimensions": {
+      "width": 700,
+      "depth": 700,
+      "height": 1230
+    },
+    "clearance": {
+      "front": 350,
+      "back": 200,
+      "left": 100,
+      "right": 100
+    },
+    "placementRules": {
+      "againstWall": "none",
+      "underWindowAllowed": true,
+      "stackable": false
+    },
+    "lifestyleTags": [
+      "work",
+      "rest"
+    ],
+    "styleTags": [
+      "warm",
+      "modern",
+      "beige"
+    ],
+    "asset": {
+      "glbUrl": "https://web-api.ikea.com/dimma/assets/geomagical/70489389/PS01_S01_NV_01/simple/glb_draco/8fc1dd8adff948d6a86a457e5f6f912e-G-70489389-7c05443a170c090ecf5e35ed185dc39f1bcb434c-simple+draco.glb",
+      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/millberget-swivel-chair-murum-beige__1020141_pe831795_s5.jpg",
+      "assetFidelity": "official",
+      "originAtFootprintCenter": true
+    },
+    "sponsor": {
+      "isSponsored": false,
+      "boost": 0
+    },
+    "status": "available",
+    "verifiedAt": "2026-11-23",
+    "color": "#D9CBB8"
+  },
+  {
+    "schemaVersion": "1.0",
+    "itemId": "cat_table_lack_550",
+    "category": "table",
+    "name": "LACK 라크 보조테이블 55x55 (화이트)",
+    "brand": "IKEA",
+    "market": "ikea",
+    "purchaseUrl": "https://www.ikea.com/kr/ko/p/lack-side-table-white-10449909/",
+    "affiliateUrl": null,
+    "price": {
+      "amount": 15900,
+      "currency": "KRW"
+    },
+    "dimensions": {
+      "width": 550,
+      "depth": 550,
+      "height": 450
+    },
+    "clearance": {
+      "front": 300,
+      "back": 0,
+      "left": 0,
+      "right": 0
+    },
+    "placementRules": {
+      "againstWall": "none",
+      "underWindowAllowed": true,
+      "stackable": false
+    },
+    "lifestyleTags": [
+      "rest",
+      "guest"
+    ],
+    "styleTags": [
+      "minimal",
+      "white"
+    ],
+    "asset": {
+      "glbUrl": "https://web-api.ikea.com/dimma/assets/1.2/10449909/PS01_S01_NV01/iqp3/glb_draco/10449909_PS01_S01_NV01_IQP3_2.0_4b2954d1ef210b74c930f41baed0c9de.glb",
+      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/lack-side-table-white__0750653_pe746802_s5.jpg",
+      "assetFidelity": "official",
+      "originAtFootprintCenter": true
+    },
+    "sponsor": {
+      "isSponsored": false,
+      "boost": 0
+    },
+    "status": "available",
+    "verifiedAt": "2026-11-23",
+    "color": "#F5F5F3"
+  },
+  {
+    "schemaVersion": "1.0",
+    "itemId": "cat_table_lack_900",
+    "category": "table",
+    "name": "LACK 라크 커피테이블 90x55 (블랙브라운)",
+    "brand": "IKEA",
+    "market": "ikea",
+    "purchaseUrl": "https://www.ikea.com/kr/ko/p/lack-coffee-table-black-brown-20352987/",
+    "affiliateUrl": null,
+    "price": {
+      "amount": 29900,
+      "currency": "KRW"
+    },
+    "dimensions": {
+      "width": 900,
+      "depth": 550,
+      "height": 450
+    },
+    "clearance": {
+      "front": 400,
+      "back": 400,
+      "left": 0,
+      "right": 0
+    },
+    "placementRules": {
+      "againstWall": "none",
+      "underWindowAllowed": true,
+      "stackable": false
+    },
+    "lifestyleTags": [
+      "rest",
+      "guest"
+    ],
+    "styleTags": [
+      "modern",
+      "dark",
+      "wood"
+    ],
+    "asset": {
+      "glbUrl": "https://web-api.ikea.com/dimma/assets/1.2/20352987/PS01_S01_NV01/iqp3/glb_draco/3e07f6b1386b486baaf5894c39bdd365-20352987_PS01_S01_NV01_IQP3_2.0.glb",
+      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/lack-coffee-table-black-brown__57540_pe163122_s5.jpg",
+      "assetFidelity": "official",
+      "originAtFootprintCenter": true
+    },
+    "sponsor": {
+      "isSponsored": false,
+      "boost": 0
+    },
+    "status": "available",
+    "verifiedAt": "2026-11-23",
+    "color": "#3B312B"
+  },
+  {
+    "schemaVersion": "1.0",
+    "itemId": "cat_table_sandsberg_1100",
+    "category": "table",
+    "name": "SANDSBERG 산스베리 테이블 110x67 (블랙)",
+    "brand": "IKEA",
+    "market": "ikea",
+    "purchaseUrl": "https://www.ikea.com/kr/ko/p/sandsberg-table-black-s09420394/",
+    "affiliateUrl": null,
+    "price": {
+      "amount": 66900,
+      "currency": "KRW"
+    },
+    "dimensions": {
+      "width": 1100,
+      "depth": 670,
+      "height": 750
+    },
+    "clearance": {
+      "front": 600,
+      "back": 600,
+      "left": 0,
+      "right": 0
+    },
+    "placementRules": {
+      "againstWall": "none",
+      "underWindowAllowed": true,
+      "stackable": false
+    },
+    "lifestyleTags": [
+      "guest",
+      "work"
+    ],
+    "styleTags": [
+      "minimal",
+      "dark",
+      "modern"
+    ],
+    "asset": {
+      "glbUrl": "https://web-api.ikea.com/dimma/assets/geomagical/29420393/PS01_S01_NV_01/simple/glb_draco/2d0ce72f228c49d3934e8054db50fd41-G-29420393-19891f589e81c0a8301b2bf4f721564b6e02480c-simple+draco.glb",
+      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/sandsberg-table-black__1074348_pe856162_s5.jpg",
+      "assetFidelity": "official",
+      "originAtFootprintCenter": true
+    },
+    "sponsor": {
+      "isSponsored": false,
+      "boost": 0
+    },
+    "status": "available",
+    "verifiedAt": "2026-11-23",
+    "color": "#2A2A2C"
+  },
+  {
+    "schemaVersion": "1.0",
+    "itemId": "cat_wardrobe_kleppstad_790",
+    "category": "wardrobe",
+    "name": "KLEPPSTAD 클렙스타드 2도어 옷장 79x55x176 (화이트)",
+    "brand": "IKEA",
+    "market": "ikea",
+    "purchaseUrl": "https://www.ikea.com/kr/ko/p/kleppstad-wardrobe-with-2-doors-white-10437237/",
+    "affiliateUrl": null,
+    "price": {
+      "amount": 139000,
+      "currency": "KRW"
+    },
+    "dimensions": {
+      "width": 790,
+      "depth": 550,
+      "height": 1760
+    },
+    "clearance": {
+      "front": 600,
+      "back": 0,
+      "left": 0,
+      "right": 0
+    },
+    "placementRules": {
+      "againstWall": "required",
+      "underWindowAllowed": false,
+      "stackable": false
+    },
+    "lifestyleTags": [
+      "storage"
+    ],
+    "styleTags": [
+      "minimal",
+      "white"
+    ],
+    "asset": {
+      "glbUrl": "https://web-api.ikea.com/dimma/assets/geomagical/80437234/PS01_S01_NV_01/simple/glb_draco/6eaed30d33b248de93122a70aac205d6-G-80437234-f727a61810ea4fc50c70e64376a7016ec3da9e57-simple+draco.glb",
+      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/kleppstad-wardrobe-with-2-doors-white__0733324_pe748781_s5.jpg",
+      "assetFidelity": "official",
+      "originAtFootprintCenter": true
+    },
+    "sponsor": {
+      "isSponsored": false,
+      "boost": 0
+    },
+    "status": "available",
+    "verifiedAt": "2026-11-23",
+    "color": "#F4F4F2"
+  },
+  {
+    "schemaVersion": "1.0",
+    "itemId": "cat_wardrobe_rakkestad_790",
+    "category": "wardrobe",
+    "name": "RAKKESTAD 라케스타드 2도어 옷장 79x55x176 (블랙브라운)",
+    "brand": "IKEA",
+    "market": "ikea",
+    "purchaseUrl": "https://www.ikea.com/kr/ko/p/rakkestad-wardrobe-with-2-doors-black-brown-30453759/",
+    "affiliateUrl": null,
+    "price": {
+      "amount": 179000,
+      "currency": "KRW"
+    },
+    "dimensions": {
+      "width": 790,
+      "depth": 550,
+      "height": 1760
+    },
+    "clearance": {
+      "front": 600,
+      "back": 0,
+      "left": 0,
+      "right": 0
+    },
+    "placementRules": {
+      "againstWall": "required",
+      "underWindowAllowed": false,
+      "stackable": false
+    },
+    "lifestyleTags": [
+      "storage"
+    ],
+    "styleTags": [
+      "modern",
+      "dark",
+      "wood"
+    ],
+    "asset": {
+      "glbUrl": "https://web-api.ikea.com/dimma/assets/geomagical/50453758/PS01_S01_NV_01/simple/glb_draco/bfc0be9f173f66f7332fe36cac46a750-G-50453758-dca159758261107f2f59ad01efd3109166c176ef-simple+draco.glb",
+      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/rakkestad-wardrobe-with-2-doors-black-brown__0780372_pe760493_s5.jpg",
+      "assetFidelity": "official",
+      "originAtFootprintCenter": true
+    },
+    "sponsor": {
+      "isSponsored": false,
+      "boost": 0
+    },
+    "status": "available",
+    "verifiedAt": "2026-11-23",
+    "color": "#3A302A"
+  },
+  {
+    "schemaVersion": "1.0",
+    "itemId": "cat_wardrobe_brimnes_1170",
+    "category": "wardrobe",
+    "name": "BRIMNES 브림네스 3도어 거울 옷장 117x50x190 (화이트)",
+    "brand": "IKEA",
+    "market": "ikea",
+    "purchaseUrl": "https://www.ikea.com/kr/ko/p/brimnes-wardrobe-with-3-doors-white-10407928/",
+    "affiliateUrl": null,
+    "price": {
+      "amount": 259000,
+      "currency": "KRW"
+    },
+    "dimensions": {
+      "width": 1170,
+      "depth": 500,
+      "height": 1900
+    },
+    "clearance": {
+      "front": 600,
+      "back": 0,
+      "left": 0,
+      "right": 0
+    },
+    "placementRules": {
+      "againstWall": "required",
+      "underWindowAllowed": false,
+      "stackable": false
+    },
+    "lifestyleTags": [
+      "storage"
+    ],
+    "styleTags": [
+      "minimal",
+      "white",
+      "modern"
+    ],
+    "asset": {
+      "glbUrl": "https://web-api.ikea.com/dimma/assets/1.2/10407928/PS01_S01_NV01/rqp3/glb_draco/10407928_PS01_S01_NV01_RQP3_3.0_852477038e034f2fb09ef6b5b2e4316e.glb",
+      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/brimnes-wardrobe-with-3-doors-white__0176787_pe329567_s5.jpg",
+      "assetFidelity": "official",
+      "originAtFootprintCenter": true
+    },
+    "sponsor": {
+      "isSponsored": false,
+      "boost": 0
+    },
+    "status": "available",
+    "verifiedAt": "2026-11-23",
+    "color": "#F5F5F3"
+  },
+  {
+    "schemaVersion": "1.0",
+    "itemId": "cat_lamp_tagarp_floor",
+    "category": "lamp",
+    "name": "TÅGARP 토가르프 상향식 플로어스탠드 (블랙/화이트)",
+    "brand": "IKEA",
+    "market": "ikea",
+    "purchaseUrl": "https://www.ikea.com/kr/ko/p/tagarp-floor-uplighter-black-white-80464053/",
+    "affiliateUrl": null,
+    "price": {
+      "amount": 19900,
+      "currency": "KRW"
+    },
+    "dimensions": {
+      "width": 240,
+      "depth": 240,
+      "height": 1800
+    },
+    "clearance": {
+      "front": 0,
+      "back": 0,
+      "left": 0,
+      "right": 0
+    },
+    "placementRules": {
+      "againstWall": "none",
+      "underWindowAllowed": true,
+      "stackable": false
+    },
+    "lifestyleTags": [
+      "rest",
+      "work"
+    ],
+    "styleTags": [
+      "minimal",
+      "warm",
+      "dark"
+    ],
+    "asset": {
+      "glbUrl": "https://web-api.ikea.com/dimma/assets/geomagical/20404095/PS01_S01_NV_01/simple/glb_draco/8e1c2e96c3b14dae9f006776f6c07105-G-20404095-660a3a7ab3ef657f958d2302767dedd3c9af9446-simple+draco.glb",
+      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/tagarp-floor-uplighter-black-white__0810840_pe771436_s5.jpg",
+      "assetFidelity": "official",
+      "originAtFootprintCenter": true
+    },
+    "sponsor": {
+      "isSponsored": false,
+      "boost": 0
+    },
+    "status": "available",
+    "verifiedAt": "2026-11-23",
+    "color": "#2E2E30"
+  },
+  {
+    "schemaVersion": "1.0",
+    "itemId": "cat_decor_ikornnes_520",
+    "category": "decor",
+    "name": "IKORNNES 이코르네스 전신거울 52x52x167 (물푸레나무)",
+    "brand": "IKEA",
+    "market": "ikea",
+    "purchaseUrl": "https://www.ikea.com/kr/ko/p/ikornnes-standing-mirror-ash-10298397/",
+    "affiliateUrl": null,
+    "price": {
+      "amount": 139000,
+      "currency": "KRW"
+    },
+    "dimensions": {
+      "width": 520,
+      "depth": 520,
+      "height": 1670
+    },
+    "clearance": {
+      "front": 500,
+      "back": 0,
+      "left": 0,
+      "right": 0
+    },
+    "placementRules": {
+      "againstWall": "preferred",
+      "underWindowAllowed": false,
+      "stackable": false
+    },
+    "lifestyleTags": [
+      "rest",
+      "guest"
+    ],
+    "styleTags": [
+      "wood",
+      "warm",
+      "natural"
+    ],
+    "asset": {
+      "glbUrl": "https://web-api.ikea.com/dimma/assets/geomagical/30298396/PS01_S01_NV_01/simple/glb_draco/0d32fd1a085995c7d11a2d7f76df0522-G-30298396-504aaecfd6d78a99825ac034ede03ee5de892276-simple+draco.glb",
+      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/ikornnes-standing-mirror-ash__0633524_pe695900_s5.jpg",
+      "assetFidelity": "official",
+      "originAtFootprintCenter": true
+    },
+    "sponsor": {
+      "isSponsored": false,
+      "boost": 0
+    },
+    "status": "available",
+    "verifiedAt": "2026-11-23",
+    "color": "#C8A882"
+  }
+]
