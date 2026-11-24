@@ -10,6 +10,18 @@ npm install -D tailwindcss @types/three
 npm run dev
 ```
 
+## 실행·테스트 (세팅 완료 후)
+
+```bash
+cd apps/web
+npm install
+npm run dev     # http://localhost:5173 — fixture 방이 3D로 뜬다
+npm test        # vitest (벽 기하 계산 등 순수 함수)
+npm run lint
+```
+
+- `packages/schema` 파일은 `@schema/...`로 import한다 (예: `@schema/fixtures/room.sample.json`).
+
 ## 권장 폴더 구조
 
 ```

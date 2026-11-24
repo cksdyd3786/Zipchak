@@ -3,8 +3,9 @@ from __future__ import annotations
 
 from typing import Any
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 
+from app.constraints import validate_layout
 from app.preferences import question_list, weights_from_answers
 
 app = FastAPI(title="Zipchak Engine", version="0.1.0")
@@ -29,8 +30,12 @@ def recommend(body: dict[str, Any]) -> dict[str, Any]:
 
 @app.post("/v1/layouts:validate")
 def validate(body: dict[str, Any]) -> dict[str, Any]:
-    # TODO(M2-2, M2-3): 하드 제약 위반 목록 + 점수 재계산 (가구 편집·제안 포스트잇 미리보기)
-    return {"violations": [], "analysis": None}
+    """M2-2 하드 제약 위반 목록. 점수 재계산(analysis)은 M2-3에서 채운다."""
+    try:
+        violations = validate_layout(body["room"], body["layout"], body.get("catalog"))
+    except (KeyError, ValueError) as e:
+        raise HTTPException(status_code=400, detail={"error": {"code": "VALIDATION_FAILED", "message": str(e), "details": {}}})
+    return {"violations": violations, "analysis": None}
 
 
 @app.post("/v1/fit:search")

@@ -18,9 +18,9 @@ RoomPlan으로 방을 스캔해 `CapturedRoom`을 `RoomData`(packages/schema/roo
 
 - RoomPlan은 **m 단위 float** → `Int((value * 1000).rounded())` 로 mm 정수.
 - RoomPlan 좌표의 바닥 다각형 바운딩 박스 최소 (x, z)를 (0, 0)으로 **평행이동**한다.
-- `CapturedRoom.walls` → `walls[]` (start/end는 벽 중심선의 양 끝 2D 좌표, `thickness`는 기본 120).
+- `CapturedRoom.walls` → `walls[]`. start/end는 **방 안쪽 면**의 양 끝 2D 좌표다(바닥 윤곽 변과 같은 선, 두께는 바깥쪽). RoomPlan 벽은 두께가 거의 0이라 중심선을 그대로 써도 차이는 수 mm지만, 두께를 알면 방 안쪽으로 thickness/2만큼 옮긴다. `thickness` 기본값은 120.
 - `doors`/`windows`/`openings` → `openings[]`. `wallId`는 가장 가까운 벽, `offset`은 벽 `start`에서 개구부 시작 모서리까지 거리.
-- 문 열림 방향은 RoomPlan이 주지 않는다 → `swing: { kind: "hinged", hingeSide: "left", opensInward: true, maxAngleDeg: 90 }` 기본값. 웹에서 사용자가 고친다.
+- 문 열림 방향은 RoomPlan이 주지 않는다 → `swing: { kind: "hinged", hingeSide: "left", opensInward: true, maxAngleDeg: 90 }` 기본값. `hingeSide`는 방 안쪽에서 문을 볼 때 왼손 쪽이 `left`(docs/conventions.md). 웹에서 사용자가 고친다.
 - 창문 `facing`은 알 수 없으면 `null`.
 - `objects` → `existingFurniture[]`. RoomPlan 카테고리를 스키마 카테고리로 매핑:
   `bed→bed, table→table, chair→chair, sofa→sofa, storage→storage, (나머지)→etc`.

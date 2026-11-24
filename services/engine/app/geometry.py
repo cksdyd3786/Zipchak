@@ -41,6 +41,59 @@ def footprint(x: int, z: int, width: int, depth: int, rotation_deg: int) -> Rect
     return Rect(x - hw, z - hd, x - hw + width, z - hd + depth)
 
 
+def local_to_world(dx: int, dz: int, rotation_deg: int) -> tuple[int, int]:
+    """가구 로컬 방향 → 월드 방향. Y축 기준 반시계(Three.js rotation.y 와 같음).
+
+    회전 θ: x' = x·cosθ + z·sinθ, z' = −x·sinθ + z·cosθ. 정면 (0, +1) 은 90° 에서 +X, 180° 에서 −Z.
+    """
+    q = (rotation_deg // 90) % 4
+    for _ in range(q):
+        dx, dz = dz, -dx
+    return dx, dz
+
+
+SIDES = {"front": (0, 1), "back": (0, -1), "left": (-1, 0), "right": (1, 0)}
+
+
+def world_side(local_side: str, rotation_deg: int) -> tuple[int, int]:
+    """'front'|'back'|'left'|'right' (회전 0도 기준, left = −X) → 월드 단위 방향."""
+    return local_to_world(*SIDES[local_side], rotation_deg)
+
+
+def expand_world(r: Rect, direction: tuple[int, int], amount: int) -> Rect:
+    dx, dz = direction
+    return Rect(
+        r.min_x - (amount if dx < 0 else 0),
+        r.min_z - (amount if dz < 0 else 0),
+        r.max_x + (amount if dx > 0 else 0),
+        r.max_z + (amount if dz > 0 else 0),
+    )
+
+
+def side_band(r: Rect, direction: tuple[int, int], depth: int) -> Rect | None:
+    """사각형 r 의 direction 쪽 바깥에 붙은 폭 depth 띠. depth <= 0 이면 None."""
+    if depth <= 0:
+        return None
+    dx, dz = direction
+    if dx > 0:
+        return Rect(r.max_x, r.min_z, r.max_x + depth, r.max_z)
+    if dx < 0:
+        return Rect(r.min_x - depth, r.min_z, r.min_x, r.max_z)
+    if dz > 0:
+        return Rect(r.min_x, r.max_z, r.max_x, r.max_z + depth)
+    return Rect(r.min_x, r.min_z - depth, r.max_x, r.min_z)
+
+
+def clearance_zones(r: Rect, clearance: dict[str, int], rotation_deg: int) -> list[tuple[str, Rect]]:
+    """사용 여유 공간(책상 앞 의자 자리 등)을 면별 띠로 돌려준다. 회전 반영."""
+    zones = []
+    for side in ("front", "back", "left", "right"):
+        band = side_band(r, world_side(side, rotation_deg), int(clearance.get(side, 0)))
+        if band is not None:
+            zones.append((side, band))
+    return zones
+
+
 def fits(item_width: int, item_depth: int, slot_width: int, slot_depth: int, margin: int) -> bool:
     """'들어감' 판정 (M3-4). 좌우 여유 2×margin, 깊이 여유 margin. 90도 회전도 검사한다."""
 

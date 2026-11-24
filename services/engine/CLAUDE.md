@@ -25,7 +25,8 @@
 ## 엔드포인트 (`docs/api.md`가 원본)
 
 - `POST /v1/layouts:recommend` `{ room, answers, weights?, budget?, catalog }` → `{ layouts: FurnitureLayout[], partial }`
-- `POST /v1/layouts:validate` `{ room, layout }` → `{ violations, analysis }` (가구 편집·제안 포스트잇 미리보기에 사용)
+- `POST /v1/layouts:validate` `{ room, layout, catalog? }` → `{ violations, analysis }` (가구 편집·제안 포스트잇 미리보기에 사용)
+  - `catalog`는 `MarketFurnitureItem[]` 선택 필드. 가구별 `clearance`를 `catalogItemId` ↔ `itemId`로 찾아 여기서 읽고, 없으면 카테고리 기본값(`DEFAULT_CLEARANCE`)을 쓴다.
 - `POST /v1/fit:search` `{ room, layout, slot, catalog }` → `{ recommendedItems }`
 
 ## 알고리즘 (개발 계획서 2-3)

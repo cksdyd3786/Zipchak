@@ -1,0 +1,746 @@
+openapi: 3.1.0
+info:
+  title: 집착(Zipchak) REST API
+  version: 1.0.0
+  description: |
+    services/api(담당 E)의 계약. 사람이 읽는 요약은 docs/api.md, 본문 스키마의 원본은 packages/schema 이다.
+    1주차에는 Prism Mock 서버로 띄워 B·C·D가 실제 서버 없이 붙는다.
+
+      cd services/api && npm run mock      # http://localhost:4000
+
+    규약: 길이는 mm 정수, ID는 prefix_ + ULID, 시간은 ISO 8601 UTC (docs/conventions.md).
+servers:
+  - url: http://localhost:4000
+    description: 로컬 / Mock
+
+tags:
+  - name: auth
+  - name: rooms
+  - name: layouts
+  - name: catalog
+  - name: recommend
+  - name: social
+  - name: events
+  - name: internal
+
+security:
+  - bearerAuth: []
+
+paths:
+  /health:
+    get:
+      tags: [internal]
+      summary: 헬스 체크
+      security: []
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [ok]
+                properties:
+                  ok: { type: boolean, const: true }
+
+  /auth/login:
+    post:
+      tags: [auth]
+      summary: 로그인 (M0-1)
+      description: 이메일·비밀번호 또는 카카오 OAuth code 중 하나. 1주차 결정에 따라 하나만 구현한다.
+      operationId: login
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - type: object
+                  required: [email, password]
+                  additionalProperties: false
+                  properties:
+                    email: { type: string, format: email, example: "student@example.ac.kr" }
+                    password: { type: string, minLength: 8, example: "password1234" }
+                - type: object
+                  required: [provider, code]
+                  additionalProperties: false
+                  properties:
+                    provider: { type: string, enum: [kakao] }
+                    code: { type: string }
+      responses:
+        "200":
+          description: 로그인 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [accessToken, user]
+                properties:
+                  accessToken: { type: string, example: "eyJhbGciOiJIUzI1NiIs..." }
+                  user: { $ref: "#/components/schemas/User" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+
+  /rooms:
+    get:
+      tags: [rooms]
+      summary: 내 방 목록 (M0-2)
+      operationId: listRooms
+      responses:
+        "200":
+          description: 내 방 요약 목록
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/RoomSummary" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+    post:
+      tags: [rooms]
+      summary: 방 생성 (M0-2, M1-1, M1-2)
+      description: |
+        RoomData에서 roomId·ownerId·createdAt·updatedAt을 뺀 본문을 보낸다. 서버가 채워서 RoomData 전체를 돌려준다.
+        서버는 채운 결과를 room.schema.json으로 검증하고, 바닥 윤곽이 닫히지 않으면 400 ROOM_NOT_CLOSED.
+      operationId: createRoom
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/RoomCreate" }
+      responses:
+        "201":
+          description: 생성된 방
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/RoomData" }
+              # Mock 응답용. fixture를 그대로 가리켜 원본을 한 곳(packages/schema/fixtures)에 둔다.
+              example: { $ref: "../packages/schema/fixtures/room.sample.json" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+
+  /rooms/{roomId}:
+    parameters:
+      - $ref: "#/components/parameters/roomId"
+    get:
+      tags: [rooms]
+      summary: 방 조회 (M0-2)
+      description: 주인의 JWT 또는 초대 토큰(inviteToken)으로 접근한다.
+      operationId: getRoom
+      security:
+        - bearerAuth: []
+        - inviteToken: []
+      responses:
+        "200":
+          description: 방
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/RoomData" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /rooms/{roomId}/layouts:
+    parameters:
+      - $ref: "#/components/parameters/roomId"
+    get:
+      tags: [layouts]
+      summary: 방의 배치안 목록 (M0-2)
+      operationId: listLayouts
+      security:
+        - bearerAuth: []
+        - inviteToken: []
+      responses:
+        "200":
+          description: 배치안 목록 (최신순)
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/FurnitureLayout" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    post:
+      tags: [layouts]
+      summary: 배치안 저장 (M0-2)
+      description: 추천받은 배치안을 내 배치안으로 저장하거나 새로 만든다. layoutId·version·createdAt·updatedAt은 서버가 채운다.
+      operationId: createLayout
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LayoutCreate" }
+      responses:
+        "201":
+          description: 저장된 배치안 (version = 1)
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/FurnitureLayout" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /rooms/{roomId}/scan-asset:
+    parameters:
+      - $ref: "#/components/parameters/roomId"
+    post:
+      tags: [rooms]
+      summary: RoomPlan 원본(.usdz) 업로드 (M1-1)
+      operationId: uploadScanAsset
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file: { type: string, format: binary, description: ".usdz, 최대 50MB" }
+      responses:
+        "201":
+          description: 업로드 완료
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [rawAssetUrl]
+                properties:
+                  rawAssetUrl: { type: string, format: uri, example: "https://cdn.example.com/scans/room_01HX.usdz" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /templates:
+    get:
+      tags: [rooms]
+      summary: 원룸 템플릿 3종 (M1-3)
+      description: 데이터는 A가 packages/schema/fixtures/templates/ 에 작성한다. source = template.
+      operationId: listTemplates
+      security: []
+      responses:
+        "200":
+          description: 템플릿 목록
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/RoomData" }
+              example:
+                - { $ref: "../packages/schema/fixtures/templates/tpl-4py-studio.json" }
+                - { $ref: "../packages/schema/fixtures/templates/tpl-5py-studio.json" }
+                - { $ref: "../packages/schema/fixtures/templates/tpl-6py-studio.json" }
+
+  /catalog:
+    get:
+      tags: [catalog]
+      summary: 큐레이션 카탈로그 (M3-1)
+      operationId: listCatalog
+      security: []
+      parameters:
+        - name: category
+          in: query
+          schema: { $ref: "#/components/schemas/Category" }
+        - name: maxWidth
+          in: query
+          description: mm. 이 값 이하인 상품만
+          schema: { type: integer, minimum: 1 }
+        - name: maxDepth
+          in: query
+          description: mm. 이 값 이하인 상품만
+          schema: { type: integer, minimum: 1 }
+        - name: maxPrice
+          in: query
+          description: 원(KRW). M3-6 예산 필터
+          schema: { type: integer, minimum: 0 }
+      responses:
+        "200":
+          description: 상품 목록 (status = available 만)
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/MarketFurnitureItem" }
+
+  /catalog/{itemId}:
+    get:
+      tags: [catalog]
+      summary: 상품 하나 조회 (M3-5)
+      operationId: getCatalogItem
+      security: []
+      parameters:
+        - name: itemId
+          in: path
+          required: true
+          schema: { type: string, pattern: "^cat_" }
+      responses:
+        "200":
+          description: 상품
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/MarketFurnitureItem" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /questions:
+    get:
+      tags: [recommend]
+      summary: 취향 질문 목록 (M2-1, 엔진 GET /v1/questions 프록시)
+      operationId: listQuestions
+      security: []
+      responses:
+        "200":
+          description: 질문 3~5개
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/QuestionList" }
+
+  /rooms/{roomId}/recommend:
+    parameters:
+      - $ref: "#/components/parameters/roomId"
+    post:
+      tags: [recommend]
+      summary: AI 배치안 추천 (M2-1, 엔진 POST /v1/layouts:recommend 프록시)
+      description: |
+        API 서버가 방과 카탈로그를 붙여 엔진에 넘긴다. 결과는 kind = ai_recommendation 으로 저장한 뒤 돌려준다.
+        엔진이 응답하지 않으면 템플릿별 기본 배치안으로 폴백하고 analysis.partial = true.
+      operationId: recommendLayouts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [answers]
+              additionalProperties: false
+              properties:
+                answers:
+                  type: object
+                  description: 질문 id → 선택지 id
+                  additionalProperties: { type: string }
+                  example: { lifestyle: "work", sleep: "window", guests: "rarely" }
+                weights: { $ref: "#/components/schemas/Weights" }
+                budget: { type: [integer, "null"], minimum: 0, description: "원(KRW)" }
+      responses:
+        "200":
+          description: 배치안 최대 3개
+          content:
+            application/json:
+              schema:
+                type: array
+                maxItems: 3
+                items: { $ref: "#/components/schemas/FurnitureLayout" }
+              example:
+                - { $ref: "../packages/schema/fixtures/layout.sample.json" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /layouts/{layoutId}:
+    parameters:
+      - $ref: "#/components/parameters/layoutId"
+    get:
+      tags: [layouts]
+      summary: 배치안 조회 (M0-2)
+      operationId: getLayout
+      security:
+        - bearerAuth: []
+        - inviteToken: []
+      responses:
+        "200":
+          description: 배치안
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/FurnitureLayout" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    put:
+      tags: [layouts]
+      summary: 배치안 수정 (M0-2, M4-2)
+      description: |
+        본문의 version은 클라이언트가 마지막으로 받은 값이다. 서버 version과 다르면 409 VERSION_CONFLICT,
+        같으면 저장하고 version + 1 을 돌려준다. 주인만 수정할 수 있다 (게스트는 포스트잇만).
+      operationId: updateLayout
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/FurnitureLayout" }
+      responses:
+        "200":
+          description: 저장된 배치안
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/FurnitureLayout" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+
+  /layouts/{layoutId}/validate:
+    parameters:
+      - $ref: "#/components/parameters/layoutId"
+    post:
+      tags: [layouts]
+      summary: 배치 검사·점수 재계산 (M4-2, 엔진 POST /v1/layouts:validate 프록시)
+      description: 저장하지 않는다. 가구를 옮길 때마다 호출한다.
+      operationId: validateLayout
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/FurnitureLayout" }
+      responses:
+        "200":
+          description: 검사 결과
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ValidateResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+
+  /rooms/{roomId}/invites:
+    parameters:
+      - $ref: "#/components/parameters/roomId"
+    post:
+      tags: [social]
+      summary: 초대 링크·QR 생성 (M5-1)
+      operationId: createInvite
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [permission]
+              additionalProperties: false
+              properties:
+                permission: { type: string, enum: [view, postit] }
+                expiresIn: { type: integer, description: "초. 기본 7일", default: 604800, minimum: 60 }
+      responses:
+        "201":
+          description: 초대 생성
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [inviteToken, url, qrPngUrl, expiresAt]
+                properties:
+                  inviteToken: { type: string, example: "inv_01HX3Q8Z2K" }
+                  url: { type: string, format: uri, example: "https://zipchak.app/v/inv_01HX3Q8Z2K" }
+                  qrPngUrl: { type: string, format: uri, example: "https://cdn.example.com/qr/inv_01HX3Q8Z2K.png" }
+                  expiresAt: { type: string, format: date-time }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /invites/{inviteToken}:
+    get:
+      tags: [social]
+      summary: 초대 확인 — 게스트 입장 (M5-1)
+      description: 비로그인 게스트가 링크를 열면 호출한다. 만료되면 410 EXPIRED_INVITE.
+      operationId: resolveInvite
+      security: []
+      parameters:
+        - name: inviteToken
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: 입장 정보
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [roomId, layoutId, permission, guestId]
+                properties:
+                  roomId: { type: string, pattern: "^room_" }
+                  layoutId: { type: string, pattern: "^lay_" }
+                  permission: { type: string, enum: [view, postit] }
+                  guestId: { type: string, pattern: "^guest_" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "410": { $ref: "#/components/responses/Gone" }
+
+  /layouts/{layoutId}/postits:
+    parameters:
+      - $ref: "#/components/parameters/layoutId"
+    post:
+      tags: [social]
+      summary: 포스트잇 추가 (M5-2)
+      description: postitId·createdAt·resolved는 서버가 채운다. 실시간 서버(C)도 같은 검증을 거친다.
+      operationId: createPostit
+      security:
+        - bearerAuth: []
+        - inviteToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PostitCreate" }
+      responses:
+        "201":
+          description: 저장된 포스트잇
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Postit" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+
+  /layouts/{layoutId}/postits/{postitId}/preview:
+    parameters:
+      - $ref: "#/components/parameters/layoutId"
+      - name: postitId
+        in: path
+        required: true
+        schema: { type: string, pattern: "^pin_" }
+    post:
+      tags: [social]
+      summary: 제안 포스트잇 미리보기 + AI 검사 (M5-2)
+      description: 제안대로 가구를 옮긴 배치를 만들어 엔진으로 검사한다. 저장하지 않는다. 주인만.
+      operationId: previewPostit
+      responses:
+        "200":
+          description: 미리보기 결과
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [previewLayout, violations, analysis]
+                properties:
+                  previewLayout: { $ref: "#/components/schemas/FurnitureLayout" }
+                  violations: { $ref: "#/components/schemas/Violations" }
+                  analysis: { $ref: "#/components/schemas/Analysis" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /events:
+    post:
+      tags: [events]
+      summary: 퍼널 이벤트 기록 (M0-3, M3-5)
+      operationId: logEvent
+      security:
+        - bearerAuth: []
+        - inviteToken: []
+        - {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [type]
+              additionalProperties: false
+              properties:
+                type:
+                  type: string
+                  enum: [room_created, questions_answered, recommend_viewed, layout_saved, item_previewed, purchase_click, invite_created, invite_opened, postit_added]
+                roomId: { type: [string, "null"] }
+                layoutId: { type: [string, "null"] }
+                itemId: { type: [string, "null"] }
+                meta: { type: object, additionalProperties: true }
+      responses:
+        "202": { description: 기록됨 }
+        "400": { $ref: "#/components/responses/BadRequest" }
+
+  /internal/postits:
+    post:
+      tags: [internal]
+      summary: 실시간 서버 전용 포스트잇 저장 (M5-2)
+      description: services/realtime(C)만 호출한다. X-Internal-Token = REALTIME_INTERNAL_TOKEN.
+      operationId: internalCreatePostit
+      security:
+        - internalToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [layoutId, postit]
+              properties:
+                layoutId: { type: string, pattern: "^lay_" }
+                postit: { $ref: "#/components/schemas/PostitCreate" }
+      responses:
+        "201":
+          description: 저장된 포스트잇
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Postit" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    inviteToken:
+      type: apiKey
+      in: header
+      name: X-Invite-Token
+      description: 비로그인 게스트용. /invites/{inviteToken} 으로 받은 토큰
+    internalToken:
+      type: apiKey
+      in: header
+      name: X-Internal-Token
+
+  parameters:
+    roomId:
+      name: roomId
+      in: path
+      required: true
+      schema: { type: string, pattern: "^room_" }
+    layoutId:
+      name: layoutId
+      in: path
+      required: true
+      schema: { type: string, pattern: "^lay_" }
+
+  responses:
+    BadRequest:
+      description: 검증 실패 (스키마 위반, ROOM_NOT_CLOSED 등)
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+          example: { error: { code: "ROOM_NOT_CLOSED", message: "바닥 윤곽이 닫히지 않았습니다", details: {} } }
+    Unauthorized:
+      description: 토큰 없음·잘못됨
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+          example: { error: { code: "UNAUTHORIZED", message: "로그인이 필요합니다", details: {} } }
+    Forbidden:
+      description: 권한 없음
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+          example: { error: { code: "FORBIDDEN", message: "방 주인만 할 수 있습니다", details: {} } }
+    NotFound:
+      description: 없음
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+          example: { error: { code: "NOT_FOUND", message: "찾을 수 없습니다", details: {} } }
+    Conflict:
+      description: version 충돌
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+          example: { error: { code: "VERSION_CONFLICT", message: "다른 곳에서 먼저 저장했습니다", details: { serverVersion: 4 } } }
+    Gone:
+      description: 초대 만료
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+          example: { error: { code: "EXPIRED_INVITE", message: "초대가 만료되었습니다", details: {} } }
+
+  schemas:
+    # ── packages/schema 원본 (손으로 다시 정의하지 않는다) ──
+    RoomData:
+      $ref: "../packages/schema/room.schema.json"
+    FurnitureLayout:
+      $ref: "../packages/schema/furniture-layout.schema.json"
+    MarketFurnitureItem:
+      $ref: "../packages/schema/market-furniture-item.schema.json"
+    Postit:
+      $ref: "../packages/schema/furniture-layout.schema.json#/properties/postits/items"
+    Analysis:
+      $ref: "../packages/schema/furniture-layout.schema.json#/properties/analysis"
+    Violations:
+      $ref: "../packages/schema/furniture-layout.schema.json#/properties/analysis/properties/violations"
+    Category:
+      $ref: "../packages/schema/room.schema.json#/$defs/category"
+
+    # ── API 전용 래퍼 ──
+    RoomCreate:
+      description: RoomData에서 roomId·ownerId·createdAt·updatedAt을 뺀 것. 서버가 채운 뒤 RoomData로 검증한다.
+      type: object
+      required: [schemaVersion, name, source, unit, ceilingHeight, floorPolygon, walls, openings, fixtures, existingFurniture]
+      properties:
+        schemaVersion: { const: "1.0" }
+        name: { type: string, maxLength: 40 }
+        source: { enum: [lidar, manual, template, floorplan] }
+        sourceMeta: { type: object }
+        unit: { const: mm }
+        ceilingHeight: { type: integer, minimum: 2000, maximum: 5000 }
+        floorPolygon: { type: array, minItems: 3, items: { type: object } }
+        walls: { type: array, minItems: 3, items: { type: object } }
+        openings: { type: array, items: { type: object } }
+        fixtures: { type: array, items: { type: object } }
+        existingFurniture: { type: array, items: { type: object } }
+    LayoutCreate:
+      description: FurnitureLayout에서 layoutId·roomId·version·createdAt·updatedAt을 뺀 것.
+      type: object
+      required: [schemaVersion, kind, title, placements]
+      properties:
+        schemaVersion: { const: "1.0" }
+        kind: { enum: [ai_recommendation, user_saved] }
+        parentLayoutId: { type: [string, "null"] }
+        title: { type: string }
+        preferences: { type: object }
+        roomType: { type: [object, "null"] }
+        placements: { type: array, items: { type: object } }
+        analysis: { type: [object, "null"] }
+    PostitCreate:
+      description: 포스트잇에서 postitId·createdAt·resolved를 뺀 것. author는 토큰에서 서버가 채운다.
+      type: object
+      required: [type, text, color, anchor]
+      properties:
+        type: { enum: [guestbook, proposal] }
+        proposal: { type: [object, "null"] }
+        text: { type: string, maxLength: 140 }
+        color: { enum: [yellow, pink, blue, green, purple] }
+        anchor: { type: object }
+    RoomSummary:
+      type: object
+      required: [roomId, name, source, updatedAt]
+      properties:
+        roomId: { type: string, pattern: "^room_" }
+        name: { type: string }
+        source: { enum: [lidar, manual, template, floorplan] }
+        layoutCount: { type: integer, minimum: 0 }
+        updatedAt: { type: string, format: date-time }
+    User:
+      type: object
+      required: [userId, displayName]
+      properties:
+        userId: { type: string, pattern: "^user_" }
+        displayName: { type: string }
+        email: { type: [string, "null"], format: email }
+    Weights:
+      type: object
+      description: M2-5 가중치 (0 이상). 키는 소프트 점수 6항목
+      propertyNames: { enum: [circulation, daylight, monitorGlare, openness, storageAccess, bedPlacement] }
+      additionalProperties: { type: number, minimum: 0 }
+    QuestionList:
+      type: object
+      required: [questions]
+      properties:
+        questions:
+          type: array
+          minItems: 3
+          maxItems: 5
+          items:
+            type: object
+            required: [id, text, options]
+            properties:
+              id: { type: string, example: "lifestyle" }
+              text: { type: string, example: "방에서 주로 무엇을 하나요?" }
+              options:
+                type: array
+                items:
+                  type: object
+                  required: [id, label]
+                  properties:
+                    id: { type: string, example: "work" }
+                    label: { type: string, example: "공부·업무" }
+    ValidateResult:
+      type: object
+      required: [violations, analysis]
+      properties:
+        violations: { $ref: "#/components/schemas/Violations" }
+        analysis: { $ref: "#/components/schemas/Analysis" }
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code:
+              type: string
+              enum: [VALIDATION_FAILED, ROOM_NOT_CLOSED, UNAUTHORIZED, FORBIDDEN, NOT_FOUND, VERSION_CONFLICT, EXPIRED_INVITE, ENGINE_UNAVAILABLE, INTERNAL]
+            message: { type: string }
+            details: { type: object }
