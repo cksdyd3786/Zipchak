@@ -199,4 +199,47 @@ final class RoomDataConverterTests: XCTestCase {
             XCTAssertEqual(decoded, t)
         }
     }
+
+    func testBundleTemplateLoadingAndFailureReporting() throws {
+        let testFileURL = URL(fileURLWithPath: #filePath)
+        let repoRoot = testFileURL
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+        let templatesDir = repoRoot.appendingPathComponent("packages/schema/fixtures/templates", isDirectory: true)
+
+        // 1. Valid bundle containing all 3 canonical fixture JSONs
+        let fm = FileManager.default
+        let validBundleURL = fm.temporaryDirectory.appendingPathComponent("ZipChakValidTemplates-\(UUID().uuidString).bundle", isDirectory: true)
+        try fm.createDirectory(at: validBundleURL, withIntermediateDirectories: true)
+        defer { try? fm.removeItem(at: validBundleURL) }
+
+        for name in RoomTemplates.templateFileNames {
+            let src = templatesDir.appendingPathComponent("\(name).json")
+            let dst = validBundleURL.appendingPathComponent("\(name).json")
+            try fm.copyItem(at: src, to: dst)
+        }
+
+        let validBundle = try XCTUnwrap(Bundle(url: validBundleURL))
+        let okResult = RoomTemplates.loadWithDiagnostics(from: validBundle)
+        XCTAssertEqual(okResult.templates.count, 3)
+        XCTAssertTrue(okResult.failures.isEmpty)
+        XCTAssertEqual(RoomTemplates.load(from: validBundle).count, 3)
+
+        // 2. Corrupted/missing bundle reports exact template failures instead of failing silently
+        let brokenBundleURL = fm.temporaryDirectory.appendingPathComponent("ZipChakBrokenTemplates-\(UUID().uuidString).bundle", isDirectory: true)
+        try fm.createDirectory(at: brokenBundleURL, withIntermediateDirectories: true)
+        defer { try? fm.removeItem(at: brokenBundleURL) }
+
+        try Data("{ invalid json".utf8).write(to: brokenBundleURL.appendingPathComponent("tpl-4py-studio.json"))
+        let brokenBundle = try XCTUnwrap(Bundle(url: brokenBundleURL))
+        let brokenResult = RoomTemplates.loadWithDiagnostics(from: brokenBundle)
+        XCTAssertTrue(brokenResult.templates.isEmpty)
+        XCTAssertEqual(brokenResult.failures.count, 3)
+        XCTAssertEqual(brokenResult.failures.map(\.templateName), RoomTemplates.templateFileNames)
+        XCTAssertTrue(RoomTemplates.load(from: brokenBundle, assertOnFailure: false).isEmpty)
+    }
 }
