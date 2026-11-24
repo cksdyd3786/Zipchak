@@ -320,9 +320,14 @@ private struct RoomCaptureRepresentable: UIViewRepresentable {
                 return
             }
             let handler = onCompleted
+            let errHandler = onError
             Task { @MainActor in
-                let output = RoomPlanBridge.convert(processedResult)
-                handler(output)
+                do {
+                    let output = try RoomPlanBridge.convert(processedResult)
+                    handler(output)
+                } catch {
+                    errHandler(error.localizedDescription)
+                }
             }
         }
 

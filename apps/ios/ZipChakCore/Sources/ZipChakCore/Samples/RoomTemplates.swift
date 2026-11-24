@@ -1,229 +1,82 @@
 import Foundation
 
-/// M1-3: Korean studio templates (4평 / 5평 / 6평) conforming to `packages/schema/room.schema.json`.
+/// Loads canonical studio templates (M1-3) directly from `packages/schema/fixtures/templates/*.json`
+/// bundled into the app target (or from a directory URL in unit tests), avoiding duplicate Swift definitions.
 public enum RoomTemplates {
-    public static let allTemplates: [RoomData] = [
-        studio4Pyeong(),
-        studio5Pyeong(),
-        studio6PyeongLShape()
+    public struct LoadFailure: Sendable, Hashable {
+        public let templateName: String
+        public let reason: String
+
+        public init(templateName: String, reason: String) {
+            self.templateName = templateName
+            self.reason = reason
+        }
+    }
+
+    public struct LoadResult: Sendable, Hashable {
+        public let templates: [RoomData]
+        public let failures: [LoadFailure]
+
+        public init(templates: [RoomData], failures: [LoadFailure]) {
+            self.templates = templates
+            self.failures = failures
+        }
+    }
+
+    public static let templateFileNames: [String] = [
+        "tpl-4py-studio",
+        "tpl-5py-studio",
+        "tpl-6py-studio"
     ]
 
-    /// 4평 오픈형 원룸: 3000 × 4400 mm = 13.2㎡ (약 4.0평)
-    public static func studio4Pyeong() -> RoomData {
-        RoomData(
-            schemaVersion: "1.0",
-            roomId: "room_01J0TEMPLATE04PYSTUDIO00",
-            ownerId: "user_template_system",
-            name: "4평 오픈형 원룸 (3.0×4.4m)",
-            source: .template,
-            sourceMeta: RoomSourceMeta(templateId: "tpl_4py"),
-            unit: "mm",
-            ceilingHeight: 2350,
-            floorPolygon: [
-                RoomPoint2(x: 0, z: 0),
-                RoomPoint2(x: 3000, z: 0),
-                RoomPoint2(x: 3000, z: 4400),
-                RoomPoint2(x: 0, z: 4400)
-            ],
-            walls: [
-                RoomWall(id: "wall_N", start: RoomPoint2(x: 0, z: 0), end: RoomPoint2(x: 3000, z: 0), height: 2350, thickness: 120),
-                RoomWall(id: "wall_E", start: RoomPoint2(x: 3000, z: 0), end: RoomPoint2(x: 3000, z: 4400), height: 2350, thickness: 120),
-                RoomWall(id: "wall_S", start: RoomPoint2(x: 3000, z: 4400), end: RoomPoint2(x: 0, z: 4400), height: 2350, thickness: 120),
-                RoomWall(id: "wall_W", start: RoomPoint2(x: 0, z: 4400), end: RoomPoint2(x: 0, z: 0), height: 2350, thickness: 120)
-            ],
-            openings: [
-                RoomOpening(
-                    id: "win_main",
-                    type: .window,
-                    wallId: "wall_N",
-                    offset: 700,
-                    width: 1600,
-                    height: 1200,
-                    sillHeight: 900,
-                    facing: .S,
-                    swing: nil
-                ),
-                RoomOpening(
-                    id: "door_main",
-                    type: .door,
-                    wallId: "wall_S",
-                    offset: 300,
-                    width: 850,
-                    height: 2050,
-                    sillHeight: 0,
-                    facing: nil,
-                    swing: .defaultHinged
-                )
-            ],
-            fixtures: [
-                RoomFixture(
-                    id: "fix_aircon",
-                    type: .aircon,
-                    position: RoomPoint3(x: 3000, y: 2050, z: 1200),
-                    direction: RoomPoint2(x: -1, z: 0)
-                ),
-                RoomFixture(
-                    id: "fix_outlet_1",
-                    type: .outlet,
-                    position: RoomPoint3(x: 0, y: 300, z: 1800)
-                )
-            ],
-            existingFurniture: [],
-            createdAt: "2026-11-21T00:00:00Z",
-            updatedAt: "2026-11-21T00:00:00Z"
-        )
+    /// Loads template `RoomData` JSON files included in an app or test `Bundle`,
+    /// returning both decoded templates and any load/decode failures.
+    public static func loadWithDiagnostics(from bundle: Bundle = .main) -> LoadResult {
+        let decoder = JSONDecoder()
+        var templates: [RoomData] = []
+        var failures: [LoadFailure] = []
+
+        for name in templateFileNames {
+            let url = bundle.url(forResource: name, withExtension: "json")
+                ?? bundle.url(forResource: name, withExtension: "json", subdirectory: "templates")
+            guard let url else {
+                failures.append(LoadFailure(templateName: name, reason: "번들에서 \(name).json 리소스를 찾지 못했습니다."))
+                continue
+            }
+            do {
+                let data = try Data(contentsOf: url)
+                let room = try decoder.decode(RoomData.self, from: data)
+                templates.append(room)
+            } catch {
+                failures.append(LoadFailure(templateName: name, reason: "\(name).json 디코딩 실패: \(error.localizedDescription)"))
+            }
+        }
+        return LoadResult(templates: templates, failures: failures)
     }
 
-    /// 5평 직사각형 원룸: 3400 × 4900 mm = 16.66㎡ (약 5.04평)
-    public static func studio5Pyeong() -> RoomData {
-        RoomData(
-            schemaVersion: "1.0",
-            roomId: "room_01J0TEMPLATE05PYSTUDIO00",
-            ownerId: "user_template_system",
-            name: "5평 표준 직사각 원룸 (3.4×4.9m)",
-            source: .template,
-            sourceMeta: RoomSourceMeta(templateId: "tpl_5py"),
-            unit: "mm",
-            ceilingHeight: 2400,
-            floorPolygon: [
-                RoomPoint2(x: 0, z: 0),
-                RoomPoint2(x: 3400, z: 0),
-                RoomPoint2(x: 3400, z: 4900),
-                RoomPoint2(x: 0, z: 4900)
-            ],
-            walls: [
-                RoomWall(id: "wall_N", start: RoomPoint2(x: 0, z: 0), end: RoomPoint2(x: 3400, z: 0), height: 2400, thickness: 120),
-                RoomWall(id: "wall_E", start: RoomPoint2(x: 3400, z: 0), end: RoomPoint2(x: 3400, z: 4900), height: 2400, thickness: 120),
-                RoomWall(id: "wall_S", start: RoomPoint2(x: 3400, z: 4900), end: RoomPoint2(x: 0, z: 4900), height: 2400, thickness: 120),
-                RoomWall(id: "wall_W", start: RoomPoint2(x: 0, z: 4900), end: RoomPoint2(x: 0, z: 0), height: 2400, thickness: 120)
-            ],
-            openings: [
-                RoomOpening(
-                    id: "win_balcony",
-                    type: .window,
-                    wallId: "wall_N",
-                    offset: 700,
-                    width: 2000,
-                    height: 1500,
-                    sillHeight: 650,
-                    facing: .S,
-                    swing: nil
-                ),
-                RoomOpening(
-                    id: "door_entry",
-                    type: .door,
-                    wallId: "wall_S",
-                    offset: 350,
-                    width: 900,
-                    height: 2100,
-                    sillHeight: 0,
-                    facing: nil,
-                    swing: .defaultHinged
-                )
-            ],
-            fixtures: [
-                RoomFixture(
-                    id: "fix_closet",
-                    type: .closetBuiltin,
-                    footprint: [
-                        RoomPoint2(x: 0, z: 3700),
-                        RoomPoint2(x: 600, z: 3700),
-                        RoomPoint2(x: 600, z: 4900),
-                        RoomPoint2(x: 0, z: 4900)
-                    ],
-                    height: 2400
-                ),
-                RoomFixture(
-                    id: "fix_aircon",
-                    type: .aircon,
-                    position: RoomPoint3(x: 3400, y: 2100, z: 1400),
-                    direction: RoomPoint2(x: -1, z: 0)
-                )
-            ],
-            existingFurniture: [],
-            createdAt: "2026-11-21T00:00:00Z",
-            updatedAt: "2026-11-21T00:00:00Z"
-        )
+    /// Loads template `RoomData` JSON files included in an app or test `Bundle`.
+    /// Logs failures and triggers `assertionFailure` in `DEBUG` builds when a bundled template is missing or malformed.
+    public static func load(from bundle: Bundle = .main, assertOnFailure: Bool = true) -> [RoomData] {
+        let result = loadWithDiagnostics(from: bundle)
+        if !result.failures.isEmpty {
+            let summary = result.failures.map { "[\($0.templateName)] \($0.reason)" }.joined(separator: "; ")
+            #if DEBUG
+            print("[RoomTemplates] 템플릿 로드 오류: \(summary)")
+            if assertOnFailure {
+                assertionFailure("원룸 템플릿 JSON 로드 실패: \(summary)")
+            }
+            #endif
+        }
+        return result.templates
     }
 
-    /// 6평 ㄱ자 분리형 원룸: 4600×4800 - 1400×1600 = 19.84㎡ (약 6.0평)
-    public static func studio6PyeongLShape() -> RoomData {
-        RoomData(
-            schemaVersion: "1.0",
-            roomId: "room_01J0TEMPLATE06PYLSHAPE00",
-            ownerId: "user_template_system",
-            name: "6평 ㄱ자 분리형 원룸 (4.6×4.8m)",
-            source: .template,
-            sourceMeta: RoomSourceMeta(templateId: "tpl_6py"),
-            unit: "mm",
-            ceilingHeight: 2450,
-            floorPolygon: [
-                RoomPoint2(x: 0, z: 0),
-                RoomPoint2(x: 3200, z: 0),
-                RoomPoint2(x: 3200, z: 1600),
-                RoomPoint2(x: 4600, z: 1600),
-                RoomPoint2(x: 4600, z: 4800),
-                RoomPoint2(x: 0, z: 4800)
-            ],
-            walls: [
-                RoomWall(id: "wall_1", start: RoomPoint2(x: 0, z: 0), end: RoomPoint2(x: 3200, z: 0), height: 2450, thickness: 120),
-                RoomWall(id: "wall_2", start: RoomPoint2(x: 3200, z: 0), end: RoomPoint2(x: 3200, z: 1600), height: 2450, thickness: 120),
-                RoomWall(id: "wall_3", start: RoomPoint2(x: 3200, z: 1600), end: RoomPoint2(x: 4600, z: 1600), height: 2450, thickness: 120),
-                RoomWall(id: "wall_4", start: RoomPoint2(x: 4600, z: 1600), end: RoomPoint2(x: 4600, z: 4800), height: 2450, thickness: 120),
-                RoomWall(id: "wall_5", start: RoomPoint2(x: 4600, z: 4800), end: RoomPoint2(x: 0, z: 4800), height: 2450, thickness: 120),
-                RoomWall(id: "wall_6", start: RoomPoint2(x: 0, z: 4800), end: RoomPoint2(x: 0, z: 0), height: 2450, thickness: 120)
-            ],
-            openings: [
-                RoomOpening(
-                    id: "win_north",
-                    type: .window,
-                    wallId: "wall_1",
-                    offset: 600,
-                    width: 1800,
-                    height: 1300,
-                    sillHeight: 850,
-                    facing: .S,
-                    swing: nil
-                ),
-                RoomOpening(
-                    id: "win_east",
-                    type: .window,
-                    wallId: "wall_4",
-                    offset: 900,
-                    width: 1200,
-                    height: 1100,
-                    sillHeight: 950,
-                    facing: .E,
-                    swing: nil
-                ),
-                RoomOpening(
-                    id: "door_entry",
-                    type: .door,
-                    wallId: "wall_5",
-                    offset: 400,
-                    width: 900,
-                    height: 2100,
-                    sillHeight: 0,
-                    facing: nil,
-                    swing: .defaultHinged
-                )
-            ],
-            fixtures: [
-                RoomFixture(
-                    id: "fix_aircon",
-                    type: .aircon,
-                    position: RoomPoint3(x: 0, y: 2150, z: 1800),
-                    direction: RoomPoint2(x: 1, z: 0)
-                ),
-                RoomFixture(
-                    id: "fix_outlet",
-                    type: .outlet,
-                    position: RoomPoint3(x: 4600, y: 300, z: 3600)
-                )
-            ],
-            existingFurniture: [],
-            createdAt: "2026-11-21T00:00:00Z",
-            updatedAt: "2026-11-21T00:00:00Z"
-        )
+    /// Loads template `RoomData` JSON files from a filesystem directory (e.g. `packages/schema/fixtures/templates/`).
+    public static func load(fromDirectory directoryURL: URL) throws -> [RoomData] {
+        let decoder = JSONDecoder()
+        return try templateFileNames.map { name in
+            let fileURL = directoryURL.appendingPathComponent("\(name).json")
+            let data = try Data(contentsOf: fileURL)
+            return try decoder.decode(RoomData.self, from: data)
+        }
     }
 }

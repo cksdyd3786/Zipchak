@@ -197,6 +197,51 @@ public struct RawCapturedRoom: Sendable {
     }
 }
 
+// MARK: - Conversion Diagnostics & Errors
+
+public enum ConversionWarning: String, Sendable, Hashable, CaseIterable, Identifiable {
+    case estimatedRoom
+    case estimatedFloorFromWalls
+    case synthesizedWallsFromFloor
+    case lowConfidenceSurfaces
+
+    public var id: String { rawValue }
+
+    public var koreanMessage: String {
+        switch self {
+        case .estimatedRoom:
+            return "일부 구조가 누락되어 추정된 방으로 변환되었습니다. 치수를 확인하거나 재스캔을 권장합니다."
+        case .estimatedFloorFromWalls:
+            return "바닥 면이 감지되지 않아 벽 끝점으로 바닥 윤곽을 추정했습니다."
+        case .synthesizedWallsFromFloor:
+            return "벽이 3개 미만으로 감지되어 바닥 윤곽에서 벽을 추정했습니다."
+        case .lowConfidenceSurfaces:
+            return "일부 벽·개구부의 인식 신뢰도가 낮아 ±3cm 이상 오차가 있을 수 있습니다."
+        }
+    }
+}
+
+public enum RoomConversionError: LocalizedError, Sendable, Equatable {
+    case insufficientScanData
+
+    public var errorDescription: String? {
+        switch self {
+        case .insufficientScanData:
+            return "방 구조를 구성할 벽(3개 이상) 또는 바닥 윤곽이 충분히 스캔되지 않았습니다. 벽 모서리와 바닥 경계를 천천히 다시 스캔해 주세요."
+        }
+    }
+}
+
+public struct ConversionResult: Sendable, Hashable {
+    public let room: RoomData
+    public let warnings: [ConversionWarning]
+
+    public init(room: RoomData, warnings: [ConversionWarning]) {
+        self.room = room
+        self.warnings = warnings
+    }
+}
+
 // MARK: - Pure RoomDataConverter (RoomPlan meters -> Zipchak RoomData mm + origin shift)
 
 public enum RoomDataConverter {
@@ -206,34 +251,73 @@ public enum RoomDataConverter {
     }
 
     /// Snaps Y-axis counter-clockwise yaw (radians) to one of {0, 90, 180, 270}.
-    public static func snapRotationDeg(yawRadians: Float) -> Int {
-        let deg = Double(yawRadians) * 180.0 / .pi
+    /// Apple RoomPlan `CapturedRoom.Object.transform` uses local +Z (`columns.2`) as forward,
+    /// matching `docs/conventions.md` (+Z front at `rotationDeg = 0`).
+    /// `facingOffsetDeg` allows an explicit 90/180° calibration if physical testing requires adjustment.
+    public static func snapRotationDeg(yawRadians: Float, facingOffsetDeg: Int = 0) -> Int {
+        let deg = Double(yawRadians) * 180.0 / .pi + Double(facingOffsetDeg)
         let normalized = ((deg.truncatingRemainder(dividingBy: 360.0)) + 360.0).truncatingRemainder(dividingBy: 360.0)
         let quadrant = Int((normalized / 90.0).rounded()) % 4
         return quadrant * 90
     }
 
-    /// Converts a `RawCapturedRoom` (meters) into a schema-valid `RoomData` (mm, origin at min X/Z = 0,0).
-    public static func convert(
+    /// Converts a `RawCapturedRoom` (meters) into a schema-valid `RoomData` (mm, origin at min X/Z = 0,0)
+    /// along with any diagnostic warnings. Throws `RoomConversionError.insufficientScanData` rather than
+    /// fabricating a fake default room when scan geometry is missing.
+    public static func convertWithDiagnostics(
         _ raw: RawCapturedRoom,
         ownerId: String = "user_local",
         roomId: String? = nil,
-        refineOrthogonalWalls: Bool = true
-    ) -> RoomData {
+        refineOrthogonalWalls: Bool = true,
+        furnitureFacingOffsetDeg: Int = 0
+    ) throws -> ConversionResult {
+        var warnings: [ConversionWarning] = []
+
         // 1. Separate walls vs openings and optionally refine collinear / slightly tilted walls
         var rawWalls = raw.surfaces.filter { $0.kind == .wall && $0.length >= 0.20 }
         let rawOpenings = raw.surfaces.filter { $0.kind != .wall && $0.length >= 0.15 }
+
+        let hasValidExplicitFloor = raw.floorPolygonM.count >= 3 && polygonAreaM(raw.floorPolygonM) > 0.25
+        guard rawWalls.count >= 3 || hasValidExplicitFloor else {
+            throw RoomConversionError.insufficientScanData
+        }
 
         if refineOrthogonalWalls && rawWalls.count >= 3 {
             rawWalls = refineWalls(rawWalls)
         }
 
-        // 2. Build raw floor polygon in meters (prefer native floor polygon; else derive from walls)
-        let polygonM = resolveFloorPolygonM(explicit: raw.floorPolygonM, walls: rawWalls)
+        // 2. Build raw floor polygon in meters (prefer native floor polygon; else derive from walls and warn)
+        let polygonM: [RawPoint2M]
+        if hasValidExplicitFloor {
+            polygonM = raw.floorPolygonM
+        } else {
+            guard let derived = deriveFloorPolygonM(from: rawWalls) else {
+                throw RoomConversionError.insufficientScanData
+            }
+            polygonM = derived
+            warnings.append(.estimatedRoom)
+            warnings.append(.estimatedFloorFromWalls)
+        }
 
-        // Ensure at least 3 walls exist (fallback from floor polygon edges if scan had < 3 walls)
+        // Synthesize walls from floor polygon if fewer than 3 walls were captured, and emit warning
         if rawWalls.count < 3 {
             rawWalls = synthesizeWallsFromPolygon(polygonM, heightM: raw.ceilingHeightM)
+            guard rawWalls.count >= 3 else {
+                throw RoomConversionError.insufficientScanData
+            }
+            if !warnings.contains(.estimatedRoom) {
+                warnings.append(.estimatedRoom)
+            }
+            warnings.append(.synthesizedWallsFromFloor)
+        }
+
+        // Low-confidence surface check
+        let allScannedSurfaces = raw.surfaces
+        if !allScannedSurfaces.isEmpty {
+            let lowCount = allScannedSurfaces.filter { $0.confidence == .low }.count
+            if Double(lowCount) / Double(allScannedSurfaces.count) > 0.4 {
+                warnings.append(.lowConfidenceSurfaces)
+            }
         }
 
         // 3. Compute bounding box min (minX, minZ) in meters across floor polygon and walls so origin shifts to (0, 0)
@@ -253,13 +337,8 @@ public enum RoomDataConverter {
         if floorPolygonMm.count >= 2 && floorPolygonMm.first == floorPolygonMm.last {
             floorPolygonMm.removeLast()
         }
-        if floorPolygonMm.count < 3 {
-            floorPolygonMm = [
-                RoomPoint2(x: 0, z: 0),
-                RoomPoint2(x: 3200, z: 0),
-                RoomPoint2(x: 3200, z: 4000),
-                RoomPoint2(x: 0, z: 4000)
-            ]
+        guard floorPolygonMm.count >= 3 else {
+            throw RoomConversionError.insufficientScanData
         }
 
         // Guarantee exact (0, 0) bounding box minimum in mm even after rounding
@@ -374,7 +453,7 @@ public enum RoomDataConverter {
                 label: obj.category.koreanLabel,
                 dimensions: dims,
                 position: pos,
-                rotationDeg: snapRotationDeg(yawRadians: obj.yaw),
+                rotationDeg: snapRotationDeg(yawRadians: obj.yaw, facingOffsetDeg: furnitureFacingOffsetDeg),
                 movable: true,
                 detectedBy: .roomplan,
                 confidence: obj.confidence
@@ -385,7 +464,7 @@ public enum RoomDataConverter {
         let ceilingMm = max(2000, min(5000, max(metersToMm(raw.ceilingHeightM), maxWallH)))
         let isoNow = RoomData.iso8601UTCNow(raw.capturedAt)
 
-        return RoomData(
+        let room = RoomData(
             schemaVersion: "1.0",
             roomId: roomId ?? "room_\(ULIDGenerator.generate(date: raw.capturedAt))",
             ownerId: ownerId,
@@ -408,6 +487,25 @@ public enum RoomDataConverter {
             createdAt: isoNow,
             updatedAt: isoNow
         )
+
+        return ConversionResult(room: room, warnings: warnings)
+    }
+
+    /// Convenience wrapper returning only `RoomData` when callers don't inspect warnings.
+    public static func convert(
+        _ raw: RawCapturedRoom,
+        ownerId: String = "user_local",
+        roomId: String? = nil,
+        refineOrthogonalWalls: Bool = true,
+        furnitureFacingOffsetDeg: Int = 0
+    ) throws -> RoomData {
+        try convertWithDiagnostics(
+            raw,
+            ownerId: ownerId,
+            roomId: roomId,
+            refineOrthogonalWalls: refineOrthogonalWalls,
+            furnitureFacingOffsetDeg: furnitureFacingOffsetDeg
+        ).room
     }
 
     // MARK: - Private Geometry & Refinement Helpers
@@ -442,34 +540,24 @@ public enum RoomDataConverter {
         return hypot(px - projX, pz - projZ)
     }
 
-    private static func resolveFloorPolygonM(explicit: [RawPoint2M], walls: [RawSurfaceM]) -> [RawPoint2M] {
-        if explicit.count >= 3 && polygonAreaM(explicit) > 0.25 {
-            return explicit
-        }
-        if walls.count >= 3 {
-            let rawPts = walls.flatMap { [$0.startPointM, $0.endPointM] }
-            let dedup = deduplicatePointsM(rawPts, threshold: 0.22)
-            if dedup.count >= 3 {
-                let cx = dedup.reduce(Float(0)) { $0 + $1.x } / Float(dedup.count)
-                let cz = dedup.reduce(Float(0)) { $0 + $1.z } / Float(dedup.count)
-                let ordered = dedup.sorted { atan2($0.z - cz, $0.x - cx) < atan2($1.z - cz, $1.x - cx) }
-                if polygonAreaM(ordered) > 0.25 {
-                    return ordered
-                }
+    private static func deriveFloorPolygonM(from walls: [RawSurfaceM]) -> [RawPoint2M]? {
+        guard walls.count >= 3 else { return nil }
+        let rawPts = walls.flatMap { [$0.startPointM, $0.endPointM] }
+        let dedup = deduplicatePointsM(rawPts, threshold: 0.22)
+        if dedup.count >= 3 {
+            let cx = dedup.reduce(Float(0)) { $0 + $1.x } / Float(dedup.count)
+            let cz = dedup.reduce(Float(0)) { $0 + $1.z } / Float(dedup.count)
+            let ordered = dedup.sorted { atan2($0.z - cz, $0.x - cx) < atan2($1.z - cz, $1.x - cx) }
+            if polygonAreaM(ordered) > 0.25 {
+                return ordered
             }
         }
-        let endpoints = walls.flatMap { [$0.startPointM, $0.endPointM] }
-        guard let minX = endpoints.map(\.x).min(),
-              let maxX = endpoints.map(\.x).max(),
-              let minZ = endpoints.map(\.z).min(),
-              let maxZ = endpoints.map(\.z).max(),
+        guard let minX = rawPts.map(\.x).min(),
+              let maxX = rawPts.map(\.x).max(),
+              let minZ = rawPts.map(\.z).min(),
+              let maxZ = rawPts.map(\.z).max(),
               (maxX - minX) > 0.4, (maxZ - minZ) > 0.4 else {
-            return [
-                RawPoint2M(x: 0, z: 0),
-                RawPoint2M(x: 3.2, z: 0),
-                RawPoint2M(x: 3.2, z: 4.0),
-                RawPoint2M(x: 0, z: 4.0)
-            ]
+            return nil
         }
         return [
             RawPoint2M(x: minX, z: minZ),

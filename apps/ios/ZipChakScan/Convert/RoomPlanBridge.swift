@@ -10,6 +10,7 @@ public enum RoomPlanBridge {
     public struct CaptureOutput: Sendable {
         public let roomData: RoomData
         public let usdzURL: URL?
+        public let warnings: [ConversionWarning]
     }
 
     @MainActor
@@ -17,7 +18,7 @@ public enum RoomPlanBridge {
         _ capturedRoom: CapturedRoom,
         defaultName: String? = nil,
         exportUSDZ: Bool = true
-    ) -> CaptureOutput {
+    ) throws -> CaptureOutput {
         let floorY = resolvedFloorY(from: capturedRoom)
         var surfaces: [RawSurfaceM] = []
         surfaces.reserveCapacity(
@@ -78,7 +79,8 @@ public enum RoomPlanBridge {
             capturedAt: Date()
         )
 
-        let roomData = RoomDataConverter.convert(raw, refineOrthogonalWalls: true)
+        let conversion = try RoomDataConverter.convertWithDiagnostics(raw, refineOrthogonalWalls: true)
+        let roomData = conversion.room
 
         var exportedURL: URL?
         if exportUSDZ {
@@ -95,7 +97,7 @@ public enum RoomPlanBridge {
             }
         }
 
-        return CaptureOutput(roomData: roomData, usdzURL: exportedURL)
+        return CaptureOutput(roomData: roomData, usdzURL: exportedURL, warnings: conversion.warnings)
     }
 
     private static func resolvedFloorY(from capturedRoom: CapturedRoom) -> Float {

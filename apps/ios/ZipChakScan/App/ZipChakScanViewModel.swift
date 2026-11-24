@@ -16,6 +16,8 @@ final class ZipChakScanViewModel {
     var currentScreen: Screen = .start
     var activeRoom: RoomData?
     var activeUSDZURL: URL?
+    var activeWarnings: [ConversionWarning] = []
+    var bundledTemplates: [RoomData] = []
 
     var pendingScans: [PendingUploadStore.StoredScan] = []
     var isUploading: Bool = false
@@ -37,6 +39,7 @@ final class ZipChakScanViewModel {
         self.apiBaseURLString = UserDefaults.standard.string(forKey: "zipchak_api_base_url") ?? "http://localhost:4000"
         self.webBaseURLString = UserDefaults.standard.string(forKey: "zipchak_web_base_url") ?? "http://localhost:5173"
         self.accessToken = UserDefaults.standard.string(forKey: "zipchak_access_token") ?? ""
+        self.bundledTemplates = RoomTemplates.load(from: .main)
         refreshPendingScans()
     }
 
@@ -61,6 +64,7 @@ final class ZipChakScanViewModel {
     func openTemplateForPreview(_ template: RoomData) {
         activeRoom = template
         activeUSDZURL = nil
+        activeWarnings = []
         uploadErrorMessage = nil
         currentScreen = .preview
     }
@@ -68,6 +72,7 @@ final class ZipChakScanViewModel {
     func openPendingScan(_ stored: PendingUploadStore.StoredScan) {
         activeRoom = stored.room
         activeUSDZURL = stored.usdzFileURL
+        activeWarnings = []
         uploadErrorMessage = nil
         currentScreen = .preview
     }
@@ -75,6 +80,7 @@ final class ZipChakScanViewModel {
     func handleScanCompleted(_ output: RoomPlanBridge.CaptureOutput) {
         activeRoom = output.roomData
         activeUSDZURL = output.usdzURL
+        activeWarnings = output.warnings
         uploadErrorMessage = nil
         currentScreen = .preview
     }
@@ -126,6 +132,7 @@ final class ZipChakScanViewModel {
         uploadErrorMessage = nil
         activeRoom = nil
         activeUSDZURL = nil
+        activeWarnings = []
         currentScreen = .start
     }
 }

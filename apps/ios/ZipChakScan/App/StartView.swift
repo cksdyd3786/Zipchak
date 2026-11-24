@@ -63,7 +63,7 @@ struct StartView: View {
                             .font(.headline)
                             .padding(.horizontal, 4)
 
-                        ForEach(RoomTemplates.allTemplates) { template in
+                        ForEach(viewModel.bundledTemplates) { template in
                             Button {
                                 viewModel.openTemplateForPreview(template)
                             } label: {
