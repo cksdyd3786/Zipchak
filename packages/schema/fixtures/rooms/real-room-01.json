@@ -1,0 +1,217 @@
+{
+  "ceilingHeight": 2280,
+  "createdAt": "2026-11-25T13:19:24Z",
+  "existingFurniture": [
+    {
+      "catalogItemId": null,
+      "category": "bed",
+      "confidence": "low",
+      "detectedBy": "roomplan",
+      "dimensions": {
+        "depth": 2022,
+        "height": 535,
+        "width": 1123
+      },
+      "instanceId": "inst_bed_01",
+      "label": "기존 침대",
+      "movable": true,
+      "position": {
+        "x": 562,
+        "z": 1011
+      },
+      "rotationDeg": 0
+    },
+    {
+      "catalogItemId": null,
+      "category": "storage",
+      "confidence": "high",
+      "detectedBy": "roomplan",
+      "dimensions": {
+        "depth": 396,
+        "height": 1150,
+        "width": 1185
+      },
+      "instanceId": "inst_storage_02",
+      "label": "기존 수납장",
+      "movable": true,
+      "position": {
+        "x": 2455,
+        "z": 592
+      },
+      "rotationDeg": 270
+    },
+    {
+      "catalogItemId": null,
+      "category": "table",
+      "confidence": "high",
+      "detectedBy": "roomplan",
+      "dimensions": {
+        "depth": 733,
+        "height": 807,
+        "width": 1466
+      },
+      "instanceId": "inst_table_03",
+      "label": "기존 테이블",
+      "movable": true,
+      "position": {
+        "x": 2078,
+        "z": 733
+      },
+      "rotationDeg": 270
+    },
+    {
+      "catalogItemId": null,
+      "category": "chair",
+      "confidence": "medium",
+      "detectedBy": "roomplan",
+      "dimensions": {
+        "depth": 618,
+        "height": 1118,
+        "width": 577
+      },
+      "instanceId": "inst_chair_04",
+      "label": "기존 의자",
+      "movable": true,
+      "position": {
+        "x": 1804,
+        "z": 733
+      },
+      "rotationDeg": 90
+    },
+    {
+      "catalogItemId": null,
+      "category": "table",
+      "confidence": "high",
+      "detectedBy": "roomplan",
+      "dimensions": {
+        "depth": 597,
+        "height": 807,
+        "width": 600
+      },
+      "instanceId": "inst_table_05",
+      "label": "기존 테이블",
+      "movable": true,
+      "position": {
+        "x": 1421,
+        "z": 299
+      },
+      "rotationDeg": 0
+    }
+  ],
+  "fixtures": [],
+  "floorPolygon": [
+    {
+      "x": 0,
+      "z": 2399
+    },
+    {
+      "x": 0,
+      "z": 0
+    },
+    {
+      "x": 2653,
+      "z": 0
+    },
+    {
+      "x": 2653,
+      "z": 2399
+    }
+  ],
+  "name": "실측 방 1 (소형 원룸 2.0평)",
+  "openings": [
+    {
+      "facing": null,
+      "height": 2067,
+      "id": "door_1",
+      "offset": 1614,
+      "sillHeight": 0,
+      "swing": {
+        "hingeSide": "left",
+        "kind": "hinged",
+        "maxAngleDeg": 90,
+        "opensInward": true
+      },
+      "type": "door",
+      "wallId": "wall_4",
+      "width": 776
+    },
+    {
+      "facing": null,
+      "height": 1875,
+      "id": "win_2",
+      "offset": 1,
+      "sillHeight": 375,
+      "swing": null,
+      "type": "window",
+      "wallId": "wall_3",
+      "width": 2377
+    }
+  ],
+  "ownerId": "user_local",
+  "roomId": "room_01M89DRT5ZYK2Y1SXT1Y2YS09C",
+  "schemaVersion": "1.0",
+  "source": "lidar",
+  "sourceMeta": {
+    "device": "iPhone16,2",
+    "floorplanImageUrl": null,
+    "rawAssetUrl": null,
+    "roomPlanVersion": "iOS 27.3",
+    "templateId": null
+  },
+  "unit": "mm",
+  "updatedAt": "2026-11-25T13:19:24Z",
+  "walls": [
+    {
+      "end": {
+        "x": 2653,
+        "z": 0
+      },
+      "height": 2280,
+      "id": "wall_1",
+      "start": {
+        "x": 0,
+        "z": 0
+      },
+      "thickness": 120
+    },
+    {
+      "end": {
+        "x": 0,
+        "z": 2399
+      },
+      "height": 2280,
+      "id": "wall_2",
+      "start": {
+        "x": 2653,
+        "z": 2399
+      },
+      "thickness": 120
+    },
+    {
+      "end": {
+        "x": 0,
+        "z": 0
+      },
+      "height": 2280,
+      "id": "wall_3",
+      "start": {
+        "x": 0,
+        "z": 2399
+      },
+      "thickness": 120
+    },
+    {
+      "end": {
+        "x": 2653,
+        "z": 2399
+      },
+      "height": 2280,
+      "id": "wall_4",
+      "start": {
+        "x": 2653,
+        "z": 0
+      },
+      "thickness": 120
+    }
+  ]
+}

@@ -1,0 +1,141 @@
+{
+  "ceilingHeight": 2310,
+  "createdAt": "2026-11-25T13:22:57Z",
+  "existingFurniture": [
+    {
+      "catalogItemId": null,
+      "category": "storage",
+      "confidence": "low",
+      "detectedBy": "roomplan",
+      "dimensions": {
+        "depth": 639,
+        "height": 2096,
+        "width": 1966
+      },
+      "instanceId": "inst_storage_01",
+      "label": "기존 수납장",
+      "movable": true,
+      "position": {
+        "x": 2170,
+        "z": 1349
+      },
+      "rotationDeg": 270
+    }
+  ],
+  "fixtures": [],
+  "floorPolygon": [
+    {
+      "x": 0,
+      "z": 2643
+    },
+    {
+      "x": 22,
+      "z": 0
+    },
+    {
+      "x": 2501,
+      "z": 21
+    },
+    {
+      "x": 2480,
+      "z": 2579
+    }
+  ],
+  "name": "실측 방 2 (소형 방 1.9평)",
+  "openings": [
+    {
+      "facing": null,
+      "height": 2117,
+      "id": "door_1",
+      "offset": 1709,
+      "sillHeight": 0,
+      "swing": {
+        "hingeSide": "left",
+        "kind": "hinged",
+        "maxAngleDeg": 90,
+        "opensInward": true
+      },
+      "type": "door",
+      "wallId": "wall_4",
+      "width": 720
+    },
+    {
+      "facing": null,
+      "height": 1887,
+      "id": "win_2",
+      "offset": 261,
+      "sillHeight": 372,
+      "swing": null,
+      "type": "window",
+      "wallId": "wall_2",
+      "width": 1665
+    }
+  ],
+  "ownerId": "user_local",
+  "roomId": "room_01M89DZAG0Z7BYD909G7QXSTA7",
+  "schemaVersion": "1.0",
+  "source": "lidar",
+  "sourceMeta": {
+    "device": "iPhone16,2",
+    "floorplanImageUrl": null,
+    "rawAssetUrl": null,
+    "roomPlanVersion": "iOS 27.3",
+    "templateId": null
+  },
+  "unit": "mm",
+  "updatedAt": "2026-11-25T13:22:57Z",
+  "walls": [
+    {
+      "end": {
+        "x": 11,
+        "z": 0
+      },
+      "height": 2310,
+      "id": "wall_1",
+      "start": {
+        "x": 11,
+        "z": 2643
+      },
+      "thickness": 120
+    },
+    {
+      "end": {
+        "x": 2501,
+        "z": 10
+      },
+      "height": 2310,
+      "id": "wall_2",
+      "start": {
+        "x": 22,
+        "z": 10
+      },
+      "thickness": 120
+    },
+    {
+      "end": {
+        "x": 2490,
+        "z": 2579
+      },
+      "height": 2310,
+      "id": "wall_3",
+      "start": {
+        "x": 2490,
+        "z": 21
+      },
+      "thickness": 120
+    },
+    {
+      "end": {
+        "x": 0,
+        "z": 2611
+      },
+      "height": 2310,
+      "id": "wall_4",
+      "start": {
+        "x": 2480,
+        "z": 2611
+      },
+      "thickness": 120
+    }
+  ]
+}
