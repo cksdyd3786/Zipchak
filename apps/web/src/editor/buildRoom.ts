@@ -137,9 +137,16 @@ export function newRoomId(now = Date.now()) {
 /** 폼 → RoomData. 검사는 validateForm으로 따로 한다. */
 export function buildRoomFromForm(
   form: RoomForm,
-  opts: { roomId?: string; ownerId?: string; now?: Date } = {},
+  opts: {
+    roomId?: string
+    ownerId?: string
+    now?: Date
+    /** 템플릿에서 시작했으면 그 방: source·sourceMeta·고정물·기존 가구를 이어받는다 (M1-3) */
+    base?: RoomData
+  } = {},
 ): RoomData {
   const now = (opts.now ?? new Date()).toISOString()
+  const base = opts.base
   const walls = makeWalls(form.width, form.depth, form.ceilingHeight)
   const openings: Opening[] = form.openings.map((o, i) => ({
     id: `${o.type === 'door' ? 'door' : 'win'}_${i + 1}`,
@@ -158,10 +165,12 @@ export function buildRoomFromForm(
 
   return {
     schemaVersion: '1.0',
-    roomId: opts.roomId ?? newRoomId(),
-    ownerId: opts.ownerId ?? 'user_local',
+    roomId: opts.roomId ?? base?.roomId ?? newRoomId(),
+    ownerId: opts.ownerId ?? base?.ownerId ?? 'user_local',
     name: form.name.trim() || '내 방',
-    source: 'manual',
+    // 템플릿에서 시작했으면 source: template + sourceMeta.templateId 유지
+    source: base?.source === 'template' ? 'template' : 'manual',
+    ...(base?.sourceMeta ? { sourceMeta: base.sourceMeta } : {}),
     unit: 'mm',
     ceilingHeight: form.ceilingHeight,
     floorPolygon: [
@@ -172,8 +181,9 @@ export function buildRoomFromForm(
     ],
     walls: [walls.N, walls.E, walls.S, walls.W],
     openings,
-    fixtures: [],
-    existingFurniture: [],
+    // 방이 줄어 밖으로 나간 고정물·가구는 뺀다
+    fixtures: (base?.fixtures ?? []).filter((f) => insideRect(form, f.footprint ?? (f.position ? [f.position] : []))),
+    existingFurniture: (base?.existingFurniture ?? []).filter((f) => insideRect(form, [f.position])),
     createdAt: now,
     updatedAt: now,
   }
@@ -184,4 +194,60 @@ export function newOpening(type: 'door' | 'window', key: string): OpeningInput {
   return type === 'door'
     ? { key, type, wall: 'S', offset: 300, width: 900, height: 2100, sillHeight: 0, facing: null, hingeSide: 'left', opensInward: true }
     : { key, type, wall: 'N', offset: 800, width: 1200, height: 1200, sillHeight: 900, facing: 'N', hingeSide: 'left', opensInward: false }
+}
+
+function insideRect(form: Pick<RoomForm, 'width' | 'depth'>, pts: { x: number; z: number }[]) {
+  return pts.every((p) => p.x >= 0 && p.x <= form.width && p.z >= 0 && p.z <= form.depth)
+}
+
+/**
+ * RoomData → 편집 폼 (M1-3 템플릿 불러오기).
+ * 직사각형(꼭짓점 4개, 원점 (0,0))이 아니면 null → 꼭짓점 편집(M1-4)이 필요한 방.
+ * 문·창문의 offset은 이 편집기의 벽 방향(시계 방향, makeWalls) 기준으로 다시 잰다.
+ */
+export function roomToForm(room: RoomData): RoomForm | null {
+  const poly = room.floorPolygon
+  if (poly.length !== 4) return null
+  const xs = poly.map((p) => p.x)
+  const zs = poly.map((p) => p.z)
+  const width = Math.max(...xs)
+  const depth = Math.max(...zs)
+  const corners = new Set(poly.map((p) => `${p.x},${p.z}`))
+  const isRect =
+    Math.min(...xs) === 0 && Math.min(...zs) === 0 &&
+    ['0,0', `${width},0`, `${width},${depth}`, `0,${depth}`].every((c) => corners.has(c))
+  if (!isRect) return null
+
+  const ours = makeWalls(width, depth, room.ceilingHeight)
+  const sideOf = (w: { start: { x: number; z: number }; end: { x: number; z: number } }): WallSide | null => {
+    if (w.start.z === 0 && w.end.z === 0) return 'N'
+    if (w.start.x === width && w.end.x === width) return 'E'
+    if (w.start.z === depth && w.end.z === depth) return 'S'
+    if (w.start.x === 0 && w.end.x === 0) return 'W'
+    return null
+  }
+
+  const openings: OpeningInput[] = []
+  room.openings.forEach((o, i) => {
+    const wall = room.walls.find((w) => w.id === o.wallId)
+    const side = wall && sideOf(wall)
+    if (!wall || !side || o.type === 'opening') return
+    const len = side === 'N' || side === 'S' ? width : depth
+    // 템플릿 벽이 이 편집기와 반대 방향이면 거리를 반대쪽 모서리부터 다시 잰다
+    const same = wall.start.x === ours[side].start.x && wall.start.z === ours[side].start.z
+    openings.push({
+      key: `t${i + 1}`,
+      type: o.type,
+      wall: side,
+      offset: same ? o.offset : len - o.offset - o.width,
+      width: o.width,
+      height: o.height,
+      sillHeight: o.sillHeight,
+      facing: o.facing ?? null,
+      hingeSide: o.swing?.hingeSide ?? 'left',
+      opensInward: o.swing?.opensInward ?? true,
+    })
+  })
+
+  return { name: room.name, width, depth, ceilingHeight: room.ceilingHeight, openings }
 }
