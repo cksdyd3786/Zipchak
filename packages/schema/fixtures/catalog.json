@@ -36,9 +36,9 @@
       "white"
     ],
     "asset": {
-      "glbUrl": "https://web-api.ikea.com/dimma/assets/1.2/80354281/PS01_S01_NV01/iqp3/glb_draco/083d08bd587b4a07bce5cb3a571f883f-80354281_PS01_S01_NV01_iqp3_v1.4.11.glb",
-      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/micke-desk-white__0736022_pe740349_s5.jpg",
-      "assetFidelity": "official",
+      "glbUrl": "/assets/proxy/cat_desk_micke_730.glb",
+      "thumbnailUrl": null,
+      "assetFidelity": "proxy",
       "originAtFootprintCenter": true
     },
     "sponsor": {
@@ -87,9 +87,9 @@
       "white"
     ],
     "asset": {
-      "glbUrl": "https://web-api.ikea.com/dimma/assets/1.2/80354276/PS01_S01_NV01/rqp3/glb_draco/370fd7aeef434e99a96c0817370cc437-80354276_PS01_S01_NV01_RQP3_3.0.glb",
-      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/micke-desk-white__0736018_pe740345_s5.jpg",
-      "assetFidelity": "official",
+      "glbUrl": "/assets/proxy/cat_desk_micke_1050.glb",
+      "thumbnailUrl": null,
+      "assetFidelity": "proxy",
       "originAtFootprintCenter": true
     },
     "sponsor": {
@@ -137,9 +137,9 @@
       "white"
     ],
     "asset": {
-      "glbUrl": "https://web-api.ikea.com/dimma/assets/geomagical/29416758/PS01_S01_NV_01/simple/glb_draco/7e0ab0e20e394146946f36c899c0e7f4-G-29416758-de80d3edad569bdd8b5f0c000ffe1f6ee7f5ffbd-simple+draco.glb",
-      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/lagkapten-adils-desk-white__0977229_pe813472_s5.jpg",
-      "assetFidelity": "official",
+      "glbUrl": "/assets/proxy/cat_desk_lagkapten_1200.glb",
+      "thumbnailUrl": null,
+      "assetFidelity": "proxy",
       "originAtFootprintCenter": true
     },
     "sponsor": {
@@ -188,9 +188,9 @@
       "modern"
     ],
     "asset": {
-      "glbUrl": "https://web-api.ikea.com/dimma/assets/geomagical/59621917/PS01_S01_NV_01/simple/glb/583bfc2ac49824dabd7f152756a7856a-G-59621917-8ee4d09d644bfde6300374469eebfc3661cefa28-simple.glb",
-      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/trotten-desk-white__1517365_pe1012269_s5.jpg",
-      "assetFidelity": "official",
+      "glbUrl": "/assets/proxy/cat_desk_trotten_1200.glb",
+      "thumbnailUrl": null,
+      "assetFidelity": "proxy",
       "originAtFootprintCenter": true
     },
     "sponsor": {
@@ -240,9 +240,9 @@
       "modern"
     ],
     "asset": {
-      "glbUrl": "https://web-api.ikea.com/dimma/assets/geomagical/99431982/PS01_S01_NV_01/simple/glb_draco/7f531f06993a400d86580f12ad790fe7-G-99431982-c43512c8d95098d59bb54949d9e5bfdb6e69ba52-simple+draco.glb",
-      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/lagkapten-alex-desk-white__1022432_pe832720_s5.jpg",
-      "assetFidelity": "official",
+      "glbUrl": "/assets/proxy/cat_desk_lagkapten_alex_1400.glb",
+      "thumbnailUrl": null,
+      "assetFidelity": "proxy",
       "originAtFootprintCenter": true
     },
     "sponsor": {
@@ -291,9 +291,9 @@
       "slim"
     ],
     "asset": {
-      "glbUrl": "https://web-api.ikea.com/dimma/assets/geomagical/00397307/PS01_S01_NV_01/simple/glb_draco/bfcdd53c9275470794f36e63a2a71509-G-00397307-98087ed690722e1c14566bc7f9a2a1d30c1eee2b-simple+draco.glb",
-      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/trones-shoe-cabinet-storage-white__0710711_pe727734_s5.jpg",
-      "assetFidelity": "official",
+      "glbUrl": "/assets/proxy/cat_storage_trones_slim_180.glb",
+      "thumbnailUrl": null,
+      "assetFidelity": "proxy",
       "originAtFootprintCenter": true
     },
     "sponsor": {
@@ -342,9 +342,9 @@
       "slim"
     ],
     "asset": {
-      "glbUrl": "https://web-api.ikea.com/dimma/assets/1.2/10613909/PS01_S01_NV01/rqp3/glb_draco/d27b3df60377dba5b0bddf953294606a-10613909_PS01_S01_NV01_RQP3_4.0.glb",
-      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/vesken-trolley-white__1418594_pe976656_s5.jpg",
-      "assetFidelity": "official",
+      "glbUrl": "/assets/proxy/cat_storage_vesken_slim_180.glb",
+      "thumbnailUrl": null,
+      "assetFidelity": "proxy",
       "originAtFootprintCenter": true
     },
     "sponsor": {
@@ -393,9 +393,9 @@
       "slim"
     ],
     "asset": {
-      "glbUrl": "https://web-api.ikea.com/dimma/assets/geomagical/40307866/PS01_S01_NV_01/simple/glb_draco/162c6d1a5b1f4eeab7deb1bfe5484c6f-G-40307866-40f460c492946f9e59e06a307b6abfeef0e3dfdb-simple+draco.glb",
-      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/vesken-shelf-unit-white__0419316_pe576206_s5.jpg",
-      "assetFidelity": "official",
+      "glbUrl": "/assets/proxy/cat_shelf_vesken_slim_233.glb",
+      "thumbnailUrl": null,
+      "assetFidelity": "proxy",
       "originAtFootprintCenter": true
     },
     "sponsor": {
@@ -444,9 +444,9 @@
       "white"
     ],
     "asset": {
-      "glbUrl": "https://web-api.ikea.com/dimma/assets/1.2/00522047/PS01_S01_NV01/rqp3/glb_draco/00522047_PS01_S01_NV01_RQP3_4.0_03890849055f43b8ac35482f7e01cf6f.glb",
-      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/billy-bookcase-white__1590272_pe1038911_s5.jpg",
-      "assetFidelity": "official",
+      "glbUrl": "/assets/proxy/cat_shelf_billy_800.glb",
+      "thumbnailUrl": null,
+      "assetFidelity": "proxy",
       "originAtFootprintCenter": true
     },
     "sponsor": {
@@ -496,9 +496,9 @@
       "modern"
     ],
     "asset": {
-      "glbUrl": "https://web-api.ikea.com/dimma/assets/1.2/20351884/PS01_S01_NV01/iqp3/glb_draco/c59e88a945c14f68b56e9d83bb22faf9-20351884_PS01_S01_NV01_iqp3_v1.4.11.glb",
-      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/kallax-shelving-unit-white__0644757_pe702939_s5.jpg",
-      "assetFidelity": "official",
+      "glbUrl": "/assets/proxy/cat_shelf_kallax_770.glb",
+      "thumbnailUrl": null,
+      "assetFidelity": "proxy",
       "originAtFootprintCenter": true
     },
     "sponsor": {
@@ -547,9 +547,9 @@
       "natural"
     ],
     "asset": {
-      "glbUrl": "https://web-api.ikea.com/dimma/assets/geomagical/30261270/PS01_S01_NV_01/simple/glb/28005b9c8bcb20c7fb7c11ca75101e33-G-30261270-d0a12f7217c99c25d778349302e5c55560e81b4d-simple.glb",
-      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/tarva-bed-frame-pine__0655004_pe708894_s5.jpg",
-      "assetFidelity": "official",
+      "glbUrl": "/assets/proxy/cat_bed_tarva_900.glb",
+      "thumbnailUrl": null,
+      "assetFidelity": "proxy",
       "originAtFootprintCenter": true
     },
     "sponsor": {
@@ -598,9 +598,9 @@
       "white"
     ],
     "asset": {
-      "glbUrl": "https://web-api.ikea.com/dimma/assets/geomagical/59581983/PS01_S01_NV_01/simple/glb/5df4b7721e6de29debce97cff4408f94-G-59581983-3ac6e8fe0c4c80d28aa9af67d93e3680475786b1-simple.glb",
-      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/vihals-bed-frame-with-2-storage-boxes-white-luroey__1447002_pe988912_s5.jpg",
-      "assetFidelity": "official",
+      "glbUrl": "/assets/proxy/cat_bed_vihals_900.glb",
+      "thumbnailUrl": null,
+      "assetFidelity": "proxy",
       "originAtFootprintCenter": true
     },
     "sponsor": {
@@ -649,9 +649,9 @@
       "modern"
     ],
     "asset": {
-      "glbUrl": "https://web-api.ikea.com/dimma/assets/geomagical/40518270/PS01_S01_NV_01/simple/glb/40c87964c764bd83a9b108e1497874f3-G-40518270-277f26626d75c57eae4e1a675924b3b1ff2bc0fe-simple.glb",
-      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/vevelstad-bed-frame-white__1035356_pe840532_s5.jpg",
-      "assetFidelity": "official",
+      "glbUrl": "/assets/proxy/cat_bed_vevelstad_1200.glb",
+      "thumbnailUrl": null,
+      "assetFidelity": "proxy",
       "originAtFootprintCenter": true
     },
     "sponsor": {
@@ -700,9 +700,9 @@
       "cozy"
     ],
     "asset": {
-      "glbUrl": "https://web-api.ikea.com/dimma/assets/geomagical/10578741/PS01_S01_NV_01/simple/glb/c922e1571d2daa445b9656d7b00bd12b-G-10578741-7eb3310c55341cb7519cd9632dab62e3a22a3882-simple.glb",
-      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/slattum-upholstered-bed-frame-vissle-dark-grey__1259334_pe926648_s5.jpg",
-      "assetFidelity": "official",
+      "glbUrl": "/assets/proxy/cat_bed_slattum_1200.glb",
+      "thumbnailUrl": null,
+      "assetFidelity": "proxy",
       "originAtFootprintCenter": true
     },
     "sponsor": {
@@ -750,9 +750,9 @@
       "dark"
     ],
     "asset": {
-      "glbUrl": "https://web-api.ikea.com/dimma/assets/geomagical/00503435/PS01_S01_NV_01/simple/glb_draco/5428b19c251ed9997352c74185829237-G-00503435-10ff792038fcf0514872064a1f547a884a82e036-simple+draco.glb",
-      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/smaellen-swivel-chair-black__1096271_pe864278_s5.jpg",
-      "assetFidelity": "official",
+      "glbUrl": "/assets/proxy/cat_chair_smaellen.glb",
+      "thumbnailUrl": null,
+      "assetFidelity": "proxy",
       "originAtFootprintCenter": true
     },
     "sponsor": {
@@ -801,9 +801,9 @@
       "cozy"
     ],
     "asset": {
-      "glbUrl": "https://web-api.ikea.com/dimma/assets/geomagical/49416012/PS01_S01_NV_01/simple/glb_draco/6562fc4e4403468aab1c4a228d5d5116-G-49416012-2eb4df9e7a0c153707e5e4fe62d58029de77507e-simple+draco.glb",
-      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/oerfjaell-swivel-chair-white-vissle-light-grey__0978008_pe813981_s5.jpg",
-      "assetFidelity": "official",
+      "glbUrl": "/assets/proxy/cat_chair_oerfjaell.glb",
+      "thumbnailUrl": null,
+      "assetFidelity": "proxy",
       "originAtFootprintCenter": true
     },
     "sponsor": {
@@ -853,9 +853,9 @@
       "beige"
     ],
     "asset": {
-      "glbUrl": "https://web-api.ikea.com/dimma/assets/geomagical/70489389/PS01_S01_NV_01/simple/glb_draco/8fc1dd8adff948d6a86a457e5f6f912e-G-70489389-7c05443a170c090ecf5e35ed185dc39f1bcb434c-simple+draco.glb",
-      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/millberget-swivel-chair-murum-beige__1020141_pe831795_s5.jpg",
-      "assetFidelity": "official",
+      "glbUrl": "/assets/proxy/cat_chair_millberget.glb",
+      "thumbnailUrl": null,
+      "assetFidelity": "proxy",
       "originAtFootprintCenter": true
     },
     "sponsor": {
@@ -904,9 +904,9 @@
       "white"
     ],
     "asset": {
-      "glbUrl": "https://web-api.ikea.com/dimma/assets/1.2/10449909/PS01_S01_NV01/iqp3/glb_draco/10449909_PS01_S01_NV01_IQP3_2.0_4b2954d1ef210b74c930f41baed0c9de.glb",
-      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/lack-side-table-white__0750653_pe746802_s5.jpg",
-      "assetFidelity": "official",
+      "glbUrl": "/assets/proxy/cat_table_lack_550.glb",
+      "thumbnailUrl": null,
+      "assetFidelity": "proxy",
       "originAtFootprintCenter": true
     },
     "sponsor": {
@@ -956,9 +956,9 @@
       "wood"
     ],
     "asset": {
-      "glbUrl": "https://web-api.ikea.com/dimma/assets/1.2/20352987/PS01_S01_NV01/iqp3/glb_draco/3e07f6b1386b486baaf5894c39bdd365-20352987_PS01_S01_NV01_IQP3_2.0.glb",
-      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/lack-coffee-table-black-brown__57540_pe163122_s5.jpg",
-      "assetFidelity": "official",
+      "glbUrl": "/assets/proxy/cat_table_lack_900.glb",
+      "thumbnailUrl": null,
+      "assetFidelity": "proxy",
       "originAtFootprintCenter": true
     },
     "sponsor": {
@@ -1008,9 +1008,9 @@
       "modern"
     ],
     "asset": {
-      "glbUrl": "https://web-api.ikea.com/dimma/assets/geomagical/29420393/PS01_S01_NV_01/simple/glb_draco/2d0ce72f228c49d3934e8054db50fd41-G-29420393-19891f589e81c0a8301b2bf4f721564b6e02480c-simple+draco.glb",
-      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/sandsberg-table-black__1074348_pe856162_s5.jpg",
-      "assetFidelity": "official",
+      "glbUrl": "/assets/proxy/cat_table_sandsberg_1100.glb",
+      "thumbnailUrl": null,
+      "assetFidelity": "proxy",
       "originAtFootprintCenter": true
     },
     "sponsor": {
@@ -1058,9 +1058,9 @@
       "white"
     ],
     "asset": {
-      "glbUrl": "https://web-api.ikea.com/dimma/assets/geomagical/80437234/PS01_S01_NV_01/simple/glb_draco/6eaed30d33b248de93122a70aac205d6-G-80437234-f727a61810ea4fc50c70e64376a7016ec3da9e57-simple+draco.glb",
-      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/kleppstad-wardrobe-with-2-doors-white__0733324_pe748781_s5.jpg",
-      "assetFidelity": "official",
+      "glbUrl": "/assets/proxy/cat_wardrobe_kleppstad_790.glb",
+      "thumbnailUrl": null,
+      "assetFidelity": "proxy",
       "originAtFootprintCenter": true
     },
     "sponsor": {
@@ -1109,9 +1109,9 @@
       "wood"
     ],
     "asset": {
-      "glbUrl": "https://web-api.ikea.com/dimma/assets/geomagical/50453758/PS01_S01_NV_01/simple/glb_draco/bfc0be9f173f66f7332fe36cac46a750-G-50453758-dca159758261107f2f59ad01efd3109166c176ef-simple+draco.glb",
-      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/rakkestad-wardrobe-with-2-doors-black-brown__0780372_pe760493_s5.jpg",
-      "assetFidelity": "official",
+      "glbUrl": "/assets/proxy/cat_wardrobe_rakkestad_790.glb",
+      "thumbnailUrl": null,
+      "assetFidelity": "proxy",
       "originAtFootprintCenter": true
     },
     "sponsor": {
@@ -1160,9 +1160,9 @@
       "modern"
     ],
     "asset": {
-      "glbUrl": "https://web-api.ikea.com/dimma/assets/1.2/10407928/PS01_S01_NV01/rqp3/glb_draco/10407928_PS01_S01_NV01_RQP3_3.0_852477038e034f2fb09ef6b5b2e4316e.glb",
-      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/brimnes-wardrobe-with-3-doors-white__0176787_pe329567_s5.jpg",
-      "assetFidelity": "official",
+      "glbUrl": "/assets/proxy/cat_wardrobe_brimnes_1170.glb",
+      "thumbnailUrl": null,
+      "assetFidelity": "proxy",
       "originAtFootprintCenter": true
     },
     "sponsor": {
@@ -1212,9 +1212,9 @@
       "dark"
     ],
     "asset": {
-      "glbUrl": "https://web-api.ikea.com/dimma/assets/geomagical/20404095/PS01_S01_NV_01/simple/glb_draco/8e1c2e96c3b14dae9f006776f6c07105-G-20404095-660a3a7ab3ef657f958d2302767dedd3c9af9446-simple+draco.glb",
-      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/tagarp-floor-uplighter-black-white__0810840_pe771436_s5.jpg",
-      "assetFidelity": "official",
+      "glbUrl": "/assets/proxy/cat_lamp_tagarp_floor.glb",
+      "thumbnailUrl": null,
+      "assetFidelity": "proxy",
       "originAtFootprintCenter": true
     },
     "sponsor": {
@@ -1264,9 +1264,9 @@
       "natural"
     ],
     "asset": {
-      "glbUrl": "https://web-api.ikea.com/dimma/assets/geomagical/30298396/PS01_S01_NV_01/simple/glb_draco/0d32fd1a085995c7d11a2d7f76df0522-G-30298396-504aaecfd6d78a99825ac034ede03ee5de892276-simple+draco.glb",
-      "thumbnailUrl": "https://www.ikea.com/kr/ko/images/products/ikornnes-standing-mirror-ash__0633524_pe695900_s5.jpg",
-      "assetFidelity": "official",
+      "glbUrl": "/assets/proxy/cat_decor_ikornnes_520.glb",
+      "thumbnailUrl": null,
+      "assetFidelity": "proxy",
       "originAtFootprintCenter": true
     },
     "sponsor": {
