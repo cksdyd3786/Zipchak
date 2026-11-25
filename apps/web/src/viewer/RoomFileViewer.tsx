@@ -23,9 +23,18 @@ function roomSize(room: RoomData) {
   return `${(w / 1000).toFixed(2)} × ${(d / 1000).toFixed(2)} m`
 }
 
-export function RoomFileViewer() {
+export interface RoomFileViewerProps {
+  /** 방을 열면 알려 준다 (App이 [가구 배치] 탭에 같은 방을 넘김) */
+  onRoomLoaded?: (room: RoomData) => void
+  /** [이 방에서 가구 배치] 버튼 */
+  onEditFurniture?: () => void
+  /** 탭을 오갔을 때 다시 보여 줄 방 */
+  initialRoom?: RoomData | null
+}
+
+export function RoomFileViewer({ onRoomLoaded, onEditFurniture, initialRoom = null }: RoomFileViewerProps = {}) {
   const input = useRef<HTMLInputElement>(null)
-  const [room, setRoom] = useState<RoomData | null>(null)
+  const [room, setRoom] = useState<RoomData | null>(initialRoom)
   const [fileName, setFileName] = useState('')
   const [errors, setErrors] = useState<string[]>([])
   const [dragOver, setDragOver] = useState(false)
@@ -36,6 +45,7 @@ export function RoomFileViewer() {
     setFileName(file.name)
     if (res.ok) {
       setRoom(res.room)
+      onRoomLoaded?.(res.room)
       setErrors([])
     } else {
       setErrors(res.errors)
@@ -88,6 +98,11 @@ export function RoomFileViewer() {
               벽 {room.walls.length} · 문·창 {room.openings.length} · 고정물 {room.fixtures.length} · 가구 {room.existingFurniture.length}
             </div>
             <div style={{ color: '#777' }}>{fileName}</div>
+            {onEditFurniture && (
+              <button style={{ ...btn, marginTop: 8, background: '#33343b', border: '1px solid #555' }} onClick={onEditFurniture}>
+                🪑 이 방에서 가구 배치 →
+              </button>
+            )}
           </div>
         )}
         {errors.length > 0 && (

@@ -1,8 +1,9 @@
 import layoutSample from '@schema/fixtures/layout.sample.json'
 import roomSample from '@schema/fixtures/room.sample.json'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { RoomEditor } from './editor/RoomEditor'
 import { LayoutEditor } from './layout/LayoutEditor'
+import { layoutFromRoom } from './layout/layoutFromRoom'
 import { RoomScene } from './scene/RoomScene'
 import { RoomFileViewer } from './viewer/RoomFileViewer'
 import type { FurnitureLayout, RoomData } from './types/schema'
@@ -14,6 +15,12 @@ type Mode = 'open' | 'editor' | 'layout' | 'sample'
 
 export default function App() {
   const [mode, setMode] = useState<Mode>('open')
+  // [가구 배치] 탭에서 편집할 방: [파일 열기]로 연 방, 아직 없으면 샘플 방
+  const [currentRoom, setCurrentRoom] = useState<RoomData>(sampleRoom)
+  const currentLayout = useMemo(
+    () => (currentRoom === sampleRoom ? sampleLayout : layoutFromRoom(currentRoom)),
+    [currentRoom],
+  )
   const tab = (m: Mode, label: string) => (
     <button
       onClick={() => setMode(m)}
@@ -35,9 +42,9 @@ export default function App() {
         {tab('sample', '샘플 방 보기')}
       </div>
       <div style={{ flex: 1, minHeight: 0 }}>
-        {mode === 'open' && <RoomFileViewer />}
+        {mode === 'open' && <RoomFileViewer initialRoom={currentRoom === sampleRoom ? null : currentRoom} onRoomLoaded={setCurrentRoom} onEditFurniture={() => setMode('layout')} />}
         {mode === 'editor' && <RoomEditor />}
-        {mode === 'layout' && <LayoutEditor room={sampleRoom} initialLayout={sampleLayout} />}
+        {mode === 'layout' && <LayoutEditor key={currentRoom.roomId} room={currentRoom} initialLayout={currentLayout} />}
         {mode === 'sample' && <RoomScene room={sampleRoom} />}
       </div>
     </div>

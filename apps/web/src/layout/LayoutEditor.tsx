@@ -6,13 +6,15 @@ import { useLayoutStore } from '../store/layoutStore'
 import type { FurnitureLayout, RoomData } from '../types/schema'
 import { findViolations } from './collision'
 import { EditableFurniture } from './EditableFurniture'
+import { QUICK_FURNITURE, newPlacement } from './layoutFromRoom'
 
 const VALIDATE_DEBOUNCE_MS = 500
 
 const btn = { padding: '8px 12px', marginRight: 6, background: '#33343b', color: '#eee', border: '1px solid #555', borderRadius: 6, cursor: 'pointer', fontSize: 14 } as const
 
 export function LayoutEditor({ room, initialLayout, onSave }: { room: RoomData; initialLayout: FurnitureLayout; onSave?: (l: FurnitureLayout) => void }) {
-  const { layout, selectedId, draggingId, setLayout, rotate, remove } = useLayoutStore()
+  const { layout, selectedId, draggingId, setLayout, rotate, remove, add } = useLayoutStore()
+  const [seq, setSeq] = useState(1)
 
   useEffect(() => setLayout(initialLayout), [initialLayout, setLayout])
 
@@ -63,6 +65,7 @@ export function LayoutEditor({ room, initialLayout, onSave }: { room: RoomData; 
 
       {/* 왼쪽 위: 점수·위반 */}
       <div style={{ position: 'absolute', left: 12, top: 12, width: 260, padding: 12, borderRadius: 8, background: '#16171bdd', color: '#eee', fontFamily: 'sans-serif', fontSize: 13 }}>
+        <div style={{ color: '#aaa', marginBottom: 4 }}>{room.name}</div>
         <div style={{ fontSize: 16, fontWeight: 700 }}>
           점수 {result?.analysis?.score ?? '–'} {loading && <span style={{ fontSize: 12, color: '#aaa' }}>계산 중…</span>}
         </div>
@@ -76,7 +79,23 @@ export function LayoutEditor({ room, initialLayout, onSave }: { room: RoomData; 
           <div style={{ marginTop: 6, color: '#8fd19e' }}>충돌 없음</div>
         )}
         {result?.analysis?.reasons?.map((r, i) => <div key={i} style={{ marginTop: 4, color: '#aaa' }}>{r}</div>)}
-        <div style={{ marginTop: 8, color: '#888' }}>가구를 끌어서 옮기세요 (50mm 단위)</div>
+        <div style={{ marginTop: 8, color: '#888' }}>
+          {layout.placements.length === 0 ? '이 방에는 가구가 없어요. 아래에서 추가하세요' : '가구를 끌어서 옮기세요 (50mm 단위)'}
+        </div>
+        <div style={{ marginTop: 8, display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+          {QUICK_FURNITURE.map((q) => (
+            <button
+              key={q.category}
+              style={{ ...btn, marginRight: 0, padding: '4px 8px', fontSize: 12 }}
+              onClick={() => {
+                add(newPlacement(room, q.category, q.dimensions, seq))
+                setSeq((n) => n + 1)
+              }}
+            >
+              + {q.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* 아래: 선택한 가구 도구 + 저장 */}

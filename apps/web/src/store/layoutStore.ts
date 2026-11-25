@@ -15,6 +15,8 @@ interface LayoutState {
   move: (id: string, x: number, z: number) => void
   rotate: (id: string) => void
   remove: (id: string) => void
+  /** 새 가구 추가 후 선택 */
+  add: (p: Placement) => void
 }
 
 const patch = (layout: FurnitureLayout, id: string, fn: (p: Placement) => Placement): FurnitureLayout => ({
@@ -42,4 +44,5 @@ export const useLayoutStore = create<LayoutState>((set) => ({
           }
         : s,
     ),
+  add: (p) => set((s) => (s.layout ? { layout: { ...s.layout, placements: [...s.layout.placements, p] }, selectedId: p.instanceId } : s)),
 }))
