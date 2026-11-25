@@ -1,6 +1,6 @@
 import { CameraControls, OrthographicCamera, PerspectiveCamera } from '@react-three/drei'
 import { Canvas, useThree } from '@react-three/fiber'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import type * as THREE from 'three'
 import { mmToM } from '../lib/units'
 import type { FurnitureLayout, RoomData } from '../types/schema'
@@ -21,6 +21,8 @@ export interface RoomSceneProps {
   initialView?: ViewMode
   /** 문 회전 반경 부채꼴 표시 (기본 true). M4-3 */
   showDoorSwing?: boolean
+  /** 기본 가구 렌더 대신 그릴 내용 (M4-2 편집용 EditableFurniture 등). Canvas 안에 들어간다 */
+  furniture?: ReactNode
 }
 
 interface Bounds {
@@ -101,7 +103,7 @@ const btn = (active: boolean) =>
   }) as const
 
 /** B·C 공용 진입점. props 모양을 바꿀 때는 C와 서로 PR 리뷰. */
-export function RoomScene({ room, layout, initialView = 'quarter', showDoorSwing = true }: RoomSceneProps) {
+export function RoomScene({ room, layout, initialView = 'quarter', showDoorSwing = true, furniture }: RoomSceneProps) {
   const [view, setView] = useState<ViewMode>(initialView)
 
   // 바닥 다각형 바운딩 박스 (mm)
@@ -123,7 +125,7 @@ export function RoomScene({ room, layout, initialView = 'quarter', showDoorSwing
 
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-      <Canvas shadows="percentage" dpr={[1, 2]}>
+      <Canvas shadows="percentage" dpr={[1, 2]} style={{ touchAction: 'none' }}>
         <color attach="background" args={['#1e1f24']} />
         <ambientLight intensity={0.6} />
         <directionalLight position={[bounds.cx + 3, 6, bounds.cz + 4]} intensity={1.2} castShadow />
@@ -133,7 +135,7 @@ export function RoomScene({ room, layout, initialView = 'quarter', showDoorSwing
         <Openings walls={room.walls} openings={room.openings} />
         {showDoorSwing && <DoorSwing walls={room.walls} openings={room.openings} center={box.center} />}
         <Fixtures fixtures={room.fixtures} />
-        <Furniture items={items} />
+        {furniture ?? <Furniture items={items} />}
 
         <Cameras view={view} bounds={bounds} />
       </Canvas>
