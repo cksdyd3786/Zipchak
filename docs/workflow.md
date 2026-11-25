@@ -3,7 +3,7 @@
 ## 브랜치
 
 ```
-main  ← 배포 (6주차 금요일 이후 동결)
+main  ← 배포 (12/11 코드 동결 이후 고정)
  └ dev  ← 통합 (PR은 여기로)
     └ feat/<담당코드>-<기능ID>   예: feat/D-M2-2, feat/B-M4-1
     └ fix/<담당코드>-<짧은설명>   예: fix/C-socket-reconnect
@@ -18,7 +18,7 @@ main  ← 배포 (6주차 금요일 이후 동결)
 | --- | --- | --- |
 | **코드 PR** (`apps/*`, `services/*`, 각 파트 폴더의 `CLAUDE.md`·`README.md`) | **CI 통과만** (승인 필요 없음) | **작성자가 직접** Squash and merge |
 | **공통 PR** (`/docs/`, `/README.md`, `/CLAUDE.md`, `/packages/schema/`, `/.github/` 중 하나라도 건드림) | CI 통과 + **@cksdyd3786 승인** | 승인 후 누구든. E 본인 PR은 E가 `--admin`으로 머지 |
-| **`dev` → `main`** | 통합 데모 날(2·4·6주차 금요일) | E만 |
+| **`dev` → `main`** | 금요일 통합 시연 통과 후 | E만 |
 
 ```bash
 git fetch origin && git switch -c feat/D-M2-3 origin/dev   # 항상 dev에서 새로 딴다
@@ -56,7 +56,7 @@ gh pr merge --squash
 2. fixture(`packages/schema/fixtures/`)로 **스캔(RoomData 로드) → 배치(엔진 `/v1/layouts:recommend`·`:validate`) → 방문(친구 방 입장·포스트잇)** 흐름을 차례로 돌린다.
 3. 화면을 **녹화**해 둔다 (발표 자료·회귀 비교용).
 4. 깨진 곳은 그 자리에서 **이슈**로 남긴다 (`bug` + 해당 `part:*` 라벨, 재현 단계와 녹화 시각).
-5. 2·4·6주차 금요일은 시연이 끝난 뒤 E가 `dev` → `main`을 반영한다.
+5. 시연을 통과하면 E가 `dev` → `main`을 반영한다. 12/11 시연이 마지막이고, 그 뒤 `main`은 동결한다.
 
 ## 이슈
 

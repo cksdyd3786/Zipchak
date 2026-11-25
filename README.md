@@ -58,7 +58,7 @@ cd packages/schema && npm install && npm run validate
 - **매주 금요일 30분 통합 시연:** 최신 `dev`로 fixture 스캔 → 배치 → 방문 흐름을 돌려 녹화하고, 깨진 곳은 이슈로 남긴다.
 - **`dev` CI가 빨간불이면 모두 머지를 멈추고**, 깨뜨린 PR 작성자가 먼저 고친다.
 - 스키마 변경은 `schema-change` 이슈로 먼저 합의한다. 필드 추가는 minor, 삭제·이름 변경은 전원 합의. `dev` → `main`은 통합 데모 날 E만 반영한다.
-- 통합 데모는 **2주차·4주차·6주차 금요일**.
+- 개발 마감·코드 동결은 **12/11(금)**. 매주 금요일 E가 통합 시연을 돌린다.
 - 자세한 내용: [`docs/workflow.md`](docs/workflow.md), 좌표·단위 규약: [`docs/conventions.md`](docs/conventions.md)
 
 ## 문서
@@ -66,6 +66,6 @@ cd packages/schema && npm install && npm run validate
 - [`docs/features.md`](docs/features.md) — 기능 ID별 우선순위·담당·완료 기준
 - [`docs/api.md`](docs/api.md) — REST·Socket.io 계약
 - [`docs/conventions.md`](docs/conventions.md) — 좌표·단위·ID 규약
-- [`docs/milestones.md`](docs/milestones.md) — 6주 일정
+- [`docs/milestones.md`](docs/milestones.md) — 12/11 마감 일정
 - [`docs/workflow.md`](docs/workflow.md) — 브랜치·PR·Claude 사용 규칙
 - 원본 기획서: 개발 계획서(PRD & Architecture Spec) v1.1
