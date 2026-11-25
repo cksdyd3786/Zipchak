@@ -4,6 +4,7 @@ import cors from "cors";
 import express, { type Express } from "express";
 import { loadConfig, type Config } from "./config.js";
 import { errorHandler, notFoundHandler } from "./errors.js";
+import { catalogRouter } from "./routes/catalog.js";
 import { templatesRouter } from "./routes/templates.js";
 
 // TODO(M0-1)  POST /auth/login
@@ -31,6 +32,7 @@ export function createApp({ config = loadConfig(), extraRoutes }: AppOptions = {
 
   // fixture 는 createApp() 할 때 읽고 검증한다 — 틀리면 서버가 뜨지 않는다.
   app.use(templatesRouter()); // M1-3
+  app.use(catalogRouter()); // M3-1 (DB 적재는 #13)
 
   extraRoutes?.(app);
 
