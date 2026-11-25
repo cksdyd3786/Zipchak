@@ -1,4 +1,4 @@
-# CLAUDE.md — apps/web (담당 B: 3D 웹 뷰어·에디터 / social 하위는 C / recommend 하위는 D)
+# CLAUDE.md — apps/web (담당 B: 3D 웹 뷰어·에디터 / social 하위는 C)
 
 루트 `CLAUDE.md`의 규칙을 먼저 따른다.
 
@@ -6,9 +6,7 @@
 
 - `apps/web/src/**` → **B**
 - `apps/web/src/social/**` → **C** (포스트잇 레이어, 게스트 화면, 소켓 클라이언트). B는 이 폴더를 수정하지 않고, C는 그 밖을 수정하지 않는다.
-- `apps/web/src/recommend/**` → **D** (취향 질문 화면, 배치안 카드 3개, 마켓 패널·구매 링크). B는 이 폴더를 수정하지 않고, D는 그 밖을 수정하지 않는다.
-- D가 3D 장면에 추천 가구를 띄울 때는 `RoomScene`의 props(배치안 `FurnitureLayout`)로만 넘긴다. props가 더 필요하면 B에게 PR로 요청한다.
-- B·C가 만나는 지점은 `src/scene/RoomScene.tsx`의 props와 `src/hooks/useFurniturePick.ts`뿐이다. 바꿀 때는 서로 PR 리뷰.
+- 두 사람이 만나는 지점은 `src/scene/RoomScene.tsx`의 props와 `src/hooks/useFurniturePick.ts`뿐이다. 바꿀 때는 서로 PR 리뷰.
 
 ## 스택
 
@@ -22,19 +20,14 @@ React 18 + Vite + TypeScript, @react-three/fiber, @react-three/drei, Zustand, Ta
 | M1-3 | 자유 모드: 원룸 템플릿 3종 선택 UI | Must |
 | M1-4 | 자유 모드: 꼭짓점 드래그 다각형 편집 | Should |
 | M1-5 | 자유 모드: 평면도 이미지 배경 따라 그리기 | Could |
+| M2-1 | 취향 질문 화면 (엔진은 D) | Must |
 | M2-5 | 가중치 슬라이더 UI (엔진은 D) | Should |
+| M3-5 | 추천 상품 3D 배치 + 구매 링크 (`purchase_click` 이벤트) | Must |
 | M3-6 | 예산 필터·합계 금액 | Should |
 | M4-1 | `RoomData` → 3D 렌더 (30fps: iPhone Safari·Android Chrome·PC) | Must |
 | M4-2 | 가구 드래그 이동·90° 회전·충돌 시 빨간색, 옮기면 점수 재계산 | Must |
 | M4-3 | 쿼터뷰/탑뷰 전환, 문 회전 반경 부채꼴 | Must |
 | M4-5 | 채광 시뮬레이션 (창문 `facing` 있을 때만) | Could |
-
-## 담당 기능 (D, `src/recommend/`)
-
-| ID | 기능 | 우선순위 |
-| --- | --- | --- |
-| M2-1 | 취향 질문 화면 + 배치안 카드 3개 (엔진 `recommend` 결과 표시) | Must |
-| M3-5 | 마켓 패널: 추천 상품 3D 배치 + 구매 링크 (`purchase_click` 이벤트) | Must |
 
 ## 담당 기능 (C, `src/social/`)
 
