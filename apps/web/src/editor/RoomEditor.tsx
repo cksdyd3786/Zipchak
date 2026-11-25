@@ -6,6 +6,7 @@ import {
   MAX_OPENINGS,
   WALL_LABEL,
   buildRoomFromForm,
+  roomToForm,
   newOpening,
   validateForm,
   wallLength,
@@ -47,14 +48,24 @@ function NumberField(props: { label: string; value: number; onChange: (v: number
   )
 }
 
-export function RoomEditor({ onSave }: { onSave?: (room: RoomData) => void }) {
-  const [form, setForm] = useState<RoomForm>({
-    name: '내 방',
-    width: 3200,
-    depth: 4800,
-    ceilingHeight: 2400,
-    openings: [newOpening('door', 'o1'), newOpening('window', 'o2')],
-  })
+const DEFAULT_FORM: RoomForm = {
+  name: '내 방',
+  width: 3200,
+  depth: 4800,
+  ceilingHeight: 2400,
+  openings: [newOpening('door', 'o1'), newOpening('window', 'o2')],
+}
+
+export interface RoomEditorProps {
+  onSave?: (room: RoomData) => void
+  /** 템플릿 등에서 시작할 방 (M1-3). source·sourceMeta를 이어받는다 */
+  initialRoom?: RoomData
+  /** [이 방에서 가구 배치] 버튼 */
+  onUseRoom?: (room: RoomData) => void
+}
+
+export function RoomEditor({ onSave, initialRoom, onUseRoom }: RoomEditorProps) {
+  const [form, setForm] = useState<RoomForm>(() => (initialRoom && roomToForm(initialRoom)) || DEFAULT_FORM)
   const [nextKey, setNextKey] = useState(3)
 
   const errors = useMemo(() => validateForm(form), [form])
@@ -62,11 +73,11 @@ export function RoomEditor({ onSave }: { onSave?: (room: RoomData) => void }) {
 
   // 미리보기: 방 크기가 정상일 때만 새로 만든다 (잘못된 값이면 직전 모양 유지)
   const sizeOk = !errors.some((e) => ['width', 'depth', 'ceilingHeight'].includes(e.target))
-  const [preview, setPreview] = useState<RoomData>(() => buildRoomFromForm(form))
+  const [preview, setPreview] = useState<RoomData>(() => buildRoomFromForm(form, { base: initialRoom }))
   const [prevForm, setPrevForm] = useState(form)
   if (prevForm !== form) {
     setPrevForm(form)
-    if (sizeOk) setPreview(buildRoomFromForm(form, { roomId: preview.roomId }))
+    if (sizeOk) setPreview(buildRoomFromForm(form, { roomId: preview.roomId, base: initialRoom }))
   }
 
   const update = (patch: Partial<RoomForm>) => setForm((f) => ({ ...f, ...patch }))
@@ -79,7 +90,7 @@ export function RoomEditor({ onSave }: { onSave?: (room: RoomData) => void }) {
   const removeOpening = (key: string) => setForm((f) => ({ ...f, openings: f.openings.filter((o) => o.key !== key) }))
 
   const save = () => {
-    const room = buildRoomFromForm(form, { roomId: preview.roomId })
+    const room = buildRoomFromForm(form, { roomId: preview.roomId, base: initialRoom })
     if (onSave) onSave(room)
     else {
       // API 연결 전: JSON 파일로 내려받기
@@ -96,6 +107,9 @@ export function RoomEditor({ onSave }: { onSave?: (room: RoomData) => void }) {
     <div style={{ display: 'flex', width: '100%', height: '100%' }}>
       <div style={s.panel}>
         <h3 style={{ marginTop: 0 }}>치수로 방 만들기</h3>
+        {initialRoom?.source === 'template' && (
+          <div style={{ color: '#9fc3ff', fontSize: 12, marginBottom: 8 }}>템플릿에서 시작: {initialRoom.name}</div>
+        )}
         <label style={s.row}>
           <span>방 이름</span>
           <input value={form.name} maxLength={40} onChange={(e) => update({ name: e.target.value })} style={s.input} />
@@ -179,6 +193,15 @@ export function RoomEditor({ onSave }: { onSave?: (room: RoomData) => void }) {
         >
           {errors.length ? `저장 불가 (오류 ${errors.length}개)` : '저장'}
         </button>
+        {onUseRoom && (
+          <button
+            style={{ ...s.btn, width: '100%', padding: 10, marginTop: 8 }}
+            disabled={errors.length > 0}
+            onClick={() => onUseRoom(buildRoomFromForm(form, { roomId: preview.roomId, base: initialRoom }))}
+          >
+            🪑 이 방에서 가구 배치 →
+          </button>
+        )}
       </div>
       <div style={{ flex: 1, position: 'relative' }}>
         <RoomScene room={preview} />

@@ -27,3 +27,18 @@ export async function validateLayout(room: RoomData, layout: FurnitureLayout, si
   const ids = new Set(violations.map((v) => v.instanceId))
   return { violations, analysis: { score: Math.max(0, 90 - ids.size * 15), reasons: ['(Mock 점수: 엔진 연결 전)'] } }
 }
+
+/** GET /templates → RoomData[] (M1-3). API가 없으면 fixture 3종 */
+export async function fetchTemplates(signal?: AbortSignal): Promise<RoomData[]> {
+  if (API_URL) {
+    const res = await fetch(`${API_URL}/templates`, { signal })
+    if (!res.ok) throw new Error(`templates 실패: ${res.status}`)
+    return res.json()
+  }
+  const [t4, t5, t6] = await Promise.all([
+    import('@schema/fixtures/templates/tpl-4py-studio.json'),
+    import('@schema/fixtures/templates/tpl-5py-studio.json'),
+    import('@schema/fixtures/templates/tpl-6py-studio.json'),
+  ])
+  return [t4.default, t5.default, t6.default] as RoomData[]
+}

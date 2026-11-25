@@ -2,6 +2,7 @@ import layoutSample from '@schema/fixtures/layout.sample.json'
 import roomSample from '@schema/fixtures/room.sample.json'
 import { useMemo, useState } from 'react'
 import { RoomEditor } from './editor/RoomEditor'
+import { TemplatePicker } from './editor/TemplatePicker'
 import { LayoutEditor } from './layout/LayoutEditor'
 import { layoutFromRoom } from './layout/layoutFromRoom'
 import { RoomScene } from './scene/RoomScene'
@@ -11,7 +12,7 @@ import type { FurnitureLayout, RoomData } from './types/schema'
 const sampleRoom = roomSample as RoomData
 const sampleLayout = layoutSample as unknown as FurnitureLayout
 
-type Mode = 'open' | 'editor' | 'layout' | 'sample'
+type Mode = 'open' | 'template' | 'editor' | 'layout' | 'sample'
 
 export default function App() {
   const [mode, setMode] = useState<Mode>('open')
@@ -21,6 +22,11 @@ export default function App() {
     () => (currentRoom === sampleRoom ? sampleLayout : layoutFromRoom(currentRoom)),
     [currentRoom],
   )
+  // 편집기·템플릿에서 [가구 배치]를 누르면 그 방으로 배치 화면 열기
+  const openInLayout = (room: RoomData) => {
+    setCurrentRoom(room)
+    setMode('layout')
+  }
   const tab = (m: Mode, label: string) => (
     <button
       onClick={() => setMode(m)}
@@ -37,13 +43,15 @@ export default function App() {
     <div style={{ display: 'flex', flexDirection: 'column', width: '100vw', height: '100vh' }}>
       <div style={{ padding: 8, background: '#101114' }}>
         {tab('open', '파일 열기')}
+        {tab('template', '템플릿 (M1-3)')}
         {tab('editor', '치수로 만들기 (M1-2)')}
         {tab('layout', '가구 배치 (M4-2)')}
         {tab('sample', '샘플 방 보기')}
       </div>
       <div style={{ flex: 1, minHeight: 0 }}>
         {mode === 'open' && <RoomFileViewer initialRoom={currentRoom === sampleRoom ? null : currentRoom} onRoomLoaded={setCurrentRoom} onEditFurniture={() => setMode('layout')} />}
-        {mode === 'editor' && <RoomEditor />}
+        {mode === 'template' && <TemplatePicker onUseRoom={openInLayout} />}
+        {mode === 'editor' && <RoomEditor onUseRoom={openInLayout} />}
         {mode === 'layout' && <LayoutEditor key={currentRoom.roomId} room={currentRoom} initialLayout={currentLayout} />}
         {mode === 'sample' && <RoomScene room={sampleRoom} />}
       </div>
