@@ -4,6 +4,7 @@ import cors from "cors";
 import express, { type Express } from "express";
 import { loadConfig, type Config } from "./config.js";
 import { errorHandler, notFoundHandler } from "./errors.js";
+import { templatesRouter } from "./routes/templates.js";
 
 // TODO(M0-1)  POST /auth/login
 // TODO(M0-2)  POST /rooms, GET /rooms/:roomId, GET/PUT /layouts/:layoutId
@@ -27,6 +28,9 @@ export function createApp({ config = loadConfig(), extraRoutes }: AppOptions = {
   app.get("/health", (_req, res) => {
     res.json({ ok: true });
   });
+
+  // fixture 는 createApp() 할 때 읽고 검증한다 — 틀리면 서버가 뜨지 않는다.
+  app.use(templatesRouter()); // M1-3
 
   extraRoutes?.(app);
 
