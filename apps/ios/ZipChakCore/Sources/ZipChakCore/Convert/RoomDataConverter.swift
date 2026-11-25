@@ -262,24 +262,42 @@ public enum RoomDataConverter {
     }
 
     /// Converts a `RawCapturedRoom` (meters) into a schema-valid `RoomData` (mm, origin at min X/Z = 0,0)
-    /// along with any diagnostic warnings. Throws `RoomConversionError.insufficientScanData` rather than
-    /// fabricating a fake default room when scan geometry is missing.
+    /// along with any diagnostic warnings. Rotates the entire captured room around +Y so its dominant walls
+    /// align with the X/Z axes before snapping `existingFurniture[].rotationDeg` to `{0, 90, 180, 270}`.
+    /// Throws `RoomConversionError.insufficientScanData` rather than fabricating a fake default room when scan geometry is missing.
     public static func convertWithDiagnostics(
         _ raw: RawCapturedRoom,
         ownerId: String = "user_local",
         roomId: String? = nil,
         refineOrthogonalWalls: Bool = true,
+        alignRoomToAxes: Bool = true,
         furnitureFacingOffsetDeg: Int = 0
     ) throws -> ConversionResult {
         var warnings: [ConversionWarning] = []
 
-        // 1. Separate walls vs openings and optionally refine collinear / slightly tilted walls
+        // 1. Separate walls vs openings and verify minimum geometry
         var rawWalls = raw.surfaces.filter { $0.kind == .wall && $0.length >= 0.20 }
-        let rawOpenings = raw.surfaces.filter { $0.kind != .wall && $0.length >= 0.15 }
+        var rawOpenings = raw.surfaces.filter { $0.kind != .wall && $0.length >= 0.15 }
+        var rawFloorPolygon = raw.floorPolygonM
+        var rawObjects = raw.objects
 
-        let hasValidExplicitFloor = raw.floorPolygonM.count >= 3 && polygonAreaM(raw.floorPolygonM) > 0.25
+        let hasValidExplicitFloor = rawFloorPolygon.count >= 3 && polygonAreaM(rawFloorPolygon) > 0.25
         guard rawWalls.count >= 3 || hasValidExplicitFloor else {
             throw RoomConversionError.insufficientScanData
+        }
+
+        // 1.5. Rigidly rotate the entire room (floor, walls, openings, furniture) around +Y
+        // so the dominant wall direction aligns with the world X/Z axes.
+        // Without this, ARKit's arbitrary scan start heading leaves walls diagonal while
+        // schema-constrained `rotationDeg` (0/90/180/270) forces furniture off-axis.
+        if alignRoomToAxes, let dominantYaw = computeDominantYaw(walls: rawWalls, floorPolygon: rawFloorPolygon) {
+            let deltaYaw = -dominantYaw
+            if abs(deltaYaw) > 1e-4 {
+                rawFloorPolygon = rawFloorPolygon.map { rotatePointM($0, by: deltaYaw) }
+                rawWalls = rawWalls.map { rotateSurfaceM($0, by: deltaYaw) }
+                rawOpenings = rawOpenings.map { rotateSurfaceM($0, by: deltaYaw) }
+                rawObjects = rawObjects.map { rotateObjectM($0, by: deltaYaw) }
+            }
         }
 
         if refineOrthogonalWalls && rawWalls.count >= 3 {
@@ -289,7 +307,7 @@ public enum RoomDataConverter {
         // 2. Build raw floor polygon in meters (prefer native floor polygon; else derive from walls and warn)
         let polygonM: [RawPoint2M]
         if hasValidExplicitFloor {
-            polygonM = raw.floorPolygonM
+            polygonM = rawFloorPolygon
         } else {
             guard let derived = deriveFloorPolygonM(from: rawWalls) else {
                 throw RoomConversionError.insufficientScanData
@@ -438,7 +456,7 @@ public enum RoomDataConverter {
         }
 
         // 7. Convert existing furniture objects
-        let existingFurniture: [ExistingFurnitureItem] = raw.objects.enumerated().map { idx, obj in
+        let existingFurniture: [ExistingFurnitureItem] = rawObjects.enumerated().map { idx, obj in
             let pos = toSchemaPoint(x: obj.centerX, z: obj.centerZ)
             let dims = RoomDimensions(
                 width: max(100, metersToMm(obj.width)),
@@ -497,6 +515,7 @@ public enum RoomDataConverter {
         ownerId: String = "user_local",
         roomId: String? = nil,
         refineOrthogonalWalls: Bool = true,
+        alignRoomToAxes: Bool = true,
         furnitureFacingOffsetDeg: Int = 0
     ) throws -> RoomData {
         try convertWithDiagnostics(
@@ -504,6 +523,7 @@ public enum RoomDataConverter {
             ownerId: ownerId,
             roomId: roomId,
             refineOrthogonalWalls: refineOrthogonalWalls,
+            alignRoomToAxes: alignRoomToAxes,
             furnitureFacingOffsetDeg: furnitureFacingOffsetDeg
         ).room
     }
@@ -590,17 +610,71 @@ public enum RoomDataConverter {
         return result
     }
 
-    /// Snaps minor (< 6°) LiDAR drift to the room's dominant orthogonal axes (adapted from RoomScanRefiner).
-    private static func refineWalls(_ walls: [RawSurfaceM]) -> [RawSurfaceM] {
+    /// Computes the room's dominant wall orientation in `[-pi/4, +pi/4]` using a 4-fold
+    /// length-weighted circular mean so orthogonal walls (0°/90°/180°/270°) reinforce each other.
+    private static func computeDominantYaw(walls: [RawSurfaceM], floorPolygon: [RawPoint2M]) -> Float? {
         var sumCos: Float = 0
         var sumSin: Float = 0
-        for w in walls {
-            let weight = max(0.2, w.length)
-            let a4 = w.yaw * 4.0
-            sumCos += cos(a4) * weight
-            sumSin += sin(a4) * weight
+
+        if !walls.isEmpty {
+            for w in walls {
+                let weight = max(0.2, w.length)
+                let a4 = w.yaw * 4.0
+                sumCos += cos(a4) * weight
+                sumSin += sin(a4) * weight
+            }
+        } else if floorPolygon.count >= 3 {
+            for i in 0..<floorPolygon.count {
+                let a = floorPolygon[i]
+                let b = floorPolygon[(i + 1) % floorPolygon.count]
+                let dx = b.x - a.x
+                let dz = b.z - a.z
+                let len = hypot(dx, dz)
+                guard len > 0.2 else { continue }
+                let edgeYaw = atan2(-dz, dx)
+                let a4 = edgeYaw * 4.0
+                sumCos += cos(a4) * len
+                sumSin += sin(a4) * len
+            }
         }
-        let dominantYaw = atan2(sumSin, sumCos) / 4.0
+
+        guard hypot(sumCos, sumSin) > 1e-4 else { return nil }
+        return atan2(sumSin, sumCos) / 4.0
+    }
+
+    /// Rigidly rotates a 2D XZ point around +Y by `deltaYaw` (right-handed Y-up: +Z rotates toward +X).
+    private static func rotatePointM(_ p: RawPoint2M, by deltaYaw: Float) -> RawPoint2M {
+        let c = cos(deltaYaw)
+        let s = sin(deltaYaw)
+        return RawPoint2M(
+            x: p.x * c + p.z * s,
+            z: -p.x * s + p.z * c
+        )
+    }
+
+    private static func rotateSurfaceM(_ s: RawSurfaceM, by deltaYaw: Float) -> RawSurfaceM {
+        var copy = s
+        let rotated = rotatePointM(RawPoint2M(x: s.centerX, z: s.centerZ), by: deltaYaw)
+        copy.centerX = rotated.x
+        copy.centerZ = rotated.z
+        copy.yaw = normalizeAngle(s.yaw + deltaYaw)
+        return copy
+    }
+
+    private static func rotateObjectM(_ o: RawObjectM, by deltaYaw: Float) -> RawObjectM {
+        var copy = o
+        let rotated = rotatePointM(RawPoint2M(x: o.centerX, z: o.centerZ), by: deltaYaw)
+        copy.centerX = rotated.x
+        copy.centerZ = rotated.z
+        copy.yaw = normalizeAngle(o.yaw + deltaYaw)
+        return copy
+    }
+
+    /// Snaps minor (< 6°) LiDAR drift to the room's dominant orthogonal axes (adapted from RoomScanRefiner).
+    private static func refineWalls(_ walls: [RawSurfaceM]) -> [RawSurfaceM] {
+        guard let dominantYaw = computeDominantYaw(walls: walls, floorPolygon: []) else {
+            return walls
+        }
         let snapThresholdRad: Float = 6.0 * .pi / 180.0
 
         return walls.map { w in

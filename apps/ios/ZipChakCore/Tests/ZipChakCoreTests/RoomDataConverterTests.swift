@@ -242,4 +242,79 @@ final class RoomDataConverterTests: XCTestCase {
         XCTAssertEqual(brokenResult.failures.map(\.templateName), RoomTemplates.templateFileNames)
         XCTAssertTrue(RoomTemplates.load(from: brokenBundle, assertOnFailure: false).isEmpty)
     }
+
+    func testDiagonallyScannedRoomAlignsWallsAndFurnitureToAxes() throws {
+        // Simulate real-device ARKit scan where user started facing +38° off axis.
+        // Without rigid alignment by -dominantYaw, walls stay tilted 38° while furniture snaps to 0/90/180/270.
+        let tilt: Float = 38.0 * .pi / 180.0
+        func rot(_ x: Float, _ z: Float) -> RawPoint2M {
+            let c = cos(tilt), s = sin(tilt)
+            return RawPoint2M(x: x * c + z * s, z: -x * s + z * c)
+        }
+
+        let northID = UUID(), eastID = UUID(), southID = UUID(), westID = UUID()
+        let baseFloor = [
+            RawPoint2M(x: -1.5, z: -1.1),
+            RawPoint2M(x:  1.5, z: -1.1),
+            RawPoint2M(x:  1.5, z:  1.1),
+            RawPoint2M(x: -1.5, z:  1.1)
+        ].map { rot($0.x, $0.z) }
+
+        let nC = rot(0, -1.1), eC = rot(1.5, 0), sC = rot(0, 1.1), wC = rot(-1.5, 0)
+        let doorC = rot(1.5, -0.3)
+        let bedC = rot(-0.6, -0.1)
+        let storageC = rot(0.9, 0.4)
+
+        let raw = RawCapturedRoom(
+            name: "대각선 실기기 스캔",
+            floorPolygonM: baseFloor,
+            surfaces: [
+                RawSurfaceM(id: northID, kind: .wall, centerX: nC.x, centerZ: nC.z, length: 3.0, height: 2.3, yaw: 0 + tilt),
+                RawSurfaceM(id: eastID,  kind: .wall, centerX: eC.x, centerZ: eC.z, length: 2.2, height: 2.3, yaw: -.pi * 0.5 + tilt),
+                RawSurfaceM(id: southID, kind: .wall, centerX: sC.x, centerZ: sC.z, length: 3.0, height: 2.3, yaw: .pi + tilt),
+                RawSurfaceM(id: westID,  kind: .wall, centerX: wC.x, centerZ: wC.z, length: 2.2, height: 2.3, yaw: .pi * 0.5 + tilt),
+                RawSurfaceM(kind: .door, centerX: doorC.x, centerZ: doorC.z, length: 0.85, height: 2.05, yaw: -.pi * 0.5 + tilt, parentWallID: eastID)
+            ],
+            objects: [
+                // Bed parallel to north wall (local +Z facing +Z in unrotated room -> should snap to 0°)
+                RawObjectM(category: .bed, centerX: bedC.x, centerZ: bedC.z, width: 1.1, depth: 2.0, height: 0.55, yaw: 0 + tilt),
+                // Storage against east wall (local +Z facing -X -> 270° in unrotated room)
+                RawObjectM(category: .storage, centerX: storageC.x, centerZ: storageC.z, width: 0.8, depth: 0.5, height: 1.2, yaw: -.pi * 0.5 + tilt)
+            ],
+            ceilingHeightM: 2.3
+        )
+
+        let result = try RoomDataConverter.convertWithDiagnostics(raw)
+        let room = result.room
+        XCTAssertTrue(result.warnings.isEmpty)
+
+        // Floor bounding box must match exact 3000 × 2200mm (not inflated by diagonal rotation)
+        let b = room.boundsMm
+        XCTAssertEqual(b.minX, 0)
+        XCTAssertEqual(b.minZ, 0)
+        XCTAssertEqual(b.maxX, 3000, accuracy: 2)
+        XCTAssertEqual(b.maxZ, 2200, accuracy: 2)
+
+        // All walls must now be strictly axis-aligned
+        for wall in room.walls {
+            let isHorizontal = abs(wall.start.z - wall.end.z) <= 2
+            let isVertical = abs(wall.start.x - wall.end.x) <= 2
+            XCTAssertTrue(isHorizontal || isVertical, "Wall \(wall.id) not axis-aligned: \(wall.start) -> \(wall.end)")
+        }
+
+        // Furniture must preserve exact room-relative orientation and sit strictly inside the room
+        XCTAssertEqual(room.existingFurniture.count, 2)
+        XCTAssertEqual(room.existingFurniture[0].rotationDeg, 0)
+        XCTAssertEqual(room.existingFurniture[0].position.x, 900, accuracy: 3)
+        XCTAssertEqual(room.existingFurniture[0].position.z, 1000, accuracy: 3)
+
+        XCTAssertEqual(room.existingFurniture[1].rotationDeg, 270)
+        XCTAssertEqual(room.existingFurniture[1].position.x, 2400, accuracy: 3)
+        XCTAssertEqual(room.existingFurniture[1].position.z, 1500, accuracy: 3)
+
+        // Door must stay attached to east wall at exact offset (1.1 + (-0.3) - 0.85/2 = 0.375m -> 375mm)
+        let door = try XCTUnwrap(room.openings.first)
+        XCTAssertEqual(door.wallId, "wall_2")
+        XCTAssertEqual(door.offset, 375, accuracy: 3)
+    }
 }
