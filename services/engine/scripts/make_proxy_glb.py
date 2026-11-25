@@ -16,11 +16,17 @@
 
 --catalog 를 생략하면 packages/schema/fixtures/catalog*.json 을 모두 읽는다.
 각 상품마다 <out>/<itemId>.glb 와 목록 파일 <out>/manifest.json 을 만든다.
+
+#52 (IKEA 링크 → proxy 교체) 용 옵션 — 원본은 건드리지 않고 새 파일로 쓴다:
+  --rewrite-catalog OUT.json   카탈로그의 asset.glbUrl = <url-prefix><itemId>.glb, assetFidelity = proxy, thumbnailUrl = null
+  --rewrite-csv IN.csv OUT.csv 원본 시트(catalog-sheet.csv)의 glbUrl·thumbnailUrl·assetFidelity 열을 같은 값으로
 """
 from __future__ import annotations
 
 import argparse
+import csv
 import glob
+import io
 import json
 import struct
 import sys
@@ -227,11 +233,48 @@ def write_blender(items: list[dict], out_dir: Path) -> list[Path]:  # pragma: no
 
 
 # ---------------------------------------------------------------------------
+# #52: 카탈로그·원본 시트의 에셋 열을 proxy 로 바꾸기
+# ---------------------------------------------------------------------------
+def proxy_asset(item_id: str, url_prefix: str) -> dict:
+    return {"glbUrl": f"{url_prefix}{item_id}.glb", "thumbnailUrl": None, "assetFidelity": "proxy", "originAtFootprintCenter": True}
+
+
+def rewrite_catalog(items: list[dict], url_prefix: str) -> list[dict]:
+    out = []
+    for item in items:
+        new = dict(item)
+        new["asset"] = proxy_asset(item["itemId"], url_prefix)
+        out.append(new)
+    return out
+
+
+def rewrite_csv(text: str, url_prefix: str) -> str:
+    rows = list(csv.reader(io.StringIO(text)))
+    header = [h.strip() for h in rows[0]]
+    idx = {name: header.index(name) for name in ("itemId", "glbUrl", "thumbnailUrl", "assetFidelity")}
+    buf = io.StringIO()
+    writer = csv.writer(buf, lineterminator="\n")
+    writer.writerow(rows[0])
+    for row in rows[1:]:
+        if not row or not row[idx["itemId"]].strip():
+            writer.writerow(row)
+            continue
+        row = row + [""] * (len(header) - len(row))
+        row[idx["glbUrl"]] = f"{url_prefix}{row[idx['itemId']].strip()}.glb"
+        row[idx["thumbnailUrl"]] = ""
+        row[idx["assetFidelity"]] = "proxy"
+        writer.writerow(row)
+    return buf.getvalue()
+
+
+# ---------------------------------------------------------------------------
 def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("--catalog", action="append", help="카탈로그 JSON 경로 (여러 번 가능). 기본: fixtures/catalog*.json")
     parser.add_argument("--out", default=str(ENGINE_DIR / "build" / "proxy_glb"), help="출력 폴더")
     parser.add_argument("--url-prefix", default="/assets/proxy/", help="manifest.json 의 glbUrl 접두어")
+    parser.add_argument("--rewrite-catalog", metavar="OUT", help="glbUrl 을 proxy 경로로 바꾼 카탈로그 JSON 을 OUT 에 쓴다")
+    parser.add_argument("--rewrite-csv", nargs=2, metavar=("IN", "OUT"), help="원본 시트 CSV 의 에셋 열을 바꿔 OUT 에 쓴다")
     args = parser.parse_args(argv)
 
     catalog_paths = args.catalog or sorted(glob.glob(DEFAULT_CATALOG_GLOB))
@@ -255,6 +298,14 @@ def main(argv: list[str]) -> int:
     }
     (out_dir / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"[{backend}] {len(paths)}개 생성 → {out_dir}")
+    if args.rewrite_catalog:
+        text = json.dumps(rewrite_catalog(items, args.url_prefix), ensure_ascii=False, indent=2) + "\n"
+        Path(args.rewrite_catalog).write_text(text, encoding="utf-8")
+        print(f"카탈로그 {len(items)}개 glbUrl → {args.url_prefix}<itemId>.glb : {args.rewrite_catalog}")
+    if args.rewrite_csv:
+        src, dst = args.rewrite_csv
+        Path(dst).write_text(rewrite_csv(Path(src).read_text(encoding="utf-8-sig"), args.url_prefix), encoding="utf-8")
+        print(f"시트 에셋 열 교체: {dst}")
     return 0
 
 

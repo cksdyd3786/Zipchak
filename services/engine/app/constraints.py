@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass, field
+from functools import cached_property
 from typing import Any, Iterable
 
 from shapely.geometry import Polygon
@@ -59,11 +60,11 @@ class Furniture:
     clearance: dict[str, int] = field(default_factory=dict)
     under_window_allowed: bool | None = None
 
-    @property
+    @cached_property
     def rect(self) -> Rect:
         return footprint(self.x, self.z, self.width, self.depth, self.rotation)
 
-    @property
+    @cached_property
     def poly(self) -> Polygon:
         return rect_polygon(self.rect)
 
@@ -96,17 +97,21 @@ def _overlaps(a: Polygon, b: Polygon) -> bool:
     return a.intersects(b) and a.intersection(b).area > 0
 
 
+def _overlaps_prepared(prepared, raw: Polygon, geom: Polygon) -> bool:
+    return prepared.intersects(geom) and raw.intersection(geom).area > 0
+
+
 # ---------------------------------------------------------------------------
 # 개별 검사 (순서대로 테스트하기 쉽게 분리)
 # ---------------------------------------------------------------------------
 def check_walls(room: Room, items: list[Furniture]) -> list[dict]:
     out = []
     for f in items:
-        if not room.polygon.covers(f.poly):
+        if not room.prepared.covers(f.poly):
             out.append(_v("WALL_OVERLAP", f.instance_id, f"{f.instance_id}이(가) 벽 밖으로 나갔어요"))
             continue
-        for fid, fpoly, _h in room.fixture_polygons:
-            if _overlaps(f.poly, fpoly):
+        for fid, fprep, fpoly in room.fixture_prepared:
+            if _overlaps_prepared(fprep, fpoly, f.poly):
                 out.append(_v("WALL_OVERLAP", f.instance_id, f"{f.instance_id}이(가) 고정물 {fid}과(와) 겹쳐요"))
                 break
     return out
@@ -129,9 +134,7 @@ def check_furniture_overlap(items: list[Furniture], obstacles: list[Furniture]) 
 def check_doors(room: Room, items: list[Furniture]) -> list[dict]:
     out = []
     for f in items:
-        for door in room.doors:
-            sector = door.swing_sector()
-            approach = door.strip(DOOR_APPROACH_DEPTH_MM)
+        for door, sector, approach in room.door_zones:
             if sector is not None and _overlaps(f.poly, sector):
                 out.append(_v("DOOR_SWING", f.instance_id, f"{f.instance_id}이(가) 문 {door.id}이 열리는 자리를 막아요"))
                 break
@@ -144,8 +147,8 @@ def check_doors(room: Room, items: list[Furniture]) -> list[dict]:
 def check_windows(room: Room, items: list[Furniture]) -> list[dict]:
     out = []
     for f in items:
-        for win in room.windows:
-            if not _overlaps(f.poly, win.window_zone()):
+        for win, zone in room.window_zones:
+            if not _overlaps(f.poly, zone):
                 continue
             too_tall = f.height > win.sill_height
             if too_tall or f.under_window_allowed is False:
@@ -162,11 +165,11 @@ def check_clearance(room: Room, items: list[Furniture], obstacles: list[Furnitur
         for side, zone in clearance_zones(f.rect, f.clearance, f.rotation):
             zpoly = rect_polygon(zone)
             blocker = None
-            if not room.polygon.covers(zpoly):
+            if not room.prepared.covers(zpoly):
                 blocker = "벽"
             else:
-                for fid, fpoly, _h in room.fixture_polygons:
-                    if _overlaps(zpoly, fpoly):
+                for fid, fprep, fpoly in room.fixture_prepared:
+                    if _overlaps_prepared(fprep, fpoly, zpoly):
                         blocker = fid
                         break
             if blocker is None:
@@ -186,9 +189,7 @@ _SIDE_KO = {"front": "앞", "back": "뒤", "left": "왼쪽", "right": "오른쪽
 
 
 def build_grid(room: Room, solids: Iterable[Furniture]) -> Grid:
-    grid = Grid.for_polygon(room.polygon)
-    for _fid, fpoly, _h in room.fixture_polygons:
-        grid.block_polygon(fpoly)
+    grid = room.base_grid.copy()
     for f in solids:
         grid.block_rect(f.rect)
     return grid

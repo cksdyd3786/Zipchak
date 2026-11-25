@@ -1,0 +1,39 @@
+{
+  "_comment": "부족 가구 탐지 (M3-2) 규칙표. 질문 답 → 필요한 가구 카테고리. 담당 D가 튜닝한다. weights.json 의 질문 id·선택지 id 를 그대로 쓴다.",
+  "always": ["bed"],
+  "byAnswer": {
+    "deskHours": {
+      "lt1": [],
+      "1to4": ["desk"],
+      "gt4": ["desk", "chair"]
+    },
+    "monitors": {
+      "0": [],
+      "1": ["desk"],
+      "2plus": ["desk"]
+    },
+    "guests": {
+      "rare": [],
+      "monthly": [],
+      "weekly": ["table"]
+    },
+    "stuff": {
+      "few": [],
+      "normal": ["storage"],
+      "many": ["storage", "wardrobe"]
+    },
+    "sleepSensitivity": {
+      "no": [],
+      "some": [],
+      "yes": []
+    }
+  },
+  "defaults": { "deskHours": "1to4", "stuff": "normal" },
+  "satisfiedBy": {
+    "_comment": "이 카테고리를 다른 가구나 붙박이 고정물이 대신할 수 있다",
+    "storage": { "categories": ["wardrobe", "shelf"], "fixtures": ["closet_builtin"] },
+    "wardrobe": { "categories": [], "fixtures": ["closet_builtin"] },
+    "table": { "categories": ["desk"], "fixtures": [] }
+  },
+  "order": ["bed", "desk", "chair", "wardrobe", "storage", "shelf", "table", "sofa", "lamp", "decor", "etc"]
+}

@@ -8,7 +8,6 @@
 """
 from __future__ import annotations
 
-from collections import deque
 from dataclasses import dataclass
 
 import numpy as np
@@ -107,19 +106,27 @@ def anchors_touching(grid: Grid, free: np.ndarray, s: int, target: Rect) -> list
     return [(int(j + j_lo), int(i + i_lo)) for j, i in zip(js, is_)]
 
 
-def reachable(free: np.ndarray, starts: list[tuple[int, int]]) -> np.ndarray:
-    seen = np.zeros_like(free, dtype=bool)
-    q = deque()
+def bfs_distance(free: np.ndarray, starts: list[tuple[int, int]]) -> np.ndarray:
+    """상하좌우 BFS 거리 (못 가면 −1). numpy 로 한 겹씩 넓혀 간다."""
+    dist = np.full(free.shape, -1, dtype=np.int32)
+    if free.size == 0:
+        return dist
+    frontier = np.zeros_like(free, dtype=bool)
     for st in starts:
-        if free[st] and not seen[st]:
-            seen[st] = True
-            q.append(st)
-    H, W = free.shape
-    while q:
-        j, i = q.popleft()
-        for dj, di in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-            nj, ni = j + dj, i + di
-            if 0 <= nj < H and 0 <= ni < W and free[nj, ni] and not seen[nj, ni]:
-                seen[nj, ni] = True
-                q.append((nj, ni))
-    return seen
+        if free[st]:
+            frontier[st] = True
+    step = 0
+    while frontier.any():
+        dist[frontier] = step
+        grow = np.zeros_like(frontier)
+        grow[1:, :] |= frontier[:-1, :]
+        grow[:-1, :] |= frontier[1:, :]
+        grow[:, 1:] |= frontier[:, :-1]
+        grow[:, :-1] |= frontier[:, 1:]
+        frontier = grow & free & (dist < 0)
+        step += 1
+    return dist
+
+
+def reachable(free: np.ndarray, starts: list[tuple[int, int]]) -> np.ndarray:
+    return bfs_distance(free, starts) >= 0

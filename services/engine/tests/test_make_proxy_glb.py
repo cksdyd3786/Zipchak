@@ -69,3 +69,35 @@ def test_reads_repo_catalog_sample():
     sample = Path(mpg.REPO_ROOT) / "packages" / "schema" / "fixtures" / "catalog.sample.json"
     items = mpg.load_items([str(sample)])
     assert items and all(mpg.build_glb(i)[:4] == b"glTF" for i in items)
+
+
+# ---------------------------------------------------------------- #52 IKEA 링크 → proxy
+IKEA = {**DESK, "asset": {"glbUrl": "https://web-api.ikea.com/dimma/x.glb", "thumbnailUrl": "https://www.ikea.com/x.jpg",
+                          "assetFidelity": "official", "originAtFootprintCenter": True}}
+
+
+def test_rewrite_catalog_replaces_ikea_links():
+    out = mpg.rewrite_catalog([IKEA], "/assets/proxy/")
+    assert out[0]["asset"] == {"glbUrl": "/assets/proxy/cat_desk_1200_a.glb", "thumbnailUrl": None,
+                               "assetFidelity": "proxy", "originAtFootprintCenter": True}
+    assert IKEA["asset"]["assetFidelity"] == "official"  # 원본 객체는 그대로
+    assert "ikea.com" not in json.dumps(out)
+
+
+def test_rewrite_csv_columns():
+    header = "itemId,category,glbUrl,thumbnailUrl,assetFidelity,status"
+    src = header + "\ncat_a,desk,https://web-api.ikea.com/dimma/a.glb,https://www.ikea.com/a.jpg,official,available\n"
+    out = mpg.rewrite_csv(src, "/assets/proxy/")
+    assert out.splitlines() == [header, "cat_a,desk,/assets/proxy/cat_a.glb,,proxy,available"]
+
+
+def test_cli_rewrite_outputs(tmp_path):
+    catalog = tmp_path / "catalog.json"
+    catalog.write_text(json.dumps([IKEA]), encoding="utf-8")
+    sheet = tmp_path / "sheet.csv"
+    sheet.write_text("itemId,glbUrl,thumbnailUrl,assetFidelity\ncat_desk_1200_a,https://web-api.ikea.com/a.glb,x,official\n", encoding="utf-8")
+    assert mpg.main(["--catalog", str(catalog), "--out", str(tmp_path / "glb"),
+                     "--rewrite-catalog", str(tmp_path / "new.json"), "--rewrite-csv", str(sheet), str(tmp_path / "new.csv")]) == 0
+    assert json.loads((tmp_path / "new.json").read_text(encoding="utf-8"))[0]["asset"]["glbUrl"] == "/assets/proxy/cat_desk_1200_a.glb"
+    assert "ikea" not in (tmp_path / "new.csv").read_text(encoding="utf-8")
+    assert "ikea" in catalog.read_text(encoding="utf-8")  # 원본 파일은 안 바뀜

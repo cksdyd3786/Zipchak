@@ -5,8 +5,10 @@ from typing import Any
 
 from fastapi import FastAPI, HTTPException
 
-from app.constraints import validate_layout
-from app.preferences import question_list, weights_from_answers
+from app.analysis import analyze_layout
+from app.fit import fit_search as run_fit_search
+from app.preferences import question_list
+from app.recommend import recommend as recommend_layouts
 
 app = FastAPI(title="Zipchak Engine", version="0.1.0")
 
@@ -23,22 +25,28 @@ def questions() -> dict[str, Any]:
 
 @app.post("/v1/layouts:recommend")
 def recommend(body: dict[str, Any]) -> dict[str, Any]:
-    # TODO(M2-1~M2-3): 그리드 → 후보 → 하드 제약 → 가중 점수 → 빔 서치 상위 3개
-    weights = body.get("weights") or weights_from_answers(body.get("answers", {}))
-    return {"layouts": [], "partial": True, "weights": weights}
+    """M2-1: 그리드 → 후보 → 하드 제약 → 가중 점수 → 빔 서치 → 침대 위치가 다른 3개."""
+    try:
+        return recommend_layouts(
+            body["room"], body.get("answers") or {}, body.get("weights"), body.get("budget"), body.get("catalog") or []
+        )
+    except (KeyError, ValueError) as e:
+        raise HTTPException(status_code=400, detail={"error": {"code": "VALIDATION_FAILED", "message": str(e), "details": {}}})
 
 
 @app.post("/v1/layouts:validate")
 def validate(body: dict[str, Any]) -> dict[str, Any]:
-    """M2-2 하드 제약 위반 목록. 점수 재계산(analysis)은 M2-3에서 채운다."""
+    """M2-2 하드 제약 위반 + M2-3 점수 재계산 + M3-3 데드 스페이스 (가구 편집·제안 포스트잇 미리보기)."""
     try:
-        violations = validate_layout(body["room"], body["layout"], body.get("catalog"))
+        return analyze_layout(body["room"], body["layout"], body.get("catalog"))
     except (KeyError, ValueError) as e:
         raise HTTPException(status_code=400, detail={"error": {"code": "VALIDATION_FAILED", "message": str(e), "details": {}}})
-    return {"violations": violations, "analysis": None}
 
 
 @app.post("/v1/fit:search")
 def fit_search(body: dict[str, Any]) -> dict[str, Any]:
-    # TODO(M3-2~M3-4): 부족 가구·데드 스페이스 슬롯에 들어가는 상품 정렬
-    return {"recommendedItems": []}
+    """M3-4: 슬롯('missing:<category>' | 'dead:<id>', 없으면 전부)에 실제로 들어가는 상품만 여유 폭 순으로."""
+    try:
+        return run_fit_search(body["room"], body["layout"], body.get("slot"), body.get("catalog") or [])
+    except (KeyError, ValueError) as e:
+        raise HTTPException(status_code=400, detail={"error": {"code": "VALIDATION_FAILED", "message": str(e), "details": {}}})
