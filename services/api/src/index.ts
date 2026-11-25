@@ -1,20 +1,14 @@
-// 집착 REST API 진입점 (담당 E)
-// 계약: docs/api.md. 모든 본문은 packages/schema 로 검증한다.
-import express from "express";
+// 집착 REST API 진입점 (담당 E). 앱 구성은 app.ts, 여기서는 listen 만 한다.
+import { createApp } from "./app.js";
+import { loadConfig } from "./config.js";
 
-const app = express();
-app.use(express.json({ limit: "5mb" }));
+// services/api/.env 가 있으면 읽는다 (Node 내장 기능, 없으면 기본값·셸 환경변수만 쓴다)
+try {
+  process.loadEnvFile();
+} catch (e) {
+  if ((e as NodeJS.ErrnoException).code !== "ENOENT") throw e;
+}
 
-app.get("/health", (_req, res) => res.json({ ok: true }));
-
-// TODO(M0-1)  POST /auth/login
-// TODO(M0-2)  POST /rooms, GET /rooms/:roomId, GET/PUT /layouts/:layoutId
-// TODO(M1-3)  GET /templates
-// TODO(M3-1)  GET /catalog?category=&maxWidth=&maxDepth=
-// TODO(M2-1)  POST /rooms/:roomId/recommend  → 엔진(D) 프록시
-// TODO(M5-1)  POST /rooms/:roomId/invites
-// TODO(M5-2)  POST /layouts/:layoutId/postits, POST .../postits/:postitId/preview
-// TODO(M0-3)  POST /events
-
-const port = Number(process.env.PORT ?? 4000);
-app.listen(port, () => console.log(`[api] listening on :${port}`));
+const config = loadConfig();
+const app = createApp({ config });
+app.listen(config.port, () => console.log(`[api] listening on :${config.port}`));
