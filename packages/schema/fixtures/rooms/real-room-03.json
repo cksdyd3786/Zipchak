@@ -1,0 +1,174 @@
+{
+  "ceilingHeight": 2085,
+  "createdAt": "2026-11-25T13:24:20Z",
+  "existingFurniture": [
+    {
+      "catalogItemId": null,
+      "category": "etc",
+      "confidence": "medium",
+      "detectedBy": "roomplan",
+      "dimensions": {
+        "depth": 789,
+        "height": 513,
+        "width": 1393
+      },
+      "instanceId": "inst_etc_01",
+      "label": "욕조",
+      "movable": true,
+      "position": {
+        "x": 394,
+        "z": 697
+      },
+      "rotationDeg": 90
+    },
+    {
+      "catalogItemId": null,
+      "category": "etc",
+      "confidence": "low",
+      "detectedBy": "roomplan",
+      "dimensions": {
+        "depth": 465,
+        "height": 300,
+        "width": 624
+      },
+      "instanceId": "inst_etc_02",
+      "label": "싱크대",
+      "movable": true,
+      "position": {
+        "x": 1114,
+        "z": 1161
+      },
+      "rotationDeg": 180
+    },
+    {
+      "catalogItemId": null,
+      "category": "etc",
+      "confidence": "medium",
+      "detectedBy": "roomplan",
+      "dimensions": {
+        "depth": 717,
+        "height": 719,
+        "width": 482
+      },
+      "instanceId": "inst_etc_03",
+      "label": "변기",
+      "movable": true,
+      "position": {
+        "x": 1864,
+        "z": 1035
+      },
+      "rotationDeg": 180
+    },
+    {
+      "catalogItemId": null,
+      "category": "storage",
+      "confidence": "low",
+      "detectedBy": "roomplan",
+      "dimensions": {
+        "depth": 283,
+        "height": 900,
+        "width": 666
+      },
+      "instanceId": "inst_storage_04",
+      "label": "기존 수납장",
+      "movable": true,
+      "position": {
+        "x": 1951,
+        "z": 1252
+      },
+      "rotationDeg": 180
+    }
+  ],
+  "fixtures": [],
+  "floorPolygon": [
+    {
+      "x": 2284,
+      "z": 1393
+    },
+    {
+      "x": 5,
+      "z": 1393
+    },
+    {
+      "x": 0,
+      "z": 0
+    },
+    {
+      "x": 2284,
+      "z": 0
+    }
+  ],
+  "name": "실측 방 3 (욕실 1.0평)",
+  "openings": [
+    {
+      "facing": null,
+      "height": 2055,
+      "id": "door_1",
+      "offset": 83,
+      "sillHeight": 0,
+      "swing": {
+        "hingeSide": "left",
+        "kind": "hinged",
+        "maxAngleDeg": 90,
+        "opensInward": true
+      },
+      "type": "door",
+      "wallId": "wall_3",
+      "width": 628
+    }
+  ],
+  "ownerId": "user_local",
+  "roomId": "room_01M89E1TXKSTXM7SX2C38GR9YC",
+  "schemaVersion": "1.0",
+  "source": "lidar",
+  "sourceMeta": {
+    "device": "iPhone16,2",
+    "floorplanImageUrl": null,
+    "rawAssetUrl": null,
+    "roomPlanVersion": "iOS 27.3",
+    "templateId": null
+  },
+  "unit": "mm",
+  "updatedAt": "2026-11-25T13:24:20Z",
+  "walls": [
+    {
+      "end": {
+        "x": 5,
+        "z": 1393
+      },
+      "height": 2085,
+      "id": "wall_1",
+      "start": {
+        "x": 2284,
+        "z": 1393
+      },
+      "thickness": 120
+    },
+    {
+      "end": {
+        "x": 2284,
+        "z": 0
+      },
+      "height": 2085,
+      "id": "wall_2",
+      "start": {
+        "x": 0,
+        "z": 0
+      },
+      "thickness": 120
+    },
+    {
+      "end": {
+        "x": 2284,
+        "z": 1393
+      },
+      "height": 2085,
+      "id": "wall_3",
+      "start": {
+        "x": 2284,
+        "z": 0
+      },
+      "thickness": 120
+    }
+  ]
+}
