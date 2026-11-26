@@ -1,0 +1,296 @@
+.postit-page {
+  --postit-bg: #101114;
+  --postit-panel: #16171b;
+  --postit-border: #3a3b42;
+  --postit-muted: #adb3c2;
+  --postit-blue: #2f6fed;
+  box-sizing: border-box;
+  height: 100%;
+  overflow: auto;
+  padding: clamp(1rem, 4vw, 3rem);
+  background: var(--postit-bg);
+  color: #f3f4f7;
+  color-scheme: dark;
+  font: 1rem/1.5 system-ui, "Malgun Gothic", sans-serif;
+}
+
+.postit-page *,
+.postit-page *::before,
+.postit-page *::after { box-sizing: inherit; }
+
+.postit-page__header,
+.postit-workspace,
+.postit-page__warning {
+  max-width: 76rem;
+  margin-inline: auto;
+}
+
+.postit-page__header { margin-bottom: 1.35rem; }
+.postit-page__header h1 {
+  margin: 0;
+  font-size: clamp(1.65rem, 4vw, 2.1rem);
+  letter-spacing: -.035em;
+}
+
+.postit-page__header p,
+.postit-editor p {
+  margin: .35rem 0 0;
+  color: var(--postit-muted);
+}
+
+.postit-page__warning { color: #ffb1b1; }
+
+.postit-workspace {
+  display: grid;
+  grid-template: "scene editor" minmax(0, 1fr) / minmax(0, 1fr) minmax(16rem, 20rem);
+  gap: 1rem;
+  align-items: start;
+}
+
+.postit-editor,
+.postit-view {
+  min-width: 0;
+  border: 1px solid var(--postit-border);
+  border-radius: .875rem;
+  background: var(--postit-panel);
+}
+
+.postit-editor {
+  grid-area: editor;
+  padding: 1.15rem;
+}
+
+.postit-editor h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.postit-editor form {
+  display: grid;
+  gap: .6rem;
+  margin-top: 1rem;
+}
+
+.postit-editor label {
+  font-size: .9rem;
+  font-weight: 650;
+}
+
+.postit-editor small { color: var(--postit-muted); }
+
+.postit-editor :is(select, textarea) {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  padding: .6rem .7rem;
+  border: 1px solid #565962;
+  border-radius: .45rem;
+  background: #26272d;
+  color: inherit;
+  font: inherit;
+}
+
+.postit-editor textarea { resize: vertical; }
+
+.postit-editor__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem;
+}
+
+.postit-editor :is(.postit-editor__primary, .postit-editor__cancel) {
+  min-height: 2.5rem;
+  padding: .4rem .7rem;
+  border: 1px solid transparent;
+  border-radius: .45rem;
+  color: #fff;
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.postit-editor .postit-editor__primary { background: var(--postit-blue); }
+.postit-editor .postit-editor__primary:hover:not(:disabled) { background: #255cca; }
+.postit-editor .postit-editor__primary:disabled {
+  border-color: var(--postit-border);
+  background: #26272d;
+  color: var(--postit-muted);
+  cursor: default;
+}
+
+.postit-editor .postit-editor__cancel {
+  border-color: var(--postit-border);
+  background: #1d1f26;
+}
+
+.postit-editor__count {
+  margin-left: auto;
+  font-size: .8rem;
+  color: var(--postit-muted);
+}
+
+.postit-editor :is(input, button, textarea, select):focus-visible,
+.postit-popover button:focus-visible {
+  outline: 2px solid #a0bcff;
+  outline-offset: 2px;
+}
+
+.postit-view { grid-area: scene; overflow: hidden; }
+.postit-view__help {
+  padding: .65rem .9rem;
+  border-bottom: 1px solid var(--postit-border);
+  color: var(--postit-muted);
+  font-size: .85rem;
+}
+.postit-view__canvas { height: clamp(21rem, 62vh, 42rem); }
+
+.postit-popover { position: relative; }
+
+.postit-popover__keyboard-trigger {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  border: 0;
+  clip-path: inset(50%);
+  pointer-events: none;
+}
+
+.postit-popover__offset {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding-bottom: 5px;
+}
+
+.postit-popover__note {
+  box-sizing: border-box;
+  width: min(13rem, calc(100vw - 2.5rem));
+  padding: .6rem .75rem;
+  border: 1px solid #d5a335;
+  border-radius: .5rem;
+  background: #ffe380;
+  color: #332900;
+  box-shadow: 0 4px 14px #0004;
+  font-size: .85rem;
+  line-height: 1.45;
+}
+
+.postit-popover__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  margin-bottom: .35rem;
+}
+
+.postit-popover__close {
+  padding: 0 .2rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.postit-popover__text { white-space: pre-wrap; overflow-wrap: anywhere; }
+.postit-popover__preview {
+  margin-top: .6rem;
+  padding: .3rem .55rem;
+  border: 1px solid #99721d;
+  border-radius: .35rem;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+@media (max-width: 48rem) {
+  .postit-workspace { grid-template: "scene" "editor" / minmax(0, 1fr); }
+  .postit-view__canvas { height: clamp(15rem, 42vh, 25rem); }
+}
+
+
+/* 포스트잇 안내 카드와 전체 화면 3D 뷰 */
+.postit-page {
+  padding: 0;
+}
+
+.postit-workspace {
+  position: relative;
+  display: block;
+  max-width: none;
+  height: 100%;
+}
+
+.postit-view,
+.postit-view__canvas {
+  height: 100%;
+}
+
+.postit-view {
+  position: relative;
+  z-index: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+.postit-editor {
+  position: absolute;
+  z-index: 1;
+  top: 12px;
+  left: 12px;
+  width: min(19rem, calc(100% - 24px));
+  max-height: calc(100% - 24px);
+  overflow: auto;
+  padding: .85rem 1rem;
+  background: #17181c;
+}
+
+.postit-page__header {
+  margin-bottom: .8rem;
+}
+
+.postit-page__header h1 {
+  font-size: 1.15rem;
+}
+
+.postit-editor h2 {
+  font-size: 1rem;
+}
+
+.postit-editor p {
+  font-size: .875rem;
+  overflow-wrap: anywhere;
+}
+
+.postit-editor .postit-page__warning {
+  color: #ffb1b1;
+}
+
+.postit-view__help {
+  margin-top: .85rem;
+  padding: .65rem 0 0;
+  border: 0;
+  border-top: 1px solid var(--postit-border);
+}
+
+@media (max-width: 48rem) {
+  .postit-workspace {
+    height: auto;
+  }
+
+  .postit-editor {
+    position: static;
+    width: auto;
+    max-height: none;
+    margin: 12px;
+  }
+
+  .postit-view__canvas {
+    height: clamp(19rem, 55vh, 30rem);
+  }
+}

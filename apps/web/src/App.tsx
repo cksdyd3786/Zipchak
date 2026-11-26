@@ -6,13 +6,14 @@ import { TemplatePicker } from './editor/TemplatePicker'
 import { LayoutEditor } from './layout/LayoutEditor'
 import { layoutFromRoom } from './layout/layoutFromRoom'
 import { RoomScene } from './scene/RoomScene'
+import { PostitRoom } from './social/PostitLayer'
 import { RoomFileViewer } from './viewer/RoomFileViewer'
 import type { FurnitureLayout, RoomData } from './types/schema'
 
 const sampleRoom = roomSample as RoomData
 const sampleLayout = layoutSample as unknown as FurnitureLayout
 
-type Mode = 'open' | 'template' | 'editor' | 'layout' | 'sample'
+type Mode = 'open' | 'template' | 'editor' | 'layout' | 'sample' | 'postit'
 
 export default function App() {
   const [mode, setMode] = useState<Mode>('open')
@@ -47,6 +48,7 @@ export default function App() {
         {tab('editor', '치수로 만들기 (M1-2)')}
         {tab('layout', '가구 배치 (M4-2)')}
         {tab('sample', '샘플 방 보기')}
+        {tab('postit', '포스트잇')}
       </div>
       <div style={{ flex: 1, minHeight: 0 }}>
         {mode === 'open' && <RoomFileViewer initialRoom={currentRoom === sampleRoom ? null : currentRoom} onRoomLoaded={setCurrentRoom} onEditFurniture={() => setMode('layout')} />}
@@ -54,6 +56,7 @@ export default function App() {
         {mode === 'editor' && <RoomEditor onUseRoom={openInLayout} />}
         {mode === 'layout' && <LayoutEditor key={currentRoom.roomId} room={currentRoom} initialLayout={currentLayout} />}
         {mode === 'sample' && <RoomScene room={sampleRoom} />}
+        {mode === 'postit' && <PostitRoom room={currentRoom} layout={currentLayout} />}
       </div>
     </div>
   )

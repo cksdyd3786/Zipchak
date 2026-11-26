@@ -1,9 +1,9 @@
 import { CameraControls, OrthographicCamera, PerspectiveCamera } from '@react-three/drei'
 import { Canvas, useThree } from '@react-three/fiber'
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { Fragment, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import type * as THREE from 'three'
 import { mmToM } from '../lib/units'
-import type { FurnitureLayout, RoomData } from '../types/schema'
+import type { FurnitureLayout, RoomData, Wall } from '../types/schema'
 import { DoorSwing } from './DoorSwing'
 import { Fixtures } from './Fixtures'
 import { Floor } from './Floor'
@@ -23,6 +23,8 @@ export interface RoomSceneProps {
   showDoorSwing?: boolean
   /** 기본 가구 렌더 대신 그릴 내용 (M4-2 편집용 EditableFurniture 등). Canvas 안에 들어간다 */
   furniture?: ReactNode
+  wrapWall?: (wall: Wall, surface: ReactNode) => ReactNode
+  wrapFloor?: (surface: ReactNode) => ReactNode
 }
 
 interface Bounds {
@@ -77,7 +79,7 @@ function Cameras({ view, bounds }: { view: ViewMode; bounds: Bounds }) {
       <PerspectiveCamera ref={setPersp} makeDefault={view === 'quarter'} fov={45} near={0.05} far={200} position={quarterPos} />
       <OrthographicCamera ref={setOrtho} makeDefault={view === 'top'} near={0.05} far={200} position={topPos} zoom={topZoom} />
       {active && (
-        <CameraControls
+        <CameraControls dollySpeed={2.5}
           key={view} // 카메라가 바뀌면 컨트롤을 새로 만든다
           ref={controls}
           camera={active}
@@ -103,7 +105,7 @@ const btn = (active: boolean) =>
   }) as const
 
 /** B·C 공용 진입점. props 모양을 바꿀 때는 C와 서로 PR 리뷰. */
-export function RoomScene({ room, layout, initialView = 'quarter', showDoorSwing = true, furniture }: RoomSceneProps) {
+export function RoomScene({ room, layout, initialView = 'quarter', showDoorSwing = true, furniture, wrapWall, wrapFloor }: RoomSceneProps) {
   const [view, setView] = useState<ViewMode>(initialView)
 
   // 바닥 다각형 바운딩 박스 (mm)
@@ -122,6 +124,7 @@ export function RoomScene({ room, layout, initialView = 'quarter', showDoorSwing
     d: mmToM(box.d),
   }
   const items = layout ? layout.placements : room.existingFurniture
+  const floor = <Floor polygon={room.floorPolygon} />
 
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
@@ -130,8 +133,12 @@ export function RoomScene({ room, layout, initialView = 'quarter', showDoorSwing
         <ambientLight intensity={0.6} />
         <directionalLight position={[bounds.cx + 3, 6, bounds.cz + 4]} intensity={1.2} castShadow />
 
-        <Floor polygon={room.floorPolygon} />
-        <Walls walls={room.walls} openings={room.openings} center={box.center} />
+        {wrapFloor ? wrapFloor(floor) : floor}
+        {wrapWall ? room.walls.map((wall) => (
+          <Fragment key={wall.id}>
+            {wrapWall(wall, <Walls walls={[wall]} openings={room.openings} center={box.center} />)}
+          </Fragment>
+        )) : <Walls walls={room.walls} openings={room.openings} center={box.center} />}
         <Openings walls={room.walls} openings={room.openings} />
         {showDoorSwing && <DoorSwing walls={room.walls} openings={room.openings} center={box.center} />}
         <Fixtures fixtures={room.fixtures} />
