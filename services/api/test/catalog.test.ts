@@ -86,6 +86,39 @@ describe("GET /catalog (M3-1)", () => {
   );
 });
 
+describe("GET /catalog/:itemId (M3-1·M3-5)", () => {
+  it("있는 itemId → 200, fixture 와 같은 상품 (스키마 통과)", async () => {
+    const target = fixture[3];
+    const { status, body } = await get(`/${target.itemId}`);
+    expect(status).toBe(200);
+    expect(body).toEqual(target);
+    expect(validate("market-furniture-item", body)).toEqual({ valid: true });
+  });
+
+  it.each(["cat_does_not_exist", "room_01HX0000000000000000000000", "%20"])("없는 itemId %s → 404 NOT_FOUND", async (id) => {
+    const { status, body } = await get(`/${id}`);
+    expect(status).toBe(404);
+    expect(body.error.code).toBe("NOT_FOUND");
+    expect(body.error.details.itemId).toBe(decodeURIComponent(id));
+  });
+
+  it("status = unavailable 상품도 200 으로 돌려준다 (저장된 배치안이 계속 보이도록)", async () => {
+    const soldOut = { ...fixture[0], status: "unavailable" as const };
+    const app = createApp({ config: loadConfig({}), catalog: [soldOut, fixture[1]] });
+    const s = await startServer(app);
+    try {
+      const res = await fetch(`${s.url}/catalog/${soldOut.itemId}`);
+      expect(res.status).toBe(200);
+      expect(await res.json()).toEqual(soldOut);
+      // 목록에서는 여전히 빠진다
+      const list = await (await fetch(`${s.url}/catalog`)).json();
+      expect(ids(list)).toEqual([fixture[1].itemId]);
+    } finally {
+      await s.close();
+    }
+  });
+});
+
 describe("filterCatalog", () => {
   it("status = unavailable 은 빼고 돌려준다", () => {
     const items = [fixture[0], { ...fixture[1], status: "unavailable" as const }];

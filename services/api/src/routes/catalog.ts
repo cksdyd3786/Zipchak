@@ -83,8 +83,18 @@ export function filterCatalog(items: MarketFurnitureItem[], q: CatalogQuery): Ma
 
 export function catalogRouter(items: MarketFurnitureItem[] = loadCatalog()): Router {
   const router = Router();
+  const byId = new Map(items.map((item) => [item.itemId, item]));
+
   router.get("/catalog", (req, res) => {
     res.json(filterCatalog(items, parseCatalogQuery(req.query)));
+  });
+
+  // GET /catalog/:itemId — 목록과 달리 status = unavailable 도 돌려준다.
+  // 이미 저장된 배치안의 가구를 3D·구매 패널(M3-5)에 계속 보여 주고, 품절 표시는 웹이 status 로 한다.
+  router.get("/catalog/:itemId", (req, res, next) => {
+    const item = byId.get(req.params.itemId);
+    if (!item) return next(new AppError("NOT_FOUND", 404, "상품을 찾을 수 없습니다", { itemId: req.params.itemId }));
+    res.json(item);
   });
   return router;
 }
