@@ -3,7 +3,24 @@
 
 export interface RoomData {
   roomId: string;
+  ownerId: string;
+  name: string;
   source: "lidar" | "manual" | "template" | "floorplan";
+  floorPolygon: { x: number; z: number }[];
+  createdAt: string;
+  updatedAt: string;
+  [key: string]: unknown;
+}
+
+export interface FurnitureLayout {
+  layoutId: string;
+  roomId: string;
+  version: number;
+  kind: "ai_recommendation" | "user_saved";
+  createdBy: { type: "user" | "guest" | "engine"; id: string; displayName: string };
+  postits: unknown[];
+  createdAt: string;
+  updatedAt: string;
   [key: string]: unknown;
 }
 
