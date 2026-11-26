@@ -6,6 +6,7 @@ import { loadConfig, type Config } from "./config.js";
 import { errorHandler, notFoundHandler } from "./errors.js";
 import { catalogRouter } from "./routes/catalog.js";
 import { templatesRouter } from "./routes/templates.js";
+import type { MarketFurnitureItem } from "./types.js";
 
 // TODO(M0-1)  POST /auth/login
 // TODO(M0-2)  POST /rooms, GET /rooms/:roomId, GET/PUT /layouts/:layoutId
@@ -16,11 +17,13 @@ import { templatesRouter } from "./routes/templates.js";
 
 export interface AppOptions {
   config?: Config;
+  /** 카탈로그를 바꿔 끼운다 (테스트용). 없으면 fixtures/catalog.json 을 읽어 검증한다. */
+  catalog?: MarketFurnitureItem[];
   /** 404 처리 앞에 라우트를 더 붙인다 (테스트용 임시 라우트) */
   extraRoutes?: (app: Express) => void;
 }
 
-export function createApp({ config = loadConfig(), extraRoutes }: AppOptions = {}): Express {
+export function createApp({ config = loadConfig(), catalog, extraRoutes }: AppOptions = {}): Express {
   const app = express();
   app.disable("x-powered-by");
   app.use(cors({ origin: config.corsOrigins }));
@@ -32,7 +35,7 @@ export function createApp({ config = loadConfig(), extraRoutes }: AppOptions = {
 
   // fixture 는 createApp() 할 때 읽고 검증한다 — 틀리면 서버가 뜨지 않는다.
   app.use(templatesRouter()); // M1-3
-  app.use(catalogRouter()); // M3-1 (DB 적재는 #13)
+  app.use(catalogRouter(catalog)); // M3-1 (DB 적재는 #14 후속)
 
   extraRoutes?.(app);
 
