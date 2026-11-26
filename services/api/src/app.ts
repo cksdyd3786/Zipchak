@@ -7,11 +7,12 @@ import { errorHandler, notFoundHandler } from "./errors.js";
 import { createEngineClient, type EngineClient } from "./engine.js";
 import { catalogRouter } from "./routes/catalog.js";
 import { recommendRouter } from "./routes/recommend.js";
+import { roomsRouter } from "./routes/rooms.js";
 import { templatesRouter } from "./routes/templates.js";
+import { MemoryStore, type Store } from "./store.js";
 import type { MarketFurnitureItem } from "./types.js";
 
 // TODO(M0-1)  POST /auth/login
-// TODO(M0-2)  POST /rooms, GET /rooms/:roomId, GET/PUT /layouts/:layoutId
 // TODO(M5-1)  POST /rooms/:roomId/invites
 // TODO(M5-2)  POST /layouts/:layoutId/postits, POST .../postits/:postitId/preview
 // TODO(M0-3)  POST /events
@@ -24,9 +25,11 @@ export interface AppOptions {
   extraRoutes?: (app: Express) => void;
   /** 엔진 클라이언트를 바꿔 끼운다 (테스트용). 없으면 config.engineUrl 로 만든다. */
   engine?: EngineClient;
+  /** 방·배치안 저장소. 없으면 메모리 저장소 (서버를 다시 켜면 비워진다) */
+  store?: Store;
 }
 
-export function createApp({ config = loadConfig(), catalog, extraRoutes, engine }: AppOptions = {}): Express {
+export function createApp({ config = loadConfig(), catalog, extraRoutes, engine, store = new MemoryStore() }: AppOptions = {}): Express {
   const app = express();
   app.disable("x-powered-by");
   app.use(cors({ origin: config.corsOrigins }));
@@ -40,6 +43,7 @@ export function createApp({ config = loadConfig(), catalog, extraRoutes, engine 
   app.use(templatesRouter()); // M1-3
   app.use(catalogRouter(catalog)); // M3-1 (DB 적재는 #14 후속)
   app.use(recommendRouter({ engine: engine ?? createEngineClient(config.engineUrl), catalog })); // M2-1 엔진 프록시
+  app.use(roomsRouter(store)); // M0-2 방·배치안 저장 (메모리, Postgres 는 후속)
 
   extraRoutes?.(app);
 
